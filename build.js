@@ -138,7 +138,7 @@ for (const lang of langs) {
 }
 
 // Static files
-for (const f of ["style.css", "content.js", "site.js", "CNAME", "share.jpg", "icon.png", "jelena.jpg", "jelena.webp"]) {
+for (const f of ["style.css", "content.js", "site.js", "CNAME", "share.jpg", "icon.png", "jelena.jpg", "jelena.webp", "live-lesson.html"]) {
   if (fs.existsSync(path.join(ROOT, f))) fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f));
 }
 
