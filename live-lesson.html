@@ -108,6 +108,7 @@ main.following .watching-note{display:block}
     <span class="msg" id="watchMsg">Connecting…</span>
     <span id="peerButtons" class="flex"></span>
     <button id="stopFollow" hidden>Stop watching</button>
+    <button id="revealBtn" hidden>Show answers to student</button>
   </div>
 </div>
 
@@ -140,7 +141,7 @@ const VOCAB={school:["a place where children study","школа"],gates:["large 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 
 /* ---------- One state object; the page is drawn from it ---------- */
-function blank(){return {tab:'intro',flipped:[],quiz:{},checked:false,clues:false,found:[],picked:null,vocab:false,word:null,text:'',model:false,key:false,scroll:0}}
+function blank(){return {tab:'intro',flipped:[],quiz:{},checked:false,clues:false,found:[],picked:null,vocab:false,word:null,text:'',model:false,key:false,scroll:0,reveal:false}}
 let S=blank();
 let following=null;   // peer label the teacher is watching
 let room=null;
@@ -185,9 +186,14 @@ function render(scrollToo){
     const sel=$('#q'+i),v=S.quiz[i]||'';if(sel.value!==v)sel.value=v;
     if(v)done++;if(v===q[1])score++;
     const r=$('#r'+i);
+    if(S.reveal){
+      r.className='result '+(v===q[1]?'good':'bad');
+      r.textContent=v===q[1]?'✓ Correct. '+q[2]:(v?'✗ ':'')+'Answer: '+q[1]+'. '+q[2];
+      return;
+    }
     if(!S.checked){r.textContent='';r.className='result';return}
     r.className='result '+(v===q[1]?'good':'bad');
-    r.textContent=!v?'Please choose an answer.':v===q[1]?'✓ Correct. '+q[2]:'✗ Correct answer: '+q[1]+'. '+q[2];
+    r.textContent=!v?'Please choose an answer.':v===q[1]?'✓':'✗';
   });
   $('#score').textContent=S.checked?`${score}/12 correct · ${done}/12 attempted`:'Not checked yet';
   $('#bar').style.width=S.checked?(score/12*100)+'%':'0%';
@@ -280,21 +286,34 @@ render();
 /* ---------- Live link: student's phone sends, teacher's laptop watches ---------- */
 const TOPIC='skudra-live-66e3200f6d5a1c2c/lesson-language-features';
 const isTeacher=location.hash==='#teacher';
+const CTRL=TOPIC+'/answers';
 if(isTeacher)$('#teacherTab').hidden=false;
 (function(){
   if(!window.mqtt)return;
+  // Only the real website connects. A downloaded copy stays offline, so it never shows up as a student.
+  if(!/(^|\.)englishwithjelena\.com$/.test(location.hostname))return;
   const client=mqtt.connect('wss://broker.hivemq.com:8884/mqtt',{clientId:'sk'+Math.random().toString(16).slice(2,10),reconnectPeriod:2000,clean:true});
   const bar=$('#watchBar');
   if(isTeacher){bar.hidden=false;$('#peerButtons').hidden=true}
   let lastTapN=null,lastSeen=0,watching=true;
   function status(t,on){if(!isTeacher)return;$('#watchMsg').textContent=t;$('#watchDot').classList.toggle('on',!!on)}
   client.on('connect',()=>{
-    if(isTeacher){status('Waiting for your student to open the lesson…');client.subscribe(TOPIC)}
-    else{room={presence:p=>{try{client.publish(TOPIC,JSON.stringify(p),{qos:0,retain:true})}catch(e){};return Promise.resolve()}};share()}
+    if(isTeacher){status('Waiting for your student to open the lesson…');client.subscribe(TOPIC);sendReveal()}
+    else{room={presence:p=>{try{client.publish(TOPIC,JSON.stringify(p),{qos:0,retain:true})}catch(e){};return Promise.resolve()}};client.subscribe(CTRL);share()}
   });
+  if(!isTeacher){
+    client.on('message',(t,buf)=>{
+      if(t!==CTRL)return;let m;try{m=JSON.parse(buf.toString())}catch(e){return}
+      const on=!!(m&&m.reveal);if(S.reveal!==on){S.reveal=on;render();share()}
+    });
+  }
   client.on('offline',()=>status('No connection — trying again…'));
   if(!isTeacher){addEventListener('pagehide',()=>{try{client.end(true)}catch(e){}})}
+  let revealOn=false;
+  function sendReveal(){try{client.publish(CTRL,JSON.stringify({reveal:revealOn}),{qos:0,retain:true})}catch(e){}}
   if(isTeacher){
+    const rb=$('#revealBtn');rb.hidden=false;
+    rb.addEventListener('click',()=>{revealOn=!revealOn;rb.textContent=revealOn?'Hide answers from student':'Show answers to student';rb.classList.toggle('on',revealOn);sendReveal()});
     following='student';$('#main').classList.add('following');$('#stopFollow').hidden=false;
     $('#stopFollow').textContent='Stop watching';
     $('#stopFollow').addEventListener('click',()=>{
