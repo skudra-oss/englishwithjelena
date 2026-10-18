@@ -1,0 +1,102 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>Homework · Language</title>
+<style>*{box-sizing:border-box}
+:root{--hotpink:#ff6fa8;--gold:#ffbe3b;--orange:#ff964f;--plum:#6d3569;--ink:#4d3656;--bg:#fff9f2;--card:#fff;--shadow:0 10px 26px rgba(255,111,168,.18);color-scheme:light}
+body{margin:0;color:var(--ink);background:var(--bg);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+.top{background:linear-gradient(135deg,var(--hotpink),var(--orange) 46%,var(--gold));color:#fff;padding:26px 16px 24px}
+.top h1{margin:0 auto;max-width:760px;font-size:clamp(24px,5vw,34px);line-height:1.2}
+.top p{margin:6px auto 0;max-width:760px;opacity:.95}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+.card{background:var(--card);border-radius:22px;padding:20px;margin:0 0 18px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 8px;font-size:20px;color:var(--plum)}
+.text p{margin:0 0 12px}
+label{font-weight:600;display:block;margin-top:6px}
+input,textarea{width:100%;padding:12px 14px;border:2px solid #ffd8e8;border-radius:16px;background:#fff;color:var(--ink);font:inherit;font-size:16px;margin:8px 0}
+textarea{min-height:220px;resize:vertical}
+input:focus,textarea:focus{outline:3px solid rgba(255,190,59,.35);border-color:var(--orange)}
+.row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px;opacity:.85}
+.warn{background:#fff2a8;border-radius:14px;padding:10px 14px;margin:8px 0;font-size:15px}
+.warn[hidden]{display:none}
+button{border:0;border-radius:999px;padding:13px 24px;font:inherit;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--hotpink),var(--orange));cursor:pointer;margin-top:8px}
+button:disabled{opacity:.5;cursor:default}
+.done{background:#c9f7da;border-radius:16px;padding:14px;font-weight:600}
+.err{background:#ffd8e8;border-radius:16px;padding:14px}
+</style></head><body>
+<header class="top"><h1>Homework: Write like an English examiner</h1><p>Read the text, then answer the question in your own words.</p></header>
+<main>
+<section class="card text"><h2>The First Day</h2>
+<p>The school gates groaned as I pushed them open. Beyond them, the playground was a battlefield: pupils rushed in every direction, while bags banged and lockers clattered.</p>
+<p>Silver streams of rain slid silently down the windows. Above the building, angry clouds gathered as my courage disappeared. My hands were as cold as ice. I could smell the sharp, damp scent of wet coats.</p>
+<p>I wanted to turn back. I wanted to hide. I wanted to go home. Then I saw a frightened little boy, completely alone, looking for his classroom. How could I leave him there? Around us, the hall was noisy, yet his voice was barely a whisper. I held out my hand, and we went inside together.</p>
+</section>
+<section class="card">
+<h2>Question</h2>
+<p><b>How does the writer use language to present the school as an intimidating place?</b></p>
+<p>Aim for 3–5 sentences: technique + short quotation + meaning + effect on the reader.</p>
+<p>Type your answer yourself. Copying and pasting is switched off in this box.</p>
+<form id="hw">
+<label for="name">Your name</label>
+<input id="name" autocomplete="off" required maxlength="60">
+<label for="answer">Your answer</label>
+<textarea id="answer" required maxlength="3000" autocomplete="off" spellcheck="true" placeholder="The writer uses ... in the phrase ‘...’. This suggests ... and makes the reader ..."></textarea>
+<div class="warn" id="pasteWarn" hidden>Pasting is switched off. Please type your answer yourself.</div>
+<div class="row"><span id="words">0 words</span><span>Your work is kept on this device until you send it.</span></div>
+<button type="submit" id="send">Send to my teacher</button>
+<div id="msg"></div>
+</form>
+</section>
+</main>
+<script>
+// Put the Formspree form address here (the part after /f/).
+const FORM_ID='myekvbzl';
+const KEY='skudra-hw-first-day';
+const $=id=>document.getElementById(id);
+const box=$('answer'),nameBox=$('name');
+let st={name:'',text:'',start:0,activeMs:0,pasteTries:0,deletions:0,keys:0};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)st=Object.assign(st,s)}catch(e){}
+nameBox.value=st.name;box.value=st.text;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function count(){const n=(box.value.trim().match(/\S+/g)||[]).length;$('words').textContent=n+(n===1?' word':' words');return n}
+count();
+// Time actually spent typing: count gaps between keystrokes up to 2 minutes.
+let last=0;
+function tick(){const now=Date.now();if(!st.start)st.start=now;if(last&&now-last<120000)st.activeMs+=now-last;last=now}
+function blockPaste(e){e.preventDefault();st.pasteTries++;$('pasteWarn').hidden=false;save()}
+['paste','drop'].forEach(t=>box.addEventListener(t,blockPaste));
+box.addEventListener('beforeinput',e=>{
+  if(e.inputType==='insertFromPaste'||e.inputType==='insertFromDrop'||e.inputType==='insertFromPasteAsQuotation'){blockPaste(e);return}
+  tick();st.keys++;
+  if(e.inputType&&e.inputType.indexOf('delete')===0)st.deletions++;
+});
+box.addEventListener('input',()=>{
+  // Catch big jumps that slip past the paste block (e.g. some phone keyboards).
+  const grow=box.value.length-st.text.length;
+  if(grow>80){st.pasteTries++;$('pasteWarn').hidden=false}
+  st.text=box.value;count();save()});
+nameBox.addEventListener('input',()=>{st.name=nameBox.value;save()});
+$('hw').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const words=count();
+  if(words<10){$('msg').innerHTML='<p class="err">Please write a bit more before sending.</p>';return}
+  const btn=$('send');btn.disabled=true;btn.textContent='Sending…';
+  const mins=Math.max(1,Math.round(st.activeMs/60000));
+  const data={
+    _subject:'Homework from '+(st.name||'student')+': The First Day',
+    student:st.name,answer:box.value,words:words,
+    typing_time:mins+' min',
+    paste_attempts:st.pasteTries,
+    corrections:st.deletions,
+    keystrokes:st.keys,
+    sent:new Date().toLocaleString('en-GB')
+  };
+  try{
+    const r=await fetch('https://formspree.io/f/'+FORM_ID,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(data)});
+    if(!r.ok)throw new Error(r.status);
+    $('msg').innerHTML='<p class="done">Sent! Your teacher will see your answer. ✓</p>';
+    btn.textContent='Sent';try{localStorage.removeItem(KEY)}catch(e){}
+  }catch(err){
+    btn.disabled=false;btn.textContent='Send to my teacher';
+    $('msg').innerHTML='<p class="err">It didn’t send. Check your internet and press the button again. Your answer is still here.</p>';
+  }
+});
+</script>
+</body></html>

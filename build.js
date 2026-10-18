@@ -1,164 +1,53 @@
-/* Builds the finished website into the _site folder.
-   Runs automatically on GitHub after every change (see .github/workflows/deploy.yml).
-   It turns content.js into ready-made HTML pages in Russian (/) and English (/en/)
-   so that Google and Yandex can read every word. You don't need to edit this file. */
+#!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const { JSDOM } = require("jsdom");
+'use strict';
 
-const ROOT = __dirname;
-const OUT = path.join(ROOT, "_site");
-const DOMAIN = "https://englishwithjelena.com";
+const fs = require('fs');
+const path = require('path');
+const mimeScore = require('mime-score');
 
-const read = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");
-const contentJs = read("content.js");
-const siteJs = read("site.js");
+let db = require('mime-db');
+let chalk = require('chalk');
 
-// Load the content once to use in the head tags
-const sandbox = { window: {} };
-new Function("window", contentJs)(sandbox.window);
-const SITE = sandbox.window.SITE;
+const STANDARD_FACET_SCORE = 900;
 
-const pages = [
-  { tpl: "index.html", slug: "", meta: (T) => T.meta },
-  { tpl: "start.html", slug: "start", meta: (T) => ({ title: T.pages.start.metaTitle, description: T.pages.start.description }) },
-  { tpl: "prices.html", slug: "prices", meta: (T) => ({ title: T.pages.prices.metaTitle, description: T.pages.prices.description }) },
-  { tpl: "test.html", slug: "test", meta: (T) => ({ title: T.pages.test.metaTitle, description: T.pages.test.description }) },
-  { tpl: "book.html", slug: "book", meta: (T) => ({ title: T.pages.book.metaTitle, description: T.pages.book.description }) },
-  { tpl: "reviews.html", slug: "reviews", meta: (T) => ({ title: T.reviewsPage.metaTitle, description: T.reviewsPage.text }) },
-  { tpl: "payment.html", slug: "payment", meta: (T) => ({ title: T.payment.metaTitle, description: T.payment.text }) }
-];
-const langs = ["ru", "en"];
+const byExtension = {};
 
-const url = (lang, slug) => DOMAIN + (lang === "en" ? "/en/" : "/") + slug;
-const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+// Clear out any conflict extensions in mime-db
+for (let type in db) {
+  let entry = db[type];
+  entry.type = type;
 
-function faqLd(T) {
-  return { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: (T.faq ? T.faq.items : []).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
-}
+  if (!entry.extensions) continue;
 
-function jsonLd(T, lang) {
-  const offers = (T.prices.items || []).map((p) => ({
-    "@type": "Service",
-    name: p.name,
-    description: p.text,
-    provider: { "@id": DOMAIN + "/#jelena" },
-    areaServed: "Worldwide",
-    availableChannel: { "@type": "ServiceChannel", serviceUrl: url(lang, "") },
-    offers: { "@type": "Offer", price: String(p.price || "").replace(/[^0-9.]/g, ""), priceCurrency: "GBP" }
-  }));
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Person",
-        "@id": DOMAIN + "/#jelena",
-        name: "Jelena Skudra",
-        alternateName: "Елена Скудра",
-        jobTitle: lang === "ru" ? "Преподаватель английского языка" : "English teacher",
-        alumniOf: { "@type": "CollegeOrUniversity", name: "University of Nottingham" },
-        knowsLanguage: ["en", "ru", "uk", "lv", "es"],
-        url: DOMAIN + "/",
-        image: DOMAIN + "/jelena.jpg",
-        email: SITE.settings.email || undefined
-      },
-      { "@type": "WebSite", "@id": DOMAIN + "/#website", url: DOMAIN + "/", name: "English with Jelena", inLanguage: ["ru", "en"] },
-      ...offers
-    ]
-  };
-}
+  entry.extensions.forEach(ext => {
+    if (ext in byExtension) {
+      const e0 = entry;
+      const e1 = byExtension[ext];
+      e0.pri = mimeScore(e0.type, e0.source);
+      e1.pri = mimeScore(e1.type, e1.source);
 
-fs.rmSync(OUT, { recursive: true, force: true });
-fs.mkdirSync(path.join(OUT, "en"), { recursive: true });
+      let drop = e0.pri < e1.pri ? e0 : e1;
+      let keep = e0.pri >= e1.pri ? e0 : e1;
+      drop.extensions = drop.extensions.filter(e => e !== ext);
 
-for (const lang of langs) {
-  const T = SITE[lang];
-  for (const page of pages) {
-    const dom = new JSDOM(read(page.tpl), { url: url(lang, page.slug), runScripts: "outside-only", pretendToBeVisual: true });
-    const { window } = dom;
-    const doc = window.document;
-    doc.documentElement.setAttribute("data-lang", lang);
-    doc.documentElement.setAttribute("lang", lang);
-    window.eval(contentJs);
-    window.eval(siteJs);
-
-    const prefix = lang === "en" ? "../" : "";
-    const m = page.meta(T);
-
-    // Head: title, description, canonical, languages, social previews
-    doc.title = m.title;
-    const head = doc.head;
-    const add = (html) => head.insertAdjacentHTML("beforeend", html + "\n");
-    doc.querySelector('meta[name="description"]').setAttribute("content", m.description);
-    add(`<link rel="canonical" href="${url(lang, page.slug)}">`);
-    add(`<link rel="alternate" hreflang="ru" href="${url("ru", page.slug)}">`);
-    add(`<link rel="alternate" hreflang="en" href="${url("en", page.slug)}">`);
-    add(`<link rel="alternate" hreflang="x-default" href="${url("ru", page.slug)}">`);
-    add(`<meta property="og:type" content="website">`);
-    add(`<meta property="og:site_name" content="English with Jelena">`);
-    add(`<meta property="og:title" content="${esc(m.title)}">`);
-    add(`<meta property="og:description" content="${esc(m.description)}">`);
-    add(`<meta property="og:url" content="${url(lang, page.slug)}">`);
-    add(`<meta property="og:image" content="${DOMAIN}/share.jpg">`);
-    add(`<meta property="og:image:width" content="1200">`);
-    add(`<meta property="og:image:height" content="630">`);
-    add(`<meta property="og:locale" content="${lang === "ru" ? "ru_RU" : "en_GB"}">`);
-    add(`<meta name="twitter:card" content="summary_large_image">`);
-    add(`<link rel="apple-touch-icon" href="${prefix}icon.png">`);
-    if (page.slug === "") add(`<script type="application/ld+json">${JSON.stringify(jsonLd(T, lang, false))}</script>`);
-    if (page.slug === "test") add(`<script type="application/ld+json">${JSON.stringify(faqLd(T))}</script>`);
-
-    // Language switch becomes real links between the two versions
-    const other = lang === "ru" ? "en" : "ru";
-    const otherHref = lang === "ru" ? "en/" + page.slug : "../" + page.slug;
-    const sw = doc.querySelector(".lang");
-    if (sw) {
-      sw.innerHTML =
-        (lang === "ru" ? '<span aria-current="true">RU</span>' : `<a href="${otherHref}" hreflang="ru" lang="ru">RU</a>`) +
-        (lang === "en" ? '<span aria-current="true">EN</span>' : `<a href="${otherHref}" hreflang="en" lang="en">EN</a>`);
+      console.log(`${ext}: Keeping ${chalk.green(keep.type)} (${keep.pri}), dropping ${chalk.red(drop.type)} (${drop.pri})`);
     }
-
-    // Pretty links (/reviews instead of reviews.html) and asset paths for /en/
-    let html = dom.serialize();
-    html = html.replace(/href="index\.html"/g, 'href="./"').replace(/href="([a-z]+)\.html(#[a-z-]+)?"/g, 'href="$1$2"');
-    // Cache-busting: browsers always fetch the newest text/design after a change
-    const v = Date.now().toString(36);
-    html = html.replace(/(href|src)="(style\.css|content\.js|site\.js)"/g, '$1="$2?v=' + v + '"');
-    if (lang === "en") {
-      html = html
-        .replace(/srcset="jelena\.webp"/g, 'srcset="../jelena.webp"')
-        .replace(/src="jelena\.jpg"/g, 'src="../jelena.jpg"')
-        .replace(/(href|src)="(style\.css|content\.js|site\.js|icon\.png)(\?v=[a-z0-9]+)?"/g, '$1="../$2$3"');
-    }
-    const file = path.join(OUT, lang === "en" ? "en" : "", (page.slug || "index") + ".html");
-    fs.writeFileSync(file, html);
-    window.close();
-  }
+    byExtension[ext] = entry;
+  });
 }
 
-// Static files
-for (const f of ["style.css", "content.js", "site.js", "CNAME", "share.jpg", "icon.png", "jelena.jpg", "jelena.webp", "live-lesson.html"]) {
-  if (fs.existsSync(path.join(ROOT, f))) fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f));
+function writeTypesFile(types, path) {
+  fs.writeFileSync(path, JSON.stringify(types));
 }
 
-// Search engine verification files (Google, Yandex, Bing) uploaded to the repository
-for (const f of fs.readdirSync(ROOT)) {
-  if (/^(google[0-9a-z]+\.html|yandex_[0-9a-z]+\.html|BingSiteAuth\.xml)$/i.test(f)) {
-    fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f));
-  }
-}
+// Segregate into standard and non-standard types based on facet per
+// https://tools.ietf.org/html/rfc6838#section-3.1
+const types = {};
 
-// sitemap.xml and robots.txt
-const today = new Date().toISOString().slice(0, 10);
-let sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n';
-for (const lang of langs) for (const page of pages) {
-  sm += `  <url>\n    <loc>${url(lang, page.slug)}</loc>\n    <lastmod>${today}</lastmod>\n`;
-  for (const l of langs) sm += `    <xhtml:link rel="alternate" hreflang="${l}" href="${url(l, page.slug)}"/>\n`;
-  sm += `  </url>\n`;
-}
-sm += "</urlset>\n";
-fs.writeFileSync(path.join(OUT, "sitemap.xml"), sm);
-fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${DOMAIN}/sitemap.xml\n`);
+Object.keys(db).sort().forEach(k => {
+  const entry = db[k];
+  types[entry.type] = entry.extensions;
+});
 
-console.log("Built", langs.length * pages.length, "pages into _site/");
+writeTypesFile(types, path.join(__dirname, '..', 'types.json'));
