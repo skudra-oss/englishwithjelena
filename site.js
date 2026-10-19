@@ -189,7 +189,7 @@
   function renderFront(T){
     var F = T.front; if (!F) return;
     fill("facts2", F.facts, function(f){
-      return el("li", null, icon(f.icon) + "<span><b>" + esc(f.title) + "</b>" + (f.sub ? "<small>" + esc(f.sub) + "</small>" : "") + "</span>");
+      var li = el("li", null, icon(f.icon) + "<span>" + esc(f.title) + "</span>"); if (f.sub) li.title = f.sub; return li;
     });
     $("m-wrong").textContent = F.marginWrong || ""; $("m-right").textContent = F.marginRight || "";
     fill("dir-list", F.directions.items, function(d){

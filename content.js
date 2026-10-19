@@ -248,8 +248,8 @@ window.SITE = {
       moreButton: "How lessons work",
       facts: [
         { icon: "cap", title: "Two British degrees", sub: "Nottingham, Birmingham" },
-        { icon: "clock", title: "7 years of teaching", sub: "" },
-        { icon: "cert", title: "TEFL teaching diploma", sub: "Level 5, recognised in the UK" }
+        { icon: "cert", title: "TEFL teaching diploma", sub: "Level 5, recognised in the UK" },
+        { icon: "clock", title: "7 years of teaching", sub: "" }
       ],
       photoAlt: "Jelena Skudra",
       marginWrong: "I lived in London since 2010",
@@ -518,8 +518,8 @@ window.SITE = {
       moreButton: "Как проходят занятия",
       facts: [
         { icon: "cap", title: "Два британских диплома", sub: "Ноттингем, Бирмингем" },
-        { icon: "clock", title: "7 лет преподавания", sub: "" },
-        { icon: "cert", title: "Диплом преподавателя TEFL", sub: "уровень 5, признан в Великобритании" }
+        { icon: "cert", title: "Диплом преподавателя TEFL", sub: "уровень 5, признан в Великобритании" },
+        { icon: "clock", title: "7 лет преподавания", sub: "" }
       ],
       photoAlt: "Елена Скудра",
       marginWrong: "I lived in London since 2010",
