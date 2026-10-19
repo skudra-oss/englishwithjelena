@@ -377,6 +377,17 @@ view.addEventListener('wheel', e => {
 }, { passive: false });
 
 // ---- pointers: drag items, pan the board, pinch zoom, draw
+// small cards that are easy to miss by a few pixels
+function nearItem(e) {
+  const pad = 22; let best = null, bd = Infinity;
+  document.querySelectorAll('.item.tile, .item.chip, .item.strip').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (e.clientX < r.left - pad || e.clientX > r.right + pad || e.clientY < r.top - pad || e.clientY > r.bottom + pad) return;
+    const dx = Math.max(r.left - e.clientX, 0, e.clientX - r.right), dy = Math.max(r.top - e.clientY, 0, e.clientY - r.bottom);
+    const d = dx * dx + dy * dy; if (d < bd) { bd = d; best = el; }
+  });
+  return best;
+}
 function localXY(el, e) { const r = el.getBoundingClientRect(); return { x: (e.clientX - r.left) / scale, y: (e.clientY - r.top) / scale }; }
 function rectIn(b, el) { const r = el.getBoundingClientRect(), s = b.getBoundingClientRect(); return { x: (r.left - s.left) / scale, y: (r.top - s.top) / scale, w: r.width / scale, h: r.height / scale }; }
 let drag = null, ink = null;
@@ -404,7 +415,8 @@ view.addEventListener('pointerdown', e => {
     view.setPointerCapture(e.pointerId); return;
   }
   if (e.target.closest('input,button,[contenteditable="true"]')) return;
-  const it = e.target.closest('.item');
+  let it = e.target.closest('.item');
+  if (!it) it = nearItem(e);   // pressed just next to a word card: grab it anyway instead of moving the board
   if (it) {
     const par = it.parentElement, p = localXY(par, e);
     drag = { it, par, dx: p.x - it.offsetLeft, dy: p.y - it.offsetTop, id: e.pointerId };
@@ -433,7 +445,11 @@ view.addEventListener('pointermove', e => {
     const now = performance.now(); if (now - lastMv > 80) { lastMv = now; sendMove(drag.it, false); }
     return;
   }
-  if (pan && e.pointerId === pan.id) { tx = pan.tx + e.clientX - pan.x; ty = pan.ty + e.clientY - pan.y; apply(); }
+  if (pan && e.pointerId === pan.id) {
+    if (!pan.moving && Math.hypot(e.clientX - pan.x, e.clientY - pan.y) < 8) return;
+    if (!pan.moving) { pan.moving = true; pan.x = e.clientX; pan.y = e.clientY; }
+    tx = pan.tx + e.clientX - pan.x; ty = pan.ty + e.clientY - pan.y; apply();
+  }
 });
 function hotSlot(b, it, markIt) {
   const c = { x: it.offsetLeft + it.offsetWidth / 2, y: it.offsetTop + it.offsetHeight / 2 };
