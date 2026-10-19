@@ -469,3 +469,9 @@ footer .foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
 .bigben{width:116px}
 .dir-ic, .dir:nth-child(n) .dir-ic{width:96px;height:96px;margin-bottom:4px}
 .doodle{width:96px;height:96px;stroke-width:1.3}
+.dir-grid{grid-template-columns:1fr 1fr;gap:24px}
+.dir{padding:32px 34px;gap:12px}
+.dir h3{font-size:30px}
+.dir .q{font-size:19px;line-height:1.45}
+.dir p{font-size:17.5px;line-height:1.65}
+@media (max-width:760px){ .dir-grid{grid-template-columns:1fr} .dir{padding:26px 24px} .dir h3{font-size:26px} .dir .q{font-size:18px} .dir p{font-size:16.5px} }
