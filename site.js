@@ -174,6 +174,10 @@
   }
 
   var ICONS = {
+    d_chat: '<path d="M10 14h28a4 4 0 014 4v13a4 4 0 01-4 4H21l-8 7v-7h-3a4 4 0 01-4-4V18a4 4 0 014-4z"/><path d="M46 26h8a4 4 0 014 4v11a4 4 0 01-4 4h-2v6l-7-6H34a4 4 0 01-4-4v-4"/><path class="acc" d="M52 6l1.3 2.8 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4zM16 22h18M16 27h11"/>',
+    d_book: '<path d="M6 16c9-4 18-3 26 3 8-6 17-7 26-3v32c-9-4-18-3-26 3-8-6-17-7-26-3z"/><path d="M32 19v32"/><path d="M11 25h15M11 31h15M11 37h12M37 25h15M37 37h15"/><path class="acc" d="M37 32c4 1.6 9 1.6 15 0"/>',
+    d_ielts: '<rect x="8" y="8" width="32" height="46" rx="2"/><path d="M24 18h11M24 30h11M24 42h11"/><path class="acc" d="M13 18l3 3 5-6M13 30l3 3 5-6M13 42l3 3 5-6"/><path d="M46 50l10-30 4 1.4-10 30zM46 50l-1 6 5-4.6M54 26l4 1.4"/>',
+    d_kids: '<path d="M8 34c8-3 16-3 24 2 8-5 16-5 24-2v22c-8-3-16-3-24 2-8-5-16-5-24-2z"/><path d="M32 36v22"/><path class="acc" d="M32 8l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8-5.3 2.8 1-6-4.3-4.2 6-.9zM20 18l-3-3M44 18l3-3M32 30v-3"/>',
     cap: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/><path d="M22 9v6"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     cert: '<rect x="4" y="3" width="16" height="13" rx="2"/><path d="M8 8h8M8 11h5"/><circle cx="15" cy="17" r="3"/><path d="M13.5 19.5L13 22l2-1 2 1-.5-2.5"/>',
@@ -194,7 +198,7 @@
     $("m-wrong").textContent = F.marginWrong || ""; $("m-right").textContent = F.marginRight || "";
     fill("dir-list", F.directions.items, function(d){
       var a = el("article", "dir");
-      a.appendChild(el("div", "dir-ic", icon(d.icon)));
+      a.appendChild(el("div", "dir-ic", '<svg class="doodle" viewBox="0 0 64 64" aria-hidden="true">' + (ICONS[d.icon] || "") + '</svg>'));
       a.appendChild(el("h3", null, esc(d.title)));
       a.appendChild(el("p", "q", esc(d.q)));
       a.appendChild(el("p", null, marked(d.text)));

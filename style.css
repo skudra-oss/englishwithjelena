@@ -8,8 +8,8 @@
   --pink:#D4549A; --teal:#2D7FA2;
   --link:#6A3F95; --pill:#E9D7F2; --line-btn:#B47AC7;
   --tint1:#FFD1E6; --tint2:#EBD9F2; --tint3:#DCE8F8; --tint4:#D6F4F5;
-  --sec-rose:#FFF0F6; --sec-mist:#EEF8F9; --sec-lav:#F5EEF9;
-  --glow1:rgba(141,180,230,.30); --glow2:rgba(244,140,189,.22); --glow3:rgba(125,225,230,.26);
+  --sec-rose:#FFF0F6; --sec-mist:#EEF8F9; --sec-lav:#F5EEF9; --sec-peri:#F1F5FD; --tape:rgba(232,203,140,.72); --paper-line:#DCE6F2; --torn:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='32'%3E%3Cpath d='M0 0H4L2 5 4.2 9 1.6 13 3.6 18 1.4 23 4 27 2.2 32H0Z' fill='%23EEF8F9'/%3E%3Ccircle cx='5.5' cy='16' r='5' fill='%23EEF8F9'/%3E%3C/svg%3E");
+  --glow1:rgba(141,180,230,.30); --glow2:rgba(180,122,199,.14); --glow3:rgba(125,225,230,.26);
   --display:"Prata", Georgia, "Times New Roman", serif;
   --body:"Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --hand:"Caveat", "Segoe Print", "Comic Sans MS", cursive;
@@ -22,7 +22,7 @@
     --cta:#E06C9F; --cta-ink:#12112A; --cta-shadow:#8C3A61;
     --blue:#9383A3; --blue-ink:#12112A; --mid:#2D7FA2; --pen:#7FC3DE;
     --band:#0C0B20; --band-ink:#F1EFF8; --band-muted:#ADA7C4;
-    --pink:#E06C9F; --teal:#2D7FA2; --link:#F4A9CF; --pill:#F1EFF8; --line-btn:#F1EFF8; --tint1:#4A2240; --tint2:#3A2A55; --tint3:#26345A; --tint4:#1F4248; --cta-grad:var(--cta); --sec-rose:var(--paper); --sec-mist:var(--surface); --sec-lav:var(--surface); --glow1:rgba(141,180,230,.10); --glow2:rgba(244,140,189,.08); --glow3:rgba(125,225,230,.08);
+    --pink:#E06C9F; --teal:#2D7FA2; --link:#F4A9CF; --pill:#F1EFF8; --line-btn:#F1EFF8; --tint1:#4A2240; --tint2:#3A2A55; --tint3:#26345A; --tint4:#1F4248; --cta-grad:var(--cta); --sec-peri:var(--surface); --tape:rgba(232,203,140,.45); --paper-line:#2D2A52; --torn:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='32'%3E%3Cpath d='M0 0H4L2 5 4.2 9 1.6 13 3.6 18 1.4 23 4 27 2.2 32H0Z' fill='%231C1A3A'/%3E%3Ccircle cx='5.5' cy='16' r='5' fill='%231C1A3A'/%3E%3C/svg%3E"); --sec-rose:var(--paper); --sec-mist:var(--surface); --sec-lav:var(--surface); --glow1:rgba(141,180,230,.10); --glow2:rgba(244,140,189,.08); --glow3:rgba(125,225,230,.08);
     color-scheme: dark;
   }
 }
@@ -32,7 +32,7 @@
     --cta:#E06C9F; --cta-ink:#12112A; --cta-shadow:#8C3A61;
     --blue:#9383A3; --blue-ink:#12112A; --mid:#2D7FA2; --pen:#7FC3DE;
     --band:#0C0B20; --band-ink:#F1EFF8; --band-muted:#ADA7C4;
-    --pink:#E06C9F; --teal:#2D7FA2; --link:#F4A9CF; --pill:#F1EFF8; --line-btn:#F1EFF8; --tint1:#4A2240; --tint2:#3A2A55; --tint3:#26345A; --tint4:#1F4248; --cta-grad:var(--cta); --sec-rose:var(--paper); --sec-mist:var(--surface); --sec-lav:var(--surface); --glow1:rgba(141,180,230,.10); --glow2:rgba(244,140,189,.08); --glow3:rgba(125,225,230,.08);
+    --pink:#E06C9F; --teal:#2D7FA2; --link:#F4A9CF; --pill:#F1EFF8; --line-btn:#F1EFF8; --tint1:#4A2240; --tint2:#3A2A55; --tint3:#26345A; --tint4:#1F4248; --cta-grad:var(--cta); --sec-peri:var(--surface); --tape:rgba(232,203,140,.45); --paper-line:#2D2A52; --torn:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='32'%3E%3Cpath d='M0 0H4L2 5 4.2 9 1.6 13 3.6 18 1.4 23 4 27 2.2 32H0Z' fill='%231C1A3A'/%3E%3Ccircle cx='5.5' cy='16' r='5' fill='%231C1A3A'/%3E%3C/svg%3E"); --sec-rose:var(--paper); --sec-mist:var(--surface); --sec-lav:var(--surface); --glow1:rgba(141,180,230,.10); --glow2:rgba(244,140,189,.08); --glow3:rgba(125,225,230,.08);
     color-scheme: dark;
 }
 *{box-sizing:border-box}
@@ -414,8 +414,8 @@ footer .foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
 
 .dir:nth-child(1) .dir-ic{background:var(--tint1)} .dir:nth-child(2) .dir-ic{background:var(--tint2)}
 .dir:nth-child(3) .dir-ic{background:var(--tint3)} .dir:nth-child(4) .dir-ic{background:var(--tint4)}
-.dir:nth-child(1){border-top:4px solid #F48CBD} .dir:nth-child(2){border-top:4px solid #B47AC7}
-.dir:nth-child(3){border-top:4px solid #8DB4E6} .dir:nth-child(4){border-top:4px solid #7DE1E6}
+.dir:nth-child(1){border-top:4px solid #7DE1E6} .dir:nth-child(2){border-top:4px solid #8DB4E6}
+.dir:nth-child(3){border-top:4px solid #B47AC7} .dir:nth-child(4){border-top:4px solid #F48CBD}
 .club{border-color:#B47AC7}
 
 /* colour wash for the light theme */
@@ -425,7 +425,45 @@ footer .foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
   radial-gradient(circle at 6% 92%, var(--glow2), transparent 40%),
   radial-gradient(circle at 62% 105%, var(--glow3), transparent 42%),
   repeating-linear-gradient(to bottom, transparent 0 35px, var(--ruled) 35px 36px), var(--paper)}
-#directions{background:var(--sec-rose)}
+#directions{background:var(--sec-peri)}
 #lesson.alt{background:var(--sec-mist)}
-#home-reviews.alt{background:var(--sec-lav)}
+#home-reviews.alt{background:radial-gradient(circle at 8% 12%, var(--glow1), transparent 40%), var(--paper)}
+#peek{background:var(--sec-lav)}
 #extras{background:radial-gradient(circle at 90% 10%, var(--glow3), transparent 45%), var(--paper)}
+
+/* ===== notebook doodles ===== */
+.review blockquote::before{color:var(--blue)}
+.dir-ic, .dir:nth-child(n) .dir-ic{width:64px;height:64px;background:none;border-radius:0;display:block;color:var(--ink)}
+.doodle{width:64px;height:64px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.doodle .acc{stroke:var(--pen)}
+.dir:nth-child(4) .doodle .acc{stroke:#E8A93A}
+
+.photo-row{display:flex;align-items:flex-end;justify-content:center;gap:4px;position:relative}
+.hero-photo .photo{position:relative;width:min(290px,72%)}
+.pin{position:absolute;top:-20px;left:50%;width:30px;height:36px;margin-left:-15px;z-index:2;fill:none;stroke-linecap:round}
+.pin-head{fill:#8DB4E6;stroke:var(--ink);stroke-width:1.6}
+.pin-needle{stroke:var(--muted);stroke-width:2}
+.pin-shine{stroke:#fff;stroke-width:2;opacity:.8}
+.bigben{width:96px;height:auto;flex:none;margin-bottom:-6px;fill:none;stroke:var(--pen);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.bigben .star{stroke:#E8A93A;stroke-width:1.8}
+@media (max-width:860px){ .bigben{width:74px} }
+
+.tape-top::after{content:"";position:absolute;top:-14px;left:30px;width:96px;height:30px;background:var(--tape);transform:rotate(-7deg);clip-path:polygon(3% 8%,10% 0,20% 10%,30% 0,40% 9%,50% 0,60% 9%,70% 0,80% 9%,90% 0,97% 10%,100% 92%,90% 100%,80% 91%,70% 100%,60% 92%,50% 100%,40% 91%,30% 100%,20% 92%,10% 100%,0 90%);z-index:2}
+.notebook{position:relative;border-radius:2px 4px 4px 2px;transform:rotate(-1.2deg);padding:30px 30px 34px 36px;background-color:var(--surface);background-image:repeating-linear-gradient(to bottom, transparent 0 31px, var(--paper-line) 31px 32px);background-position:0 32px}
+.notebook::before{content:"";position:absolute;left:-1px;top:0;bottom:0;width:16px;background:var(--torn) repeat-y 0 6px;width:18px}
+.notebook .eyebrow{color:var(--pen)}
+.notebook blockquote{font-size:19px;line-height:32px;margin-top:2px}
+.smile{position:absolute;right:16px;bottom:10px;width:36px;height:36px;fill:none;stroke:var(--pen);stroke-width:1.6;stroke-linecap:round}
+.teacher-note{position:relative;margin:22px 0 0 60px;font-family:var(--hand);font-weight:700;font-size:26px;line-height:1.1;color:var(--pink);transform:rotate(-4deg)}
+.note-arrow{position:absolute;left:-58px;top:-38px;width:48px;height:56px;fill:none;stroke:var(--pink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.peek-head{flex-direction:row;align-items:flex-end;gap:22px;max-width:none;flex-wrap:wrap}
+.try-note{position:relative;font-family:var(--hand);font-weight:700;font-size:28px;color:var(--pen);transform:rotate(-5deg);margin:0 0 4px;padding-right:70px}
+.try-arrow{position:absolute;right:0;top:14px;width:66px;height:42px;fill:none;stroke:var(--pen);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.peek{grid-template-columns:1fr;padding:18px;box-shadow:0 22px 40px -30px rgba(40,36,100,.45)}
+.peek-img img{aspect-ratio:16/9}
+.peek-body h3{font-size:24px}
+@media (max-width:480px){ .try-note{font-size:24px} }
+
+.margin-note{margin-bottom:28px}
+.bigben{width:116px}

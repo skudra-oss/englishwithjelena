@@ -258,10 +258,10 @@ window.SITE = {
         title: "What we can work on",
         more: "More",
         items: [
-          { icon: "chat", title: "Conversational English", q: "Studied English for years but still get lost in conversation?", text: "We’ll talk a lot, build your vocabulary step by step and learn to express your thoughts naturally and confidently.", link: "" },
-          { icon: "book", title: "GCSE English", q: "Your child is at a British school but doesn’t know how to analyse language and structure?", text: "We’ll work out what examiners expect and learn to find quotations and explain them. Tricky points can be clarified in Russian.", link: "" },
-          { icon: "cap", title: "IELTS", q: "Need a certain band score for university, work or a visa?", text: "We’ll go through the exam format and focus on what will raise your score.", link: "" },
-          { icon: "sprout", title: "English for children (6+)", q: "Want your child not just to learn rules but to actually use English?", text: "Textbook, interactive games and speaking practice: we speak English as much as possible and use Russian only when it’s really needed.", link: "" }
+          { icon: "d_chat", title: "Conversational English", q: "Studied English for years but still get lost in conversation?", text: "We’ll talk a lot, build your vocabulary step by step and learn to express your thoughts naturally and confidently.", link: "" },
+          { icon: "d_book", title: "GCSE English", q: "Your child is at a British school but doesn’t know how to analyse language and structure?", text: "We’ll work out what examiners expect and learn to find quotations and explain them. Tricky points can be clarified in Russian.", link: "" },
+          { icon: "d_ielts", title: "IELTS", q: "Need a certain band score for university, work or a visa?", text: "We’ll go through the exam format and focus on what will raise your score.", link: "" },
+          { icon: "d_kids", title: "English for children (6+)", q: "Want your child not just to learn rules but to actually use English?", text: "Textbook, interactive games and speaking practice: we speak English as much as possible and use Russian only when it’s really needed.", link: "" }
         ]
       },
       how: {
@@ -269,12 +269,14 @@ window.SITE = {
         text: "My lessons focus on speaking. I use textbooks written by professional teams and add your interests and plenty of conversation. You answer questions on the lesson topic, I listen and note your mistakes, and we fix them step by step.",
         points: ["Lots of speaking practice", "Vocabulary, grammar and all four skills: speaking, reading, writing, listening", "A flexible, not rigid, structure"],
         langNote: "We speak English as much as possible, but use Russian when it’s really needed.",
-        button: "More about lessons"
+        button: "More about lessons",
+        note: "One of my favourite teaching moments"
       },
       peek: {
         title: "Take a look at a lesson",
         text: "Lessons are based on textbooks, but I add more speaking practice and choose extra materials for your goals and interests. Sometimes I create interactive boards and games myself. Here are two examples you can open and try on your own.",
         all: "All lessons",
+        tryNote: "Try it yourself!",
         open: "Open the lesson",
         cards: [
           { title: "Falling for Autumn", meta: "B1 · Reading · Speaking · Grammar", text: "We read a text about autumn, discuss it and practise the present perfect in conversation.", img: "lessons/previews/autumn.jpg", href: "/lessons/autumn#demo" },
@@ -528,10 +530,10 @@ window.SITE = {
         title: "Направления",
         more: "Подробнее",
         items: [
-          { icon: "chat", title: "Разговорный английский", q: "Учили английский годами, но в разговоре всё равно теряетесь?", text: "Будем много говорить, постепенно расширять словарный запас и учиться выражать мысли естественно и уверенно.", link: "" },
-          { icon: "book", title: "GCSE English", q: "Ребёнок учится в британской школе, но не понимает, как анализировать язык и структуру текста?", text: "Разберёмся, чего ждут экзаменаторы, научимся находить цитаты и объяснять их. Сложное можно уточнить по-русски.", link: "" },
-          { icon: "cap", title: "IELTS", q: "Нужен определённый балл для университета, работы или визы?", text: "Разберём формат экзамена и сосредоточимся на том, что поднимет именно ваш балл.", link: "" },
-          { icon: "sprout", title: "Английский для детей (от 6 лет)", q: "Хотите, чтобы ребёнок не просто учил правила, а пользовался английским?", text: "Учебник, интерактивные игры и разговорная практика — стараемся говорить как можно больше по-английски, но используем и русский, когда это необходимо.", link: "" }
+          { icon: "d_chat", title: "Разговорный английский", q: "Учили английский годами, но в разговоре всё равно теряетесь?", text: "Будем много говорить, постепенно расширять словарный запас и учиться выражать мысли естественно и уверенно.", link: "" },
+          { icon: "d_book", title: "GCSE English", q: "Ребёнок учится в британской школе, но не понимает, как анализировать язык и структуру текста?", text: "Разберёмся, чего ждут экзаменаторы, научимся находить цитаты и объяснять их. Сложное можно уточнить по-русски.", link: "" },
+          { icon: "d_ielts", title: "IELTS", q: "Нужен определённый балл для университета, работы или визы?", text: "Разберём формат экзамена и сосредоточимся на том, что поднимет именно ваш балл.", link: "" },
+          { icon: "d_kids", title: "Английский для детей (от 6 лет)", q: "Хотите, чтобы ребёнок не просто учил правила, а пользовался английским?", text: "Учебник, интерактивные игры и разговорная практика — стараемся говорить как можно больше по-английски, но используем и русский, когда это необходимо.", link: "" }
         ]
       },
       how: {
@@ -539,12 +541,14 @@ window.SITE = {
         text: "Я преподаю с упором на живую речь: беру за основу учебники, созданные профессиональными методистами, и дополняю их вашими интересами и разговорной практикой. Вы отвечаете на вопросы по теме урока, а я слушаю, отмечаю ошибки, и мы постепенно их исправляем.",
         points: ["Много разговорной практики", "Лексика, грамматика и все навыки: речь, чтение, письмо, слушание", "Гибкая, а не жёсткая структура"],
         langNote: "Стараемся говорить как можно больше по-английски, но используем и русский, когда это необходимо.",
-        button: "Подробнее о занятиях"
+        button: "Подробнее о занятиях",
+        note: "One of my favourite teaching moments"
       },
       peek: {
         title: "Загляните на урок",
         text: "Занятия строятся на основе учебников, но я добавляю больше разговорной практики и подбираю дополнительные материалы под ваши цели и интересы. Иногда я сама создаю интерактивные доски и игры — вот два примера, их можно открыть и попробовать самостоятельно.",
         all: "Все уроки",
+        tryNote: "Try it yourself!",
         open: "Открыть урок",
         cards: [
           { title: "Falling for Autumn", meta: "B1 · чтение · разговор · грамматика", text: "Читаем текст об осени, обсуждаем его и тренируем Present Perfect в речи.", img: "lessons/previews/autumn.jpg", href: "/lessons/autumn#demo" },
