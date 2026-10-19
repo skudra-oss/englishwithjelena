@@ -167,7 +167,70 @@
       tgBtn.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M9.8 15.3l-.4 5.3c.6 0 .8-.2 1.1-.5l2.6-2.5 5.4 4c1 .5 1.7.3 2-.9l3.6-17c.3-1.5-.5-2.1-1.5-1.7L1.4 9.9C0 10.4 0 11.3 1.2 11.6l5.4 1.7L19 5.5c.6-.4 1.1-.2.7.2"/></svg><span>Telegram</span>';
     }
 
+
+    // ---------- new home page ----------
+    renderFront(T);
     $("year").textContent = new Date().getFullYear();
+  }
+
+  var ICONS = {
+    cap: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/><path d="M22 9v6"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    cert: '<rect x="4" y="3" width="16" height="13" rx="2"/><path d="M8 8h8M8 11h5"/><circle cx="15" cy="17" r="3"/><path d="M13.5 19.5L13 22l2-1 2 1-.5-2.5"/>',
+    chat: '<path d="M4 5h16v11H9l-5 4z"/>',
+    book: '<path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/>',
+    sprout: '<path d="M12 21v-9"/><path d="M12 12c0-4-3-6-7-6 0 4 3 6 7 6z"/><path d="M12 10c0-3 2-5 6-5 0 3-2 5-6 5z"/>',
+    tutorful: '<circle cx="12" cy="12" r="9"/><path d="M8 9h8M12 9v8"/>',
+    preply: '<circle cx="12" cy="12" r="9"/><path d="M9 17V7h4a3 3 0 010 6H9"/>',
+    threads: '<circle cx="12" cy="12" r="9"/><path d="M15.5 10.5c-.5-2-2-3-3.8-3-2.6 0-4.2 2-4.2 4.5s1.6 4.5 4.2 4.5c2 0 3.3-1 3.3-2.6 0-1.8-1.6-2.4-3.2-2.4-1.3 0-2.3.6-2.3 1.6 0 .8.7 1.4 1.8 1.4"/>'
+  };
+  function icon(name){ return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[name] || "") + '</svg>'; }
+
+  function renderFront(T){
+    var F = T.front; if (!F) return;
+    fill("facts2", F.facts, function(f){
+      return el("li", null, icon(f.icon) + "<span><b>" + esc(f.title) + "</b>" + (f.sub ? "<small>" + esc(f.sub) + "</small>" : "") + "</span>");
+    });
+    $("m-wrong").textContent = F.marginWrong || ""; $("m-right").textContent = F.marginRight || "";
+    fill("dir-list", F.directions.items, function(d){
+      var a = el("article", "dir");
+      a.appendChild(el("div", "dir-ic", icon(d.icon)));
+      a.appendChild(el("h3", null, esc(d.title)));
+      a.appendChild(el("p", "q", esc(d.q)));
+      a.appendChild(el("p", null, marked(d.text)));
+      if (d.link) { var m = el("a", "dir-more", esc(F.directions.more) + " →"); m.href = d.link; a.appendChild(m); }
+      return a;
+    });
+    fill("how-points", F.how.points, function(p){ return el("li", null, esc(p)); });
+    var pre = location.pathname.indexOf("/en/") === 0 ? "../" : "";
+    fill("peek-list", F.peek.cards, function(c){
+      var a = el("article", "peek");
+      var img = el("img"); img.src = pre + c.img; img.alt = ""; img.loading = "lazy"; img.width = 800; img.height = 500;
+      var link = el("a", "peek-img"); link.href = c.href; link.appendChild(img); a.appendChild(link);
+      var b = el("div", "peek-body");
+      b.appendChild(el("h3", null, esc(c.title)));
+      b.appendChild(el("p", "meta", esc(c.meta)));
+      b.appendChild(el("p", null, esc(c.text)));
+      var o = el("a", "btn btn-line btn-sm", esc(F.peek.open) + " →"); o.href = c.href; b.appendChild(o);
+      a.appendChild(b);
+      return a;
+    });
+    fill("home-reviews-list", (T.reviews.items || []).filter(function(r){ return r.home; }), function(r){
+      var f = el("figure", "review");
+      f.appendChild(el("blockquote", null, esc(r.text)));
+      f.appendChild(el("figcaption", null, esc(r.name) + (r.role ? "<span>" + esc(r.role) + "</span>" : "")));
+      return f;
+    });
+    var ch = (set.telegramChannel || "").trim();
+    $("word-more-box").hidden = !ch; if (ch) $("word-more").href = ch;
+    var cb = $("club-btn"), form = (set.clubForm || "").trim();
+    cb.href = form || (set.telegram ? "https://t.me/" + set.telegram.replace("@","") : "book.html");
+    var pf = set.profiles || {}, rows = [];
+    if (set.telegram) rows.push(["Telegram", "https://t.me/" + set.telegram.replace("@",""), "chat"]);
+    if (pf.preply) rows.push(["Preply", pf.preply, "preply"]);
+    if (pf.tutorful) rows.push(["Tutorful", pf.tutorful, "tutorful"]);
+    if (pf.threads) rows.push(["Threads", pf.threads, "threads"]);
+    fill("profiles", rows, function(r){ var a = el("a", null, icon(r[2]) + "<span>" + r[0] + "</span>"); a.href = r[1]; a.target = "_blank"; a.rel = "noopener"; return a; });
   }
   // ---------- level test ----------
   var quiz = { step: -1, picks: [] };

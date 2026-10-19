@@ -326,8 +326,77 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 :root[data-theme="dark"] .theme-btn .i-moon{display:none}
 @media (max-width:1000px){ .bar .lang{margin-left:auto} }
 
-/* teacher's correction in the margin of the hero */
-.art-box{position:relative}
-.margin-note{margin:0 2% 8px auto;width:max-content;max-width:100%;white-space:nowrap;transform:rotate(-3deg);font-family:var(--hand);font-weight:700;font-size:clamp(21px,2.3vw,27px);line-height:1.1;text-align:right;color:var(--ink)}
+/* ===== new home page ===== */
+.hero .subtitle{font-family:var(--display);font-size:clamp(20px,2.2vw,25px);line-height:1.35;margin-top:18px;color:var(--ink)}
+.hero .lead{margin-top:14px}
+.btn-lg{padding:17px 30px;font-size:18px;border-radius:14px}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.facts2{display:flex;flex-wrap:wrap;gap:16px 28px;margin:32px 0 0;padding:0;list-style:none}
+.facts2 li{display:flex;align-items:center;gap:10px;font-size:15px;line-height:1.3}
+.facts2 .ic{width:30px;height:30px;color:var(--margin)}
+.facts2 b{display:block;font-weight:700}
+.facts2 small{display:block;color:var(--muted);font-size:13px}
+.hero-photo{position:relative;display:flex;flex-direction:column;align-items:center}
+.hero-photo .photo{margin:0;width:min(330px,80%);background:var(--surface);padding:12px 12px 14px;border:1px solid var(--rule);border-radius:4px;transform:rotate(2deg);box-shadow:0 22px 44px -28px rgba(40,36,100,.45)}
+.hero-photo .photo img{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;border-radius:2px}
+.margin-note{align-self:flex-end;margin:0 0 14px;width:max-content;max-width:100%;transform:rotate(-3deg);font-family:var(--hand);font-weight:700;font-size:clamp(21px,2.3vw,27px);line-height:1.1;text-align:right;color:var(--ink)}
 .margin-note s{text-decoration:none;background:linear-gradient(var(--margin),var(--margin)) 0 56%/100% 2.5px no-repeat;opacity:.85}
 .margin-note span{display:block;margin-top:4px;color:var(--margin)}
+.hand-tag{margin:18px 0 0;align-self:flex-start;transform:rotate(-4deg);font-family:var(--hand);font-weight:700;font-size:clamp(24px,2.6vw,30px);color:var(--pink);line-height:1.1}
+.hand-tag u{text-decoration:none;background:linear-gradient(var(--pink),var(--pink)) 0 92%/100% 2.5px no-repeat}
+@media (max-width:860px){ .hero-photo{margin-top:8px} .hand-tag{align-self:center} .margin-note{align-self:center;text-align:center} }
+
+.dir-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.dir{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:22px}
+.dir-ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--hl);color:var(--ink)}
+.dir h3{font-size:21px}
+.dir .q{font-weight:700;line-height:1.45}
+.dir p{font-size:15.5px;line-height:1.6;color:var(--muted)}
+.dir .q{color:var(--ink)}
+.dir-more{margin-top:auto;font-weight:700;color:var(--cta);text-decoration:none}
+@media (max-width:1000px){ .dir-grid{grid-template-columns:1fr 1fr} }
+@media (max-width:560px){ .dir-grid{grid-template-columns:1fr} }
+
+.lesson-lead{margin-top:18px}
+.how-points{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:10px}
+.how-points li{display:flex;gap:10px;font-weight:600}
+.how-points li::before{content:"";flex:none;width:14px;height:8px;margin-top:9px;border-left:2.5px solid var(--margin);border-bottom:2.5px solid var(--margin);transform:rotate(-45deg)}
+.lang-note{margin:26px 0 24px;font-family:var(--display);font-size:clamp(20px,2.2vw,24px);line-height:1.4;padding-left:18px;border-left:3px solid var(--pink)}
+
+.sec-lead{max-width:46em;color:var(--muted);margin:-24px 0 32px}
+.peek-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.peek{display:grid;grid-template-columns:44% 1fr;gap:18px;background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:16px;align-items:center}
+.peek-img{display:block;border-radius:10px;overflow:hidden;border:1px solid var(--rule)}
+.peek-img img{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:cover}
+.peek-body{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.peek-body .meta{font-size:13px;color:var(--muted)}
+.peek-body p{font-size:15px;line-height:1.55}
+.peek-body .btn{margin-top:8px}
+@media (max-width:900px){ .peek-grid{grid-template-columns:1fr} }
+@media (max-width:480px){ .peek{grid-template-columns:1fr} }
+
+.reviews.three{grid-template-columns:repeat(3,1fr)}
+.reviews.three .review blockquote{font-size:15.5px}
+.review figcaption span{display:block;margin:2px 0 0}
+@media (max-width:900px){ .reviews.three{grid-template-columns:1fr} }
+
+.club{display:flex;flex-direction:column;gap:14px;align-items:flex-start;background:var(--surface);border:1.5px dashed var(--pink);border-radius:14px;padding:28px}
+.soon-tag{font-family:var(--display);font-size:clamp(24px,2.6vw,30px);line-height:1.2}
+.club-note{font-size:13px;color:var(--muted)}
+.word-more{margin-top:16px;font-weight:700}
+.word-more a{color:var(--cta);text-decoration:none;border-bottom:2px solid var(--pink)}
+
+footer .foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
+.foot-links{display:flex;flex-wrap:wrap;gap:8px 20px}
+.foot-links a{color:var(--muted);text-decoration:none}
+.foot-links a:hover{color:var(--ink)}
+.profiles{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.profiles a{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--rule);border-radius:999px;color:var(--ink);text-decoration:none;font-weight:600;font-size:13px;background:var(--surface)}
+.profiles a:hover{border-color:var(--muted)}
+.profiles .ic{width:17px;height:17px}
+@media (max-width:640px){ .profiles{margin-left:0} }
+.lesson-main > .btn{align-self:flex-start;width:auto}
+.hero-grid{grid-template-columns:1.25fr .75fr}
+.hero h1{font-size:clamp(38px,5vw,62px)}
+@media (max-width:860px){ .hero-grid{grid-template-columns:1fr} }
+@media (max-width:640px){ .hero::before{left:8px} }

@@ -62,6 +62,17 @@ window.SITE = {
     // copy only the link inside src="..."). Empty = show email instead.
     feedbackForm: "",
 
+    // SPEAKING CLUB: paste the Google Form link here. Empty = the button opens Telegram.
+    clubForm: "",
+    // Telegram CHANNEL link for the "word with a history" card. Empty = no link.
+    telegramChannel: "",
+    // Profiles shown at the bottom of every page. Empty = hidden.
+    profiles: {
+      tutorful: "https://tutorful.co.uk/tutors/w2ewb4mw",
+      preply: "https://preply.com/en/tutor/2125253",
+      threads: "https://www.threads.com/@_jesku_"
+    },
+
     // Show the free level test? true / false
     showTest: true
   },
@@ -101,7 +112,7 @@ window.SITE = {
       title: "Online English Tutor Jelena Skudra | GCSE & IELTS Preparation, Kids & Adults",
       description: "Online English lessons with a UK-accredited teacher: speaking-focused lessons for children and adults, GCSE English and IELTS preparation, essay checking. Free level test and online booking."
     },
-    nav: { about: "About", lessons: "Lessons", prices: "Prices", reviews: "Reviews", payment: "Payment", test: "Test & FAQ", start: "How to start", book: "Book a lesson" },
+    nav: { about: "About me", lessons: "Lessons", boards: "Lesson examples", prices: "Prices", reviews: "Reviews", payment: "Payment", test: "Test & FAQ", start: "How to start", book: "Book a lesson" },
 
     hero: {
       eyebrow: "Online English tutor · GCSE · IELTS",
@@ -161,8 +172,9 @@ window.SITE = {
       title: "What students say",
       // Reviews are shown as written. featured: true = bigger card.
       items: [
-        { name: "Pavel", date: "June 2026", featured: true, text: "Jelena is a wonderful tutor, not only for improving your general English level and preparing for exams, but also for more specific goals such as university admissions and interviews. Her lessons are both effective and enjoyable, and she creates a friendly and supportive atmosphere. With her help, I was able to improve my English quickly, gain confidence, and get admitted to the university I wanted to attend." },
-        { name: "Анна, IELTS", date: "", featured: true, text: "Я была уверена, что слушание сдам стабильно на 5, а больше всего разочаровал спикинг, но письмо с чтением — правда хороший результат. Набрала более высокую оценку там, где и не думала. Спасибо вам за вашу работу! Без вас я бы даже такого уровня не достигла. Вы открыли мне другой английский, который приятно и интересно изучать, а не чувствовать страх, когда его видишь." },
+        { name: "Pavel", date: "June 2026", featured: true, home: true, text: "Jelena is a wonderful tutor, not only for improving your general English level and preparing for exams, but also for more specific goals such as university admissions and interviews. Her lessons are both effective and enjoyable, and she creates a friendly and supportive atmosphere. With her help, I was able to improve my English quickly, gain confidence, and get admitted to the university I wanted to attend." },
+        { name: "Анна, IELTS", date: "", featured: true, home: true, text: "Я была уверена, что слушание сдам стабильно на 5, а больше всего разочаровал спикинг, но письмо с чтением — правда хороший результат. Набрала более высокую оценку там, где и не думала. Спасибо вам за вашу работу! Без вас я бы даже такого уровня не достигла. Вы открыли мне другой английский, который приятно и интересно изучать, а не чувствовать страх, когда его видишь." },
+        { name: "Bob Simpson", role: "Head of English, British school", date: "", featured: true, home: true, text: "A committed, experienced and sensitive teacher, Jelena has the expertise and the patience to be a wholly effective tutor. She has a good range of resources and a positive and supportive demeanour." },
         { name: "Inese", date: "February 2026", text: "Focused on my needs." },
         { name: "Anna", date: "July 2025", text: "She explains clearly." },
         { name: "Armands", date: "April 2025", text: "Many moments were clear and understandable :)" },
@@ -224,6 +236,57 @@ window.SITE = {
       test: { metaTitle: "Free English Level Test (A1–C2) & FAQ | Jelena Skudra", description: "Find out your English level in 3 minutes: 18 questions from beginner to advanced, instant CEFR result (A1–C2). Free, no sign-up. Plus answers to common questions about lessons.", title: "Level test and questions", lead: "Check your English level in 3 minutes, and find answers to common questions." },
       start: { metaTitle: "How to Start Online English Lessons · Jelena Skudra", description: "Three simple steps: book a first lesson online, we find your topics and level, then lessons planned around your interests and goals.", title: "How to start", lead: "Three simple steps to your first lesson." },
       book: { metaTitle: "Book an Online English Lesson · Jelena Skudra", description: "Choose a free time in Jelena’s calendar and book an online English lesson. You’ll get a Google Meet link and a reminder by email.", title: "Book a lesson", lead: "Choose a free time in my calendar. You’ll get a confirmation email with a video link." }
+    },
+
+    /* ---------- HOME PAGE (new layout) ---------- */
+    front: {
+      eyebrow: "Online English tutor · for children, teens and adults · GCSE · IELTS",
+      subtitle: "I teach you not just to speak correctly, but to sound natural.",
+      text: "I moved to England in 2010, studied and worked here, so I teach the English people actually speak. In lessons we talk a lot, and I adapt topics, tasks and pace to your goals and interests.",
+      bookButton: "Book a lesson",
+      pricesButton: "Prices",
+      moreButton: "How lessons work",
+      facts: [
+        { icon: "cap", title: "Two British degrees", sub: "Nottingham, Birmingham" },
+        { icon: "clock", title: "7 years of teaching", sub: "" },
+        { icon: "cert", title: "TEFL teaching diploma", sub: "Level 5, recognised in the UK" }
+      ],
+      photoAlt: "Jelena Skudra",
+      marginWrong: "I lived in London since 2010",
+      marginRight: "I have lived in London since 2010",
+      directions: {
+        title: "What we can work on",
+        more: "More",
+        items: [
+          { icon: "chat", title: "Conversational English", q: "Studied English for years but still get lost in conversation?", text: "We’ll talk a lot, build your vocabulary step by step and learn to express your thoughts naturally and confidently.", link: "" },
+          { icon: "book", title: "GCSE English", q: "Your child is at a British school but doesn’t know how to analyse language and structure?", text: "We’ll work out what examiners expect and learn to find quotations and explain them. Tricky points can be clarified in Russian.", link: "" },
+          { icon: "cap", title: "IELTS", q: "Need a certain band score for university, work or a visa?", text: "We’ll go through the exam format and focus on what will raise your score.", link: "" },
+          { icon: "sprout", title: "English for children (6+)", q: "Want your child not just to learn rules but to actually use English?", text: "Textbook, interactive games and speaking practice: we speak English as much as possible and use Russian only when it’s really needed.", link: "" }
+        ]
+      },
+      how: {
+        title: "How lessons work",
+        text: "My lessons focus on speaking. I use textbooks written by professional teams and add your interests and plenty of conversation. You answer questions on the lesson topic, I listen and note your mistakes, and we fix them step by step.",
+        points: ["Lots of speaking practice", "Vocabulary, grammar and all four skills: speaking, reading, writing, listening", "A flexible, not rigid, structure"],
+        langNote: "We speak English as much as possible, but use Russian when it’s really needed.",
+        button: "More about lessons"
+      },
+      peek: {
+        title: "Take a look at a lesson",
+        text: "Lessons are based on textbooks, but I add more speaking practice and choose extra materials for your goals and interests. Sometimes I create interactive boards and games myself. Here are two examples you can open and try on your own.",
+        all: "All lessons",
+        open: "Open the lesson",
+        cards: [
+          { title: "Falling for Autumn", meta: "B1 · Reading · Speaking · Grammar", text: "We read a text about autumn, discuss it and practise the present perfect in conversation.", img: "lessons/previews/autumn.jpg", href: "/lessons/autumn#demo" },
+          { title: "Language Features Detective", meta: "GCSE English Language", text: "We look for language features in a text and learn to explain their effect on the reader.", img: "lessons/previews/detective.jpg", href: "/lessons/detective-demo.html" }
+        ]
+      },
+      reviewsTitle: "What students say",
+      reviewsAll: "All reviews",
+      wordMore: "More stories like this on my Telegram channel",
+      club: { title: "Speaking club for adults — coming soon", text: "Level B1–B2. The first meetings are free.", button: "I’m interested", note: "I only need your contact to tell you when the club starts." },
+      start: { title: "Prices and booking", text: "The first session is a 30-minute introduction: we talk about your goals and make a plan. 50% off.", book: "Book a lesson", prices: "Prices" },
+      footer: { test: "Level test and questions", payment: "Payment", contacts: "Contacts" }
     },
 
     home: {
@@ -321,7 +384,7 @@ window.SITE = {
       title: "Репетитор английского онлайн — Елена Скудра | GCSE, IELTS, дети и взрослые",
       description: "Уроки английского онлайн с преподавателем из Англии: разговорный английский, подготовка к GCSE и IELTS, занятия для детей от 5 лет и взрослых. Британская аккредитация, 7 лет опыта. Бесплатный тест уровня и онлайн-запись."
     },
-    nav: { about: "Обо мне", lessons: "Занятия", prices: "Цены", reviews: "Отзывы", payment: "Оплата", test: "Тест и вопросы", start: "Как начать", book: "Записаться" },
+    nav: { about: "Обо мне", lessons: "Занятия", boards: "Уроки", prices: "Цены", reviews: "Отзывы", payment: "Оплата", test: "Тест и вопросы", start: "Как начать", book: "Записаться" },
 
     hero: {
       eyebrow: "Репетитор английского онлайн · GCSE · IELTS",
@@ -381,8 +444,9 @@ window.SITE = {
       title: "Отзывы учеников",
       // Reviews are shown as written. featured: true = bigger card.
       items: [
-        { name: "Pavel", date: "June 2026", featured: true, text: "Jelena is a wonderful tutor, not only for improving your general English level and preparing for exams, but also for more specific goals such as university admissions and interviews. Her lessons are both effective and enjoyable, and she creates a friendly and supportive atmosphere. With her help, I was able to improve my English quickly, gain confidence, and get admitted to the university I wanted to attend." },
-        { name: "Анна, IELTS", date: "", featured: true, text: "Я была уверена, что слушание сдам стабильно на 5, а больше всего разочаровал спикинг, но письмо с чтением — правда хороший результат. Набрала более высокую оценку там, где и не думала. Спасибо вам за вашу работу! Без вас я бы даже такого уровня не достигла. Вы открыли мне другой английский, который приятно и интересно изучать, а не чувствовать страх, когда его видишь." },
+        { name: "Pavel", date: "June 2026", featured: true, home: true, text: "Jelena is a wonderful tutor, not only for improving your general English level and preparing for exams, but also for more specific goals such as university admissions and interviews. Her lessons are both effective and enjoyable, and she creates a friendly and supportive atmosphere. With her help, I was able to improve my English quickly, gain confidence, and get admitted to the university I wanted to attend." },
+        { name: "Анна, IELTS", date: "", featured: true, home: true, text: "Я была уверена, что слушание сдам стабильно на 5, а больше всего разочаровал спикинг, но письмо с чтением — правда хороший результат. Набрала более высокую оценку там, где и не думала. Спасибо вам за вашу работу! Без вас я бы даже такого уровня не достигла. Вы открыли мне другой английский, который приятно и интересно изучать, а не чувствовать страх, когда его видишь." },
+        { name: "Bob Simpson", role: "руководитель кафедры английского языка, британская школа", date: "", featured: true, home: true, text: "A committed, experienced and sensitive teacher, Jelena has the expertise and the patience to be a wholly effective tutor. She has a good range of resources and a positive and supportive demeanour." },
         { name: "Inese", date: "February 2026", text: "Focused on my needs." },
         { name: "Anna", date: "July 2025", text: "She explains clearly." },
         { name: "Armands", date: "April 2025", text: "Many moments were clear and understandable :)" },
@@ -442,6 +506,57 @@ window.SITE = {
       test: { metaTitle: "Бесплатный тест на уровень английского (A1–C2) и ответы на вопросы", description: "Узнайте свой уровень английского за 3 минуты: 18 вопросов от начального до продвинутого, результат по шкале CEFR (A1–C2) сразу. Бесплатно и без регистрации. А также ответы на частые вопросы об уроках.", title: "Тест уровня и вопросы", lead: "Проверьте свой уровень английского за 3 минуты и найдите ответы на частые вопросы." },
       start: { metaTitle: "Как начать заниматься английским онлайн · Елена Скудра", description: "Три простых шага: запишитесь на первый урок онлайн, мы найдём ваши темы и уровень, а дальше — уроки под ваши интересы и цели.", title: "Как начать", lead: "Три простых шага до первого урока." },
       book: { metaTitle: "Записаться на урок английского онлайн · Елена Скудра", description: "Выберите свободное время в календаре и запишитесь на онлайн-урок английского. Ссылка на Google Meet и напоминание придут на почту.", title: "Записаться на урок", lead: "Выберите свободное время в моём календаре. На почту придёт подтверждение со ссылкой на видеозвонок." }
+    },
+
+    /* ---------- ГЛАВНАЯ (новая) ---------- */
+    front: {
+      eyebrow: "Репетитор английского онлайн · для детей, подростков и взрослых · GCSE · IELTS",
+      subtitle: "Учу не только говорить правильно, но и звучать естественно.",
+      text: "В 2010 году я переехала в Англию, здесь училась и работала — поэтому учу тому английскому, на котором говорят на самом деле. На занятиях мы много разговариваем, а темы, задания и темп обучения я подстраиваю под ваши цели и интересы.",
+      bookButton: "Записаться на урок",
+      pricesButton: "Цены",
+      moreButton: "Как проходят занятия",
+      facts: [
+        { icon: "cap", title: "Два британских диплома", sub: "Ноттингем, Бирмингем" },
+        { icon: "clock", title: "7 лет преподавания", sub: "" },
+        { icon: "cert", title: "Диплом преподавателя TEFL", sub: "уровень 5, признан в Великобритании" }
+      ],
+      photoAlt: "Елена Скудра",
+      marginWrong: "I lived in London since 2010",
+      marginRight: "I have lived in London since 2010",
+      directions: {
+        title: "Направления",
+        more: "Подробнее",
+        items: [
+          { icon: "chat", title: "Разговорный английский", q: "Учили английский годами, но в разговоре всё равно теряетесь?", text: "Будем много говорить, постепенно расширять словарный запас и учиться выражать мысли естественно и уверенно.", link: "" },
+          { icon: "book", title: "GCSE English", q: "Ребёнок учится в британской школе, но не понимает, как анализировать язык и структуру текста?", text: "Разберёмся, чего ждут экзаменаторы, научимся находить цитаты и объяснять их. Сложное можно уточнить по-русски.", link: "" },
+          { icon: "cap", title: "IELTS", q: "Нужен определённый балл для университета, работы или визы?", text: "Разберём формат экзамена и сосредоточимся на том, что поднимет именно ваш балл.", link: "" },
+          { icon: "sprout", title: "Английский для детей (от 6 лет)", q: "Хотите, чтобы ребёнок не просто учил правила, а пользовался английским?", text: "Учебник, интерактивные игры и разговорная практика — стараемся говорить как можно больше по-английски, но используем и русский, когда это необходимо.", link: "" }
+        ]
+      },
+      how: {
+        title: "Как проходят занятия",
+        text: "Я преподаю с упором на живую речь: беру за основу учебники, созданные профессиональными методистами, и дополняю их вашими интересами и разговорной практикой. Вы отвечаете на вопросы по теме урока, а я слушаю, отмечаю ошибки, и мы постепенно их исправляем.",
+        points: ["Много разговорной практики", "Лексика, грамматика и все навыки: речь, чтение, письмо, слушание", "Гибкая, а не жёсткая структура"],
+        langNote: "Стараемся говорить как можно больше по-английски, но используем и русский, когда это необходимо.",
+        button: "Подробнее о занятиях"
+      },
+      peek: {
+        title: "Загляните на урок",
+        text: "Занятия строятся на основе учебников, но я добавляю больше разговорной практики и подбираю дополнительные материалы под ваши цели и интересы. Иногда я сама создаю интерактивные доски и игры — вот два примера, их можно открыть и попробовать самостоятельно.",
+        all: "Все уроки",
+        open: "Открыть урок",
+        cards: [
+          { title: "Falling for Autumn", meta: "B1 · чтение · разговор · грамматика", text: "Читаем текст об осени, обсуждаем его и тренируем Present Perfect в речи.", img: "lessons/previews/autumn.jpg", href: "/lessons/autumn#demo" },
+          { title: "Language Features Detective", meta: "GCSE English Language", text: "Ищем языковые приёмы в тексте и учимся объяснять, как они действуют на читателя.", img: "lessons/previews/detective.jpg", href: "/lessons/detective-demo.html" }
+        ]
+      },
+      reviewsTitle: "Отзывы учеников",
+      reviewsAll: "Все отзывы",
+      wordMore: "Больше таких историй в моём Телеграм-канале",
+      club: { title: "Разговорный клуб для взрослых — скоро", text: "Уровень B1–B2, первые встречи бесплатные.", button: "Хочу в клуб", note: "Контакт нужен только чтобы сообщить о запуске клуба." },
+      start: { title: "Цены и запись", text: "Первое занятие — 30 минут знакомства: обсудим ваши цели и составим план. Скидка 50%.", book: "Записаться на урок", prices: "Цены" },
+      footer: { test: "Тест и вопросы", payment: "Оплата", contacts: "Контакты" }
     },
 
     home: {

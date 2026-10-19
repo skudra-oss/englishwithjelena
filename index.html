@@ -13,17 +13,18 @@
 <script>try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 </head>
 <body data-page="home">
+</head>
+<body data-page="home">
 
 <header>
   <div class="wrap bar">
     <a class="logo" href="index.html">Jelena Skudra<span>.</span></a>
     <nav class="links" aria-label="Main">
-      <a href="index.html#about" data-t="nav.about">About</a>
+      <a href="./#directions" data-t="nav.lessons">Lessons</a>
       <a href="prices.html" class="price-nav" data-t="nav.prices">Prices</a>
-      <a href="start.html" data-t="nav.start">How to start</a>
-      <a href="test.html" class="test-nav" data-t="nav.test">Test & FAQ</a>
+      <a href="/lessons/" data-t="nav.boards">Lesson examples</a>
       <a href="reviews.html" data-t="nav.reviews">Reviews</a>
-      <a href="payment.html" data-t="nav.payment">Payment</a>
+      <a href="about.html" data-t="nav.about">About me</a>
     </nav>
     <div class="lang" role="group" aria-label="Language">
       <button type="button" id="lang-ru" data-lang="ru" aria-pressed="false">RU</button>
@@ -41,111 +42,47 @@
   <div class="hero">
     <div class="wrap hero-grid">
       <div>
-        <p class="eyebrow" data-t="hero.eyebrow"></p>
+        <p class="eyebrow" data-t="front.eyebrow"></p>
         <h1 data-t="hero.title" data-mark></h1>
-        <p class="tagline" data-t="hero.tagline"></p>
-        <p class="lead" data-t="hero.text"></p>
+        <p class="subtitle" data-t="front.subtitle"></p>
+        <p class="lead" data-t="front.text"></p>
         <div class="cta">
-          <a class="btn btn-hl" href="book.html" data-t="hero.bookButton"></a>
-          <a class="btn btn-line" href="#lesson" data-t="hero.moreButton"></a>
+          <a class="btn btn-hl btn-lg" href="book.html" data-t="front.bookButton"></a>
+          <a class="btn btn-line" href="prices.html" data-t="front.pricesButton"></a>
+          <a class="btn btn-line" href="about.html#lesson" data-t="front.moreButton"></a>
         </div>
-        <ul class="facts" id="facts"></ul>
+        <ul class="facts2" id="facts2"></ul>
       </div>
-      <div class="art-box" aria-hidden="true">
-        <p class="margin-note" lang="en"><s>I lived in London since 2010</s><span>I have lived in London since 2010</span></p>
-        <svg class="art" viewBox="0 0 460 400" role="img">
-          <ellipse class="shadow" cx="228" cy="362" rx="190" ry="16"/>
-          <!-- bottom book -->
-          <rect class="band" x="44" y="300" width="340" height="54" rx="5"/>
-          <rect class="paper-edge" x="372" y="306" width="8" height="42" rx="2"/>
-          <rect class="red" x="84" y="300" width="10" height="54"/>
-          <rect class="red" x="100" y="300" width="4" height="54"/>
-          <text class="spine-text" x="130" y="332">HISTORY OF ENGLISH</text>
-          <!-- middle book -->
-          <rect class="mid" x="74" y="254" width="292" height="46" rx="5"/>
-          <rect class="paper-edge" x="355" y="260" width="7" height="34" rx="2"/>
-          <text class="spine-text" x="104" y="282">STORIES · РАССКАЗЫ</text>
-          <!-- top book -->
-          <rect class="blue" x="58" y="214" width="316" height="40" rx="5"/>
-          <rect class="paper-edge" x="364" y="220" width="7" height="28" rx="2"/>
-          <text class="spine-text dark" x="92" y="239">GRAMMAR IN USE</text>
-          <!-- open notebook -->
-          <g transform="rotate(-5 230 150)">
-            <rect class="shadow" x="92" y="104" width="284" height="116" rx="4"/>
-            <rect class="page" x="84" y="94" width="142" height="116" rx="3"/>
-            <rect class="page" x="226" y="94" width="142" height="116" rx="3"/>
-            <line class="line" x1="94" y1="126" x2="218" y2="126"/><line class="line" x1="94" y1="148" x2="218" y2="148"/>
-            <line class="line" x1="94" y1="170" x2="218" y2="170"/><line class="line" x1="94" y1="192" x2="218" y2="192"/>
-            <line class="line" x1="234" y1="126" x2="360" y2="126"/><line class="line" x1="234" y1="148" x2="360" y2="148"/>
-            <line class="line" x1="234" y1="170" x2="360" y2="170"/><line class="line" x1="234" y1="192" x2="360" y2="192"/>
-            <line class="mline" x1="106" y1="98" x2="106" y2="206"/>
-            <line class="mline" x1="248" y1="98" x2="248" y2="206"/>
-            <text class="write" x="114" y="122" font-size="22">Hello!</text>
-            <text class="write blue-ink" x="114" y="145" font-size="18">Привет!</text>
-            <text class="write" x="114" y="167" font-size="17">Sveiki! Hola!</text>
-            <text class="write blue-ink" x="256" y="122" font-size="18">I have been</text>
-            <text class="write blue-ink" x="256" y="145" font-size="18">learning…</text>
-            <text class="write" x="256" y="167" font-size="17">1066 → today</text>
-            <path d="M256 176 q30 8 70 0" stroke="var(--margin)" stroke-width="2" fill="none"/>
-          </g>
-          <!-- pencil -->
-          <g transform="rotate(-24 360 200)">
-            <rect class="hl" x="300" y="192" width="120" height="14" rx="2"/>
-            <rect class="ink" x="300" y="192" width="120" height="3" opacity=".15"/>
-            <rect class="red" x="286" y="192" width="14" height="14" rx="3"/>
-            <polygon points="420,192 440,199 420,206" fill="#E9CFA3"/>
-            <polygon points="433,197 440,199 433,201" class="ink"/>
-          </g>
-          <!-- sticky note -->
-          <g transform="rotate(6 90 70)">
-            <rect class="hl" x="40" y="26" width="100" height="84" rx="3"/>
-            <text class="note-text" x="56" y="62" font-size="24">A1 → C2</text>
-            <text class="note-text" x="56" y="90" font-size="19">all ages!</text>
-          </g>
-        </svg>
+      <div class="hero-photo">
+        <p class="margin-note" lang="en"><s id="m-wrong"></s><span id="m-right"></span></p>
+        <figure class="photo">
+          <picture>
+            <source srcset="jelena.webp" type="image/webp">
+            <img src="jelena.jpg" width="900" height="1200" data-t-alt="front.photoAlt" alt="Jelena Skudra">
+          </picture>
+        </figure>
+        <p class="hand-tag" lang="en">English that works <u>with</u> your brain</p>
       </div>
     </div>
   </div>
 
-
-  <section id="about">
-    <div class="wrap about">
-      <div>
-        <h2 data-t="about.title"></h2>
-        <span class="note" data-t="about.note"></span>
-        <figure class="photo">
-          <picture>
-            <source srcset="jelena.webp" type="image/webp">
-            <img src="jelena.jpg" width="900" height="1200" loading="lazy" data-t-alt="about.photoAlt" alt="Jelena Skudra">
-          </picture>
-          <figcaption data-t="about.photoCaption"></figcaption>
-        </figure>
-      </div>
-      <div class="about-text" id="about-text"></div>
-    </div>
-  </section>
-
-  <section id="offer" class="alt">
+  <section id="directions">
     <div class="wrap">
-      <div class="sec-head"><h2 data-t="offer.title"></h2></div>
-      <div class="offer-grid" id="offer-list"></div>
-      <p class="more-link"><a href="prices.html" data-t="home.offerMore"></a></p>
+      <div class="sec-head"><h2 data-t="front.directions.title"></h2></div>
+      <div class="dir-grid" id="dir-list"></div>
     </div>
   </section>
 
-  <section id="lesson">
+  <section id="lesson" class="alt">
     <div class="wrap lesson-grid">
       <div class="lesson-main">
-        <h2 data-t="lesson.title"></h2>
-        <div class="lesson-text" id="lesson-text"></div>
-        <h3 data-t="lesson.flexTitle"></h3>
-        <p class="muted-p" data-t="lesson.flex"></p>
+        <h2 data-t="front.how.title"></h2>
+        <p class="lesson-lead" data-t="front.how.text"></p>
+        <ul class="how-points" id="how-points"></ul>
+        <p class="lang-note" data-t="front.how.langNote"></p>
+        <a class="btn btn-line" href="about.html#lesson" data-t="front.how.button"></a>
       </div>
       <aside class="lesson-side">
-        <div class="expect">
-          <p class="eyebrow" data-t="lesson.expectTitle"></p>
-          <ul id="expect-list"></ul>
-        </div>
         <figure class="example">
           <p class="eyebrow" data-t="lesson.exampleLabel"></p>
           <blockquote data-t="lesson.example"></blockquote>
@@ -154,34 +91,58 @@
     </div>
   </section>
 
-  <section id="languages" class="alt">
+  <section id="peek">
+    <div class="wrap">
+      <div class="sec-head"><h2 data-t="front.peek.title"></h2></div>
+      <p class="sec-lead" data-t="front.peek.text"></p>
+      <div class="peek-grid" id="peek-list"></div>
+      <p class="more-link"><a href="/lessons/" data-t="front.peek.all"></a></p>
+    </div>
+  </section>
+
+  <section id="home-reviews" class="alt">
+    <div class="wrap">
+      <div class="sec-head"><h2 data-t="front.reviewsTitle"></h2></div>
+      <div class="reviews three" id="home-reviews-list"></div>
+      <p class="more-link"><a href="reviews.html" data-t="front.reviewsAll"></a></p>
+    </div>
+  </section>
+
+  <section id="extras">
     <div class="wrap duo">
-      <div>
-        <h2 data-t="languages.title"></h2>
-        <p class="lang-text" data-t="languages.text"></p>
-        <ul class="chips" id="chips"></ul>
-      </div>
       <article class="card">
         <p class="eyebrow" data-t="word.label"></p>
         <p class="word" data-t="word.word"></p>
         <p class="origin" data-t="word.origin"></p>
         <p class="story" data-t="word.story"></p>
+        <p class="word-more" id="word-more-box"><a id="word-more" target="_blank" rel="noopener" data-t="front.wordMore"></a></p>
+      </article>
+      <article class="club">
+        <p class="soon-tag" data-t="front.club.title"></p>
+        <p data-t="front.club.text"></p>
+        <a class="btn btn-hl" id="club-btn" target="_blank" rel="noopener" data-t="front.club.button"></a>
+        <p class="club-note" data-t="front.club.note"></p>
       </article>
     </div>
   </section>
 
   <section class="band cta-band">
     <div class="wrap after-pay">
-      <div><h2 class="h-sm" data-t="book.title"></h2><p data-t="book.text"></p></div>
-      <div class="cta"><a class="btn btn-hl" href="book.html" data-t="hero.bookButton"></a><a class="btn btn-line light" href="prices.html" data-t="nav.prices"></a></div>
+      <div><h2 class="h-sm" data-t="front.start.title"></h2><p data-t="front.start.text"></p></div>
+      <div class="cta"><a class="btn btn-hl" href="book.html" data-t="front.start.book"></a><a class="btn btn-line light" href="prices.html" data-t="front.start.prices"></a></div>
     </div>
   </section>
 </main>
 
 <footer>
-  <div class="wrap">
+  <div class="wrap foot">
     <span>© <span id="year">2026</span> Jelena Skudra</span>
-    <span data-t="footer"></span>
+    <nav class="foot-links" aria-label="More">
+      <a href="test.html" data-t="front.footer.test">Level test and questions</a>
+      <a href="payment.html" data-t="front.footer.payment">Payment</a>
+      <a href="book.html#contact-box" data-t="front.footer.contacts">Contacts</a>
+    </nav>
+    <div class="profiles" id="profiles"></div>
   </div>
 </footer>
 

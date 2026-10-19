@@ -22,6 +22,7 @@ const SITE = sandbox.window.SITE;
 
 const pages = [
   { tpl: "index.html", slug: "", meta: (T) => T.meta },
+  { tpl: "about.html", slug: "about", meta: (T) => ({ title: T.pages.about.metaTitle, description: T.pages.about.description }) },
   { tpl: "start.html", slug: "start", meta: (T) => ({ title: T.pages.start.metaTitle, description: T.pages.start.description }) },
   { tpl: "prices.html", slug: "prices", meta: (T) => ({ title: T.pages.prices.metaTitle, description: T.pages.prices.description }) },
   { tpl: "test.html", slug: "test", meta: (T) => ({ title: T.pages.test.metaTitle, description: T.pages.test.description }) },
