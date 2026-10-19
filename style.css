@@ -529,3 +529,8 @@ footer .foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
   #directions .dir .q{font-size:clamp(16px,1.3vw,19px)}
   #directions .dir p{font-size:clamp(15px,1.15vw,17.5px)}
 }
+/* word card: plain card, no ruled lines */
+#extras .card{background:var(--surface);background-image:none;border-radius:14px;transform:none;box-shadow:0 18px 40px -30px rgba(40,36,100,.35)}
+#extras .card::before{display:none}
+#extras .card .word{margin-top:12px}
+#extras .card .story{line-height:1.7}
