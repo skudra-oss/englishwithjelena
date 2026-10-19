@@ -254,3 +254,16 @@
   });
   render();
 })();
+
+/* Day / night switch: remembers the choice; otherwise follows the device setting */
+(function(){
+  var b = document.getElementById("theme-btn");
+  if (!b) return;
+  b.addEventListener("click", function(){
+    var root = document.documentElement;
+    var cur = root.getAttribute("data-theme") || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    var next = cur === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch(e){}
+  });
+})();

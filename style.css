@@ -314,3 +314,20 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media (max-width:560px){ .pay-price{min-width:0} }
 .pay-price small{margin-top:6px;white-space:nowrap}
 .offer .price{text-align:right}
+
+/* day / night switch */
+.theme-btn{display:grid;place-items:center;width:38px;height:38px;flex:none;border:1px solid var(--rule);border-radius:999px;background:var(--surface);color:var(--ink);cursor:pointer;padding:0}
+.theme-btn:hover{border-color:var(--muted)}
+.theme-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .i-moon{fill:currentColor;stroke:none}
+.theme-btn .i-sun{display:none}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .theme-btn .i-sun{display:block} :root:not([data-theme="light"]) .theme-btn .i-moon{display:none} }
+:root[data-theme="dark"] .theme-btn .i-sun{display:block}
+:root[data-theme="dark"] .theme-btn .i-moon{display:none}
+@media (max-width:1000px){ .bar .lang{margin-left:auto} }
+
+/* teacher's correction in the margin of the hero */
+.art-box{position:relative}
+.margin-note{margin:0 2% 8px auto;width:max-content;max-width:100%;white-space:nowrap;transform:rotate(-3deg);font-family:var(--hand);font-weight:700;font-size:clamp(21px,2.3vw,27px);line-height:1.1;text-align:right;color:var(--ink)}
+.margin-note s{text-decoration:none;background:linear-gradient(var(--margin),var(--margin)) 0 56%/100% 2.5px no-repeat;opacity:.85}
+.margin-note span{display:block;margin-top:4px;color:var(--margin)}
