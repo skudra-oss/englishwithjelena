@@ -467,3 +467,5 @@ footer .foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
 
 .margin-note{margin-bottom:28px}
 .bigben{width:116px}
+.dir-ic, .dir:nth-child(n) .dir-ic{width:96px;height:96px;margin-bottom:4px}
+.doodle{width:96px;height:96px;stroke-width:1.3}
