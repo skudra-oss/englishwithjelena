@@ -70,7 +70,7 @@ window.SITE = {
     profiles: {
       tutorful: "https://tutorful.co.uk/tutors/w2ewb4mw",
       preply: "https://preply.com/en/tutor/2125253",
-      threads: "https://www.threads.com/@_jesku_"
+      threads: ""
     },
 
     // Show the free level test? true / false
