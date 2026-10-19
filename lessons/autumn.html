@@ -719,6 +719,9 @@ let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTime
   function newCode() { const a = new Uint32Array(6); crypto.getRandomValues(a); return [...a].map(n => ABC[n % ABC.length]).join(''); }
   const linkFor = c => location.origin + location.pathname + '#' + c;
 
+  // the demo link from the lessons page (lessons/autumn#demo) skips the code screen
+  if (location.hash === '#demo') { wrap.hidden = true; return; }
+
   // a link with a code in it opens straight on the student side
   const fromLink = clean(location.hash.slice(1));
   if (valid(fromLink)) { $('jIn').value = fromLink; setTimeout(() => $('jJoin').focus(), 50); }

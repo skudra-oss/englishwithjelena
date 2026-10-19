@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Interactive lessons | English with Jelena</title>
+<meta name="description" content="Try interactive English lessons from English with Jelena: a B1 speaking board and GCSE English Language practice.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Caveat:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F8F7FC;--surface:#FFFFFF;--ink:#1E1C40;--muted:#5D5876;--rule:#E3E0EE;
+  --cta:#454192;--cta-ink:#FFFFFF;--cta-shadow:#2A2766;--pink:#E06C9F;--teal:#2D7FA2;--coral:#E17967;
+  --autumn:#FBEBDD;--autumn-ink:#9A4317;--gcse:#E7F1F6;--gcse-ink:#1F6383;--soon:#F1EFF8;
+  --display:"Prata",Georgia,"Times New Roman",serif;
+  --body:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --hand:"Caveat","Segoe Print",cursive;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#12112A;--surface:#1C1A3A;--ink:#F1EFF8;--muted:#AEA8C4;--rule:#34315C;
+    --cta:#E06C9F;--cta-ink:#12112A;--cta-shadow:#8C3A61;
+    --autumn:#3A2620;--autumn-ink:#F2B48E;--gcse:#18304A;--gcse-ink:#8FD0EC;--soon:#211F42;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#12112A;--surface:#1C1A3A;--ink:#F1EFF8;--muted:#AEA8C4;--rule:#34315C;
+  --cta:#E06C9F;--cta-ink:#12112A;--cta-shadow:#8C3A61;
+  --autumn:#3A2620;--autumn-ink:#F2B48E;--gcse:#18304A;--gcse-ink:#8FD0EC;--soon:#211F42;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar{border-bottom:1px solid var(--rule)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px}
+.logo{font:400 20px var(--display);text-decoration:none}
+.logo b{color:var(--pink);font-weight:400}
+.bar a.home{font-weight:700;font-size:15px;color:var(--muted);text-decoration:none}
+.bar a.home:hover{color:var(--ink)}
+.hero{padding-block:clamp(36px,7vw,72px) clamp(24px,4vw,40px)}
+.hand{font:700 26px/1 var(--hand);color:var(--coral);margin:0 0 6px}
+h1{font:400 clamp(34px,6vw,56px)/1.1 var(--display);margin:0;max-width:16ch;text-wrap:balance}
+.lead{max-width:58ch;color:var(--muted);font-size:18px;margin:16px 0 0}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:22px;padding-bottom:28px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.cover{padding:22px 22px 18px;position:relative;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
+.cover.autumn{background:var(--autumn);color:var(--autumn-ink)}
+.cover.gcse{background:var(--gcse);color:var(--gcse-ink)}
+.cover.soon{background:var(--soon);color:var(--muted)}
+.cover svg{position:absolute;right:18px;top:16px;width:74px;height:74px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;padding-right:84px}
+.tag{font-size:13px;font-weight:800;letter-spacing:.02em;border-radius:999px;padding:3px 10px;background:var(--surface);color:inherit}
+.cover h2{font:400 26px/1.2 var(--display);margin:0;color:var(--ink)}
+.body{padding:18px 22px 22px;display:flex;flex-direction:column;gap:14px;flex:1}
+.body p{margin:0;color:var(--muted)}
+.inside{margin:0;padding:0;list-style:none;display:grid;gap:4px;font-size:15px;color:var(--muted)}
+.inside li::before{content:"✓ ";color:var(--teal);font-weight:800}
+.actions{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+.btn{display:block;text-align:center;text-decoration:none;font-weight:800;border-radius:14px;padding:12px 18px;background:var(--cta);color:var(--cta-ink);box-shadow:0 4px 0 var(--cta-shadow)}
+.btn:active{transform:translateY(2px);box-shadow:none}
+.btn:focus-visible,.code:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.code{text-align:center;font-size:15px;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.code:hover{color:var(--ink)}
+.soon-note{font:700 24px var(--hand);color:var(--coral)}
+.cta{margin-block:20px 56px;background:var(--cta);color:var(--cta-ink);border-radius:24px;padding:clamp(22px,4vw,36px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px}
+.cta h2{font:400 clamp(24px,3.5vw,32px)/1.2 var(--display);margin:0}
+.cta p{margin:6px 0 0;opacity:.85}
+.cta a{background:var(--cta-ink);color:var(--cta);text-decoration:none;font-weight:800;border-radius:14px;padding:12px 22px;white-space:nowrap}
+footer{border-top:1px solid var(--rule);color:var(--muted);font-size:14px}
+footer .wrap{padding-block:20px}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="wrap">
+  <a class="logo" href="/">English <b>with</b> Jelena</a>
+  <a class="home" href="/">← Main page</a>
+</div></div>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="hand">try it yourself</p>
+    <h1>Interactive lessons</h1>
+    <p class="lead">These are real lessons from my classes. Open a demo and try everything: flip the cards, drag the words, check your answers. In a lesson, my student and I work on the same page together.</p>
+  </section>
+
+  <section class="lessons" aria-label="Lessons">
+    <article class="card">
+      <div class="cover autumn">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6c3 7 9 9 15 8-2 6 0 11 6 14-5 3-6 8-3 13-6 0-10 3-11 9-3-4-5-5-7-5s-4 1-7 5c-1-6-5-9-11-9 3-5 2-10-3-13 6-3 8-8 6-14 6 1 12-1 15-8z" fill="currentColor" opacity=".85"/><path d="M32 22v36" stroke="var(--autumn)" stroke-width="3" stroke-linecap="round"/></svg>
+        <div class="tags"><span class="tag">B1</span><span class="tag">Speaking</span></div>
+        <h2>Falling for Autumn</h2>
+      </div>
+      <div class="body">
+        <p>A cosy autumn article on one big shared board, with lots of speaking.</p>
+        <ul class="inside">
+          <li>Key words: drag each word to its meaning</li>
+          <li>Present simple and present perfect</li>
+          <li>Speaking questions</li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href="autumn#demo">Try the demo</a>
+          <a class="code" href="autumn">I have a lesson code</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="cover gcse">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="26" cy="26" r="17" fill="none" stroke="currentColor" stroke-width="6"/><path d="M38 38l17 17" stroke="currentColor" stroke-width="8" stroke-linecap="round"/></svg>
+        <div class="tags"><span class="tag">GCSE</span><span class="tag">English Language</span></div>
+        <h2>Language Features Detective</h2>
+      </div>
+      <div class="body">
+        <p>Learn to spot a writer’s methods and explain their effect, like an examiner.</p>
+        <ul class="inside">
+          <li>12 language features on revision cards</li>
+          <li>A quiz with answers</li>
+          <li>Find the features in a short story</li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href="detective-demo.html">Try the demo</a>
+          <a class="code" href="/live-lesson.html">I have a lesson code</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="cover soon">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="10" width="44" height="12" rx="4" fill="currentColor" opacity=".5"/><rect x="10" y="26" width="30" height="12" rx="4" fill="currentColor" opacity=".7"/><rect x="10" y="42" width="38" height="12" rx="4" fill="currentColor"/></svg>
+        <div class="tags"><span class="tag">GCSE</span><span class="tag">English Language</span></div>
+        <h2>Structural features</h2>
+      </div>
+      <div class="body">
+        <p>How writers build a text: openings, shifts in focus, endings.</p>
+        <div class="actions"><span class="soon-note">coming soon</span></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="cta">
+    <div>
+      <h2>Want lessons like this?</h2>
+      <p>Book a lesson and we’ll do it together.</p>
+    </div>
+    <a href="/book">Book a lesson</a>
+  </section>
+</main>
+
+<footer><div class="wrap">English with Jelena · <a href="mailto:hello@englishwithjelena.com">hello@englishwithjelena.com</a></div></footer>
+
+</body>
+</html>

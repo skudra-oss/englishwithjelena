@@ -101,11 +101,57 @@ main.following .watching-note{display:block}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
 .hwbox{margin:16px 0 18px;padding:18px;border-radius:22px;background:linear-gradient(135deg,#fff2a8,#ffd4a8);border:3px solid var(--orange)}.hwbox p{margin:0 0 12px}.hwlabel{font-size:20px;font-weight:800;color:var(--plum)}.hwbtn{display:block;text-align:center;text-decoration:none;font-size:20px;font-weight:800;color:#fff;padding:16px 20px;border-radius:999px;background:linear-gradient(135deg,var(--hotpink),var(--orange));box-shadow:var(--shadow)}.hwbtn:hover{filter:brightness(1.05)}.hwbtn:focus-visible{outline:3px solid var(--plum);outline-offset:3px}.practice{margin-top:6px}.practice summary{cursor:pointer;display:inline-block;padding:10px 18px;border-radius:999px;background:#fff;border:2px solid #ffd8e8;font-weight:700;color:var(--plum)}.practice summary::marker{content:""}.practice summary::before{content:"▸ "}.practice[open] summary::before{content:"▾ "}.practice[open] summary{margin-bottom:6px}
-</style></head><body>
+/* Lesson code screen */
+body.locked{overflow:hidden}
+body.locked .top,body.locked main,body.locked .watch{display:none!important}
+.gate{position:fixed;inset:0;z-index:50;overflow:auto;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+.gate-card{width:min(560px,100%);background:#fff;border-radius:28px;box-shadow:0 18px 50px rgba(255,111,168,.25);overflow:hidden}
+.gate-head{background:linear-gradient(135deg,var(--hotpink),var(--orange) 46%,var(--gold));color:#fff;padding:24px 26px}
+.gate-head h1{margin:0;font-size:clamp(26px,6vw,36px);line-height:1.15}
+.gate-head p{margin:6px 0 0;color:#fff8dc}
+.gate-body{padding:24px 26px 26px}
+.gate label{display:block;font-weight:800;color:var(--plum);margin-bottom:8px}
+.gate-in{width:100%;font:800 30px/1.2 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.22em;text-transform:uppercase;text-align:center;padding:10px 12px;border:3px solid #ffd4a8;border-radius:16px;color:var(--ink);background:#fffdf7;margin-bottom:12px}
+.gate-in:focus{outline:none;border-color:var(--hotpink)}
+.gate-in::placeholder{color:#ead9c6}
+.gate-err{color:#c2185b;font-weight:700;margin:0 0 10px}
+.gate .btn{width:100%;font-size:18px;padding:13px 18px}
+.gate-code{display:block;text-align:center;font-size:44px;font-weight:900;letter-spacing:.18em;color:var(--hotpink);margin:4px 0 10px}
+.gate-link{width:100%;font:14px system-ui,-apple-system,Segoe UI,sans-serif;padding:9px 10px;border:2px solid #ffe6ac;border-radius:12px;background:#fffdf7;color:var(--ink);margin:6px 0 12px}
+.gate-row{display:flex;gap:10px;flex-wrap:wrap}.gate-row .btn{flex:1 1 180px}
+.gate-demo{margin:20px 0 0;padding-top:16px;border-top:2px dashed #ffe6ac;font-size:15px;color:#7a6480}
+.gate-demo a{color:var(--plum);font-weight:800}
+.watch .code{font-weight:900;letter-spacing:.12em;background:rgba(255,255,255,.14);border-radius:999px;padding:3px 10px}
+</style></head><body class="locked">
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-head"><h1>Language Features Detective</h1><p>GCSE English Language · live lesson</p></div>
+    <div class="gate-body">
+      <div id="gStudent">
+        <label for="gIn">Lesson code from your teacher</label>
+        <input class="gate-in" id="gIn" maxlength="9" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC234" inputmode="text">
+        <p class="gate-err" id="gErr" hidden>Please check the code. It has 6 letters and numbers.</p>
+        <button type="button" class="btn primary" id="gJoin">Join the lesson</button>
+      </div>
+      <div id="gTeacher" hidden>
+        <div id="gStartBox"><p>You’ll get a lesson code to send to your student.</p><button type="button" class="btn primary" id="gStart">Start a lesson</button></div>
+        <div id="gCodeBox" hidden>
+          <span class="muted small">Lesson code</span><span class="gate-code" id="gCode"></span>
+          <span class="muted small">Send your student this link:</span>
+          <input class="gate-link" id="gLink" readonly aria-label="Link for your student">
+          <div class="gate-row"><button type="button" class="btn" id="gCopy">Copy link</button><button type="button" class="btn primary" id="gGo">Open the lesson</button></div>
+        </div>
+      </div>
+      <p class="gate-demo">Just looking? <a href="lessons/detective-demo.html">Try the demo lesson →</a></p>
+    </div>
+  </div>
+</div>
+
 
 <div class="watch" id="watchBar" hidden>
   <div class="in">
     <span class="dot" id="watchDot"></span>
+    <span class="code" id="watchCode"></span>
     <span class="msg" id="watchMsg">Connecting…</span>
     <span id="peerButtons" class="flex"></span>
     <button id="stopFollow" hidden>Stop watching</button>
@@ -284,18 +330,55 @@ function showTap(t){
 
 render();
 
-/* ---------- Live link: student's phone sends, teacher's laptop watches ---------- */
-const TOPIC='skudra-live-66e3200f6d5a1c2c/lesson-language-features';
+/* ---------- Lesson code + live link: student's phone sends, teacher's laptop watches ---------- */
+const BASE='skudra-live-66e3200f6d5a1c2c/lesson-language-features/';
 const isTeacher=location.hash==='#teacher';
-const CTRL=TOPIC+'/answers';
-if(isTeacher)$('#teacherTab').hidden=false;
+const ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const clean=x=>(x||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const valid=x=>x.length===6&&[...x].every(c=>ABC.includes(c));
+function newCode(){const a=new Uint32Array(6);crypto.getRandomValues(a);return [...a].map(n=>ABC[n%ABC.length]).join('')}
+const linkFor=c=>location.origin+location.pathname+'#'+c;
+const SAVE='ewj-detective-live';
+let code='';
+
+if(isTeacher){$('#gStudent').hidden=true;$('#gTeacher').hidden=false}
+$('#gStart').addEventListener('click',()=>{code=newCode();$('#gCode').textContent=code;$('#gLink').value=linkFor(code);$('#gStartBox').hidden=true;$('#gCodeBox').hidden=false});
+$('#gCopy').addEventListener('click',()=>{
+  const done=()=>{$('#gCopy').textContent='Copied';setTimeout(()=>$('#gCopy').textContent='Copy link',1500)};
+  try{navigator.clipboard.writeText($('#gLink').value).then(done,()=>$('#gLink').select())}catch(e){$('#gLink').select()}
+});
+$('#gGo').addEventListener('click',()=>enter(code));
+$('#gJoin').addEventListener('click',()=>{const c=clean($('#gIn').value);if(!valid(c)){$('#gErr').hidden=false;return}enter(c)});
+$('#gIn').addEventListener('keydown',e=>{if(e.key==='Enter')$('#gJoin').click()});
+$('#gIn').addEventListener('input',()=>{$('#gErr').hidden=true});
+
+function enter(c){
+  code=c;
+  try{sessionStorage.setItem(SAVE,JSON.stringify({teacher:isTeacher,code}))}catch(e){}
+  $('#gate').hidden=true;document.body.classList.remove('locked');
+  if(isTeacher)$('#teacherTab').hidden=false;
+  if(!isTeacher&&location.hash.slice(1)!==c){try{history.replaceState(null,'',location.pathname+'#'+c)}catch(e){}}
+  connect();
+}
+
+// A link with the code in it opens the lesson straight away; a refresh goes back into the same lesson.
 (function(){
+  let saved=null;try{saved=JSON.parse(sessionStorage.getItem(SAVE)||'null')}catch(e){}
+  if(saved&&valid(saved.code)&&!!saved.teacher===isTeacher&&(isTeacher||clean(location.hash.slice(1))===saved.code||!location.hash)){enter(saved.code);return}
+  const fromLink=clean(location.hash.slice(1));
+  if(!isTeacher&&valid(fromLink)){enter(fromLink);return}
+  setTimeout(()=>{const el=isTeacher?$('#gStart'):$('#gIn');if(el)el.focus()},50);
+})();
+
+function connect(){
   if(!window.mqtt)return;
   // Only the real website connects. A downloaded copy stays offline, so it never shows up as a student.
-  if(!/(^|\.)englishwithjelena\.com$/.test(location.hostname))return;
+  let test=false;try{test=localStorage.getItem('ewj-live-test')==='1'}catch(e){}
+  if(!(/(^|\.)englishwithjelena\.com$/.test(location.hostname)||test))return;
+  const TOPIC=BASE+code,CTRL=TOPIC+'/answers';
   const client=mqtt.connect('wss://broker.hivemq.com:8884/mqtt',{clientId:'sk'+Math.random().toString(16).slice(2,10),reconnectPeriod:2000,clean:true});
   const bar=$('#watchBar');
-  if(isTeacher){bar.hidden=false;$('#peerButtons').hidden=true}
+  if(isTeacher){bar.hidden=false;$('#peerButtons').hidden=true;$('#watchCode').textContent='Lesson '+code}
   let lastTapN=null,lastSeen=0,watching=true;
   function status(t,on){if(!isTeacher)return;$('#watchMsg').textContent=t;$('#watchDot').classList.toggle('on',!!on)}
   client.on('connect',()=>{
@@ -334,6 +417,6 @@ if(isTeacher)$('#teacherTab').hidden=false;
       if(tp&&typeof tp==='object'&&tp.n!==lastTapN){const old=lastTapN;lastTapN=tp.n;if(!first&&old!==null)showTap(tp)}
     });
   }
-})();
+}
 </script>
 </body></html>
