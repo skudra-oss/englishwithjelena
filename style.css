@@ -486,3 +486,21 @@ footer .foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px}
 @media (max-width:860px){ .bigben{right:0;width:76px} .hero-photo .photo{width:min(330px,78%)} }
 @media (max-width:860px){ .hero-photo .photo{width:min(300px,64%);margin-right:18%} .bigben{right:0;width:66px} .hand-tag{font-size:22px;white-space:nowrap} }
 @media (max-width:480px){ .margin-note{font-size:19px;align-self:center} .hand-tag{font-size:19px} }
+/* Big Ben in the notebook margin */
+.hero .bigben{position:absolute;left:calc(50% - 560px - 28px - 104px);bottom:56px;right:auto;width:92px;margin:0;z-index:1}
+@media (max-width:1310px){ .hero .bigben{left:calc(50% - 560px - 28px - 80px);width:68px} }
+@media (max-width:1250px){ .hero .bigben{display:none} }
+/* bigger photo */
+.hero-grid{grid-template-columns:1fr 1fr}
+.hero-photo .photo{width:min(430px,90%);margin-right:0}
+@media (max-width:860px){ .hero-photo .photo{width:min(360px,88%);margin-right:0} }
+/* directions back in one row */
+.dir-grid{grid-template-columns:repeat(4,1fr);gap:18px}
+.dir{padding:26px 24px;gap:10px}
+.dir h3{font-size:24px}
+.dir .q{font-size:17px}
+.dir p{font-size:16px;line-height:1.6}
+.dir-ic, .dir:nth-child(n) .dir-ic{width:84px;height:84px}
+.doodle{width:84px;height:84px}
+@media (max-width:1000px){ .dir-grid{grid-template-columns:1fr 1fr} }
+@media (max-width:560px){ .dir-grid{grid-template-columns:1fr} }
