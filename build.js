@@ -142,6 +142,11 @@ for (const f of ["style.css", "content.js", "site.js", "CNAME", "share.jpg", "ic
   if (fs.existsSync(path.join(ROOT, f))) fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f));
 }
 
+// Lessons: everything in the "lessons" folder goes on the site as it is (e.g. lessons/autumn.html -> englishwithjelena.com/lessons/autumn)
+if (fs.existsSync(path.join(ROOT, "lessons"))) {
+  fs.cpSync(path.join(ROOT, "lessons"), path.join(OUT, "lessons"), { recursive: true });
+}
+
 // Search engine verification files (Google, Yandex, Bing) uploaded to the repository
 for (const f of fs.readdirSync(ROOT)) {
   if (/^(google[0-9a-z]+\.html|yandex_[0-9a-z]+\.html|BingSiteAuth\.xml)$/i.test(f)) {
