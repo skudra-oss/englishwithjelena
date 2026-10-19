@@ -130,7 +130,7 @@ for (const lang of langs) {
       html = html
         .replace(/srcset="jelena\.webp"/g, 'srcset="../jelena.webp"')
         .replace(/src="jelena\.jpg"/g, 'src="../jelena.jpg"')
-        .replace(/(href|src)="(style\.css|content\.js|site\.js|icon\.png)(\?v=[a-z0-9]+)?"/g, '$1="../$2$3"');
+        .replace(/(href|src)="(style\.css|content\.js|site\.js|icon\.png|favicon-[0-9]+\.png)(\?v=[a-z0-9]+)?"/g, '$1="../$2$3"');
     }
     const file = path.join(OUT, lang === "en" ? "en" : "", (page.slug || "index") + ".html");
     fs.writeFileSync(file, html);
@@ -139,7 +139,7 @@ for (const lang of langs) {
 }
 
 // Static files
-for (const f of ["style.css", "content.js", "site.js", "CNAME", "share.jpg", "icon.png", "jelena.jpg", "jelena.webp", "live-lesson.html", "homework.html"]) {
+for (const f of ["style.css", "content.js", "site.js", "CNAME", "share.jpg", "icon.png", "jelena.jpg", "jelena.webp", "live-lesson.html", "homework.html", "favicon-32.png", "favicon-64.png", "favicon-192.png"]) {
   if (fs.existsSync(path.join(ROOT, f))) fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f));
 }
 
