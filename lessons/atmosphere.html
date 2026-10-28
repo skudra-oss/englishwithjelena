@@ -1,0 +1,637 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>Atmosphere Detective</title>
+<script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+<style>*{box-sizing:border-box}
+/* Same single bright "sunshine" look as Language Features Detective; colours set explicitly. */
+:root{
+  --butter:#fff2a8;--peach:#ffd4a8;--hotpink:#ff6fa8;--gold:#ffbe3b;--orange:#ff964f;
+  --plum:#6d3569;--ink:#4d3656;--bg:#fff9f2;--card:#ffffff;
+  --shadow:0 10px 26px rgba(255,111,168,.18);
+  color-scheme:light;
+}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ink);background-color:var(--bg);
+  font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif;
+  background-image:
+    radial-gradient(circle at 8% 8%, rgba(255,223,93,.45) 0 8%, transparent 8.5%),
+    radial-gradient(circle at 95% 12%, rgba(184,236,255,.55) 0 10%, transparent 10.5%),
+    radial-gradient(circle at 18% 92%, rgba(255,183,213,.5) 0 9%, transparent 9.5%),
+    radial-gradient(circle at 88% 88%, rgba(201,247,218,.65) 0 11%, transparent 11.5%),
+    linear-gradient(180deg,#fffdf7 0%, #fff6ea 45%, #fff9f2 100%);
+}
+.top{background:linear-gradient(135deg,var(--hotpink),var(--orange) 46%, var(--gold));color:#fff;padding-block:26px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(255,111,168,.28)}
+.top:before,.top:after{content:"";position:absolute;border-radius:50%;opacity:.25;background:#fff}
+.top:before{width:170px;height:170px;right:-40px;top:-65px}
+.top:after{width:110px;height:110px;left:-25px;bottom:-35px}
+.top .in{max-width:1100px;margin:auto;position:relative;display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
+.top h1{margin:0;font-size:clamp(26px,3vw,42px);letter-spacing:.3px;text-wrap:balance}
+.top p{margin:4px 0 0;color:#fff8dc;font-size:17px}
+.rubtn{border:2px solid rgba(255,255,255,.7);border-radius:999px;padding:9px 16px;font:inherit;font-weight:800;cursor:pointer;background:rgba(255,255,255,.2);color:#fff}
+.rubtn.on{background:#fff;color:var(--plum)}
+.rubtn:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.shell{max-width:1120px;margin:auto;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 24px}
+.tabs button,.btn{border:none;border-radius:999px;padding:11px 18px;font:inherit;cursor:pointer;color:var(--plum);font-weight:800;background:#fff;box-shadow:var(--shadow);transition:transform .16s ease}
+.tabs button:hover,.btn:hover{transform:translateY(-2px)}
+.tabs button:focus-visible,.btn:focus-visible{outline:3px solid var(--plum);outline-offset:2px}
+.tabs button.active,.primary{background:linear-gradient(135deg,var(--hotpink),var(--orange));color:#fff!important}
+.page{display:none}.page.active{display:block}
+.card{background:rgba(255,255,255,.94);border:2px solid rgba(255,255,255,.8);padding:22px;border-radius:24px;box-shadow:var(--shadow);margin-bottom:18px;min-width:0}
+.muted{color:#775f7b}.small{font-size:14px}
+.pill{display:inline-block;background:linear-gradient(135deg,var(--butter),var(--peach));padding:5px 12px;border-radius:999px;font-size:13px;font-weight:900;color:#7d4c22}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:16px}
+.grid > .card{margin:0}
+h2,h3{color:var(--plum);text-wrap:balance}
+h2{margin-top:0}
+.flex{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spaced{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}
+
+/* Russian: with the button on, each item shows its translation when tapped */
+.ru{display:none;color:#8b3274;font-weight:650}
+body.ru-on .ru.open{display:inline}
+body.ru-on .ru.block.open{display:block}
+body.ru-on .rut{cursor:pointer}
+body.ru-on li.rut,body.ru-on .tag.rut,body.ru-on .feat>div.rut,body.ru-on .gloss>div.rut{outline:2px dashed #c9a4ec;outline-offset:-2px}
+body.ru-on strong.rut{text-decoration:underline dotted #ba7cdb 2px;text-underline-offset:4px}
+body.ru-on .rut:hover{background-color:#f3e8ff}
+.rut:focus-visible{outline:3px solid var(--plum)!important}
+
+/* Paragraph steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px;margin:14px 0}
+.step{border-radius:20px;padding:16px 18px;border-left:8px solid var(--gc);background:linear-gradient(180deg,#fff,var(--gbg));min-width:0}
+.step b{display:block;color:var(--plum);font-size:19px}
+.s1{--gc:#f2c300;--gbg:#fff1bd}.s2{--gc:#3fae6b;--gbg:#e3f9ea}.s3{--gc:#3b8fd9;--gbg:#dff1ff}.s4{--gc:#e0558f;--gbg:#ffe0ee}
+.template{font:19px/1.9 Georgia,serif;background:linear-gradient(180deg,#fffdf5,#fff8ec)}
+.gap{display:inline-block;padding:0 9px;border-radius:999px;font:700 15px/1.7 system-ui,sans-serif;background:var(--gbg);color:var(--ink);border:2px solid var(--gc)}
+
+/* Phrase list */
+.phr{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:10px;margin:12px 0 0;padding:0;list-style:none}
+.phr li{background:linear-gradient(180deg,#fff,#fff7ec);border:2px solid #ffe3c9;border-radius:16px;padding:10px 14px}
+.phr li strong{color:var(--plum)}
+.phr .ru{margin-left:6px}
+
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:12px}
+.feat div{background:linear-gradient(180deg,#fff,#fff5fa);border:2px solid #ffd0e4;border-radius:18px;padding:12px 16px}
+.feat b{color:var(--plum);display:block;font-size:17px}
+
+.atm{display:flex;flex-wrap:wrap;gap:8px}
+.tag{padding:7px 12px;border-radius:999px;display:inline-block;background:#fff0c2;color:#78501c;font-weight:700}
+.tag .ru{font-weight:600;margin-left:4px}
+.tip{padding:15px 18px;background:linear-gradient(180deg,#fff3b7,#ffe9cc);border-radius:20px;margin:12px 0;box-shadow:var(--shadow)}
+
+/* Quizzes */
+.qcard{border-left:10px solid var(--orange);background:linear-gradient(180deg,#fff,#fff7ec)}
+.qcard:nth-child(even){border-left-color:var(--hotpink);background:linear-gradient(180deg,#fff,#fff5fa)}
+.qcard p.q{font:19px/1.6 Georgia,serif;margin:4px 0}
+select{width:100%;padding:12px 14px;border:2px solid #ffd8e8;border-radius:16px;background:#fff;color:var(--ink);font-size:16px;margin:8px 0}
+select:focus{outline:3px solid rgba(255,190,59,.35);border-color:var(--orange)}
+.result{margin-top:6px;font-weight:700}.good{color:#16804d}.bad{color:#b44152}
+.progress{background:#ffe6ac;height:13px;border-radius:999px;overflow:hidden;margin:14px 0}
+.progress div{height:100%;background:linear-gradient(90deg,var(--hotpink),var(--orange),var(--gold));transition:width .25s}
+
+/* Gatsby */
+.passage{font:21px/2 Georgia,serif;background:linear-gradient(180deg,#fffdf5,#fff8ec)}
+.passage p{margin:0}
+.passage mark{background:transparent;border-bottom:3px dashed var(--hotpink);cursor:pointer;padding:2px 0;color:inherit}
+.passage:not(.show-clues) mark{border-bottom:3px solid transparent;cursor:text}
+.passage mark.found{background:#fff1a8;border-bottom:3px solid var(--orange)}
+.passage mark:focus{outline:3px solid rgba(255,111,168,.35);border-radius:4px}
+.source{font:14px system-ui,sans-serif;color:#775f7b;margin-top:10px}
+#picked{background:linear-gradient(180deg,#fff7cb,#fff0df)}
+.answer{display:none;background:linear-gradient(180deg,#fff9d5,#fff2e0);padding:16px;border-radius:18px;margin-top:12px;font:18px/1.8 Georgia,serif}
+.answer.open{display:block}
+.answer .hl{background:var(--gbg);border-bottom:2px solid var(--gc);padding:0 2px}
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:10px;margin-top:12px}
+.gloss div{background:linear-gradient(120deg,#e7f9ff,#fffbe6);border-radius:16px;padding:10px 14px}
+.gloss b{color:var(--plum)}
+
+body.locked{overflow:hidden}
+.gate[hidden]{display:none!important}
+.gate{position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+.gate-card{width:min(560px,100%);background:#fff;border-radius:28px;box-shadow:0 18px 50px rgba(255,111,168,.25);overflow:hidden}
+.gate-head{background:linear-gradient(135deg,var(--hotpink),var(--orange) 46%,var(--gold));color:#fff;padding:24px 26px}
+.gate-head h1{margin:0;font-size:clamp(26px,6vw,36px);line-height:1.15}
+.gate-head p{margin:6px 0 0;color:#fff8dc}
+.gate-body{padding:24px 26px 26px}
+.gate label{display:block;font-weight:800;color:var(--plum);margin-bottom:8px}
+.gate-in{width:100%;font:800 30px/1.2 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.22em;text-transform:uppercase;text-align:center;padding:10px 12px;border:3px solid #ffd4a8;border-radius:16px;color:var(--ink);background:#fffdf7;margin-bottom:12px}
+.gate-in:focus{outline:none;border-color:var(--hotpink)}
+.gate-in::placeholder{color:#ead9c6}
+.gate-err{color:#c2185b;font-weight:700;margin:0 0 10px}
+.gate .btn{width:100%;font-size:18px;padding:13px 18px}
+.gate-code{display:block;text-align:center;font-size:44px;font-weight:900;letter-spacing:.18em;color:var(--hotpink);margin:4px 0 10px}
+.gate-link{width:100%;font:14px system-ui,-apple-system,Segoe UI,sans-serif;padding:9px 10px;border:2px solid #ffe6ac;border-radius:12px;background:#fffdf7;color:var(--ink);margin:6px 0 12px}
+.gate-row{display:flex;gap:10px;flex-wrap:wrap}.gate-row .btn{flex:1 1 180px}
+.watch .code{font-weight:900;letter-spacing:.12em;background:rgba(255,255,255,.14);border-radius:999px;padding:3px 10px}
+/* Live watch bar — only the owner (teacher) sees it */
+.watch{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:#4d3656;color:#fff;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.watch .in{max-width:1120px;margin:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.watch .dot{width:10px;height:10px;border-radius:50%;background:#9c8aa3;flex:none}
+.watch .dot.on{background:#5be3a1;box-shadow:0 0 0 4px rgba(91,227,161,.25)}
+.watch button{border:none;border-radius:999px;padding:8px 14px;font:inherit;font-weight:800;cursor:pointer;background:#fff;color:var(--plum)}
+.watch button.on{background:linear-gradient(135deg,var(--hotpink),var(--orange));color:#fff}
+.watch button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.watch .msg{font-size:14px;color:#f3e6f5}
+body.following .top,body.following main{pointer-events:none}
+.watching-note{display:none;background:#e9fff3;color:#17603f;border-radius:16px;padding:10px 14px;margin-bottom:16px;font-weight:700}
+body.following .watching-note{display:block}
+.tap{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:4px solid var(--hotpink);pointer-events:none;z-index:30;animation:tap .9s ease-out forwards}
+@keyframes tap{from{transform:scale(.4);opacity:1}to{transform:scale(1.6);opacity:0}}
+@media(max-width:650px){.card{padding:16px;border-radius:20px}.passage{font-size:18px}.template{font-size:17px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style></head><body class="locked">
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-head"><h1>Atmosphere Detective</h1><p>GCSE English Language · live lesson</p></div>
+    <div class="gate-body">
+      <div id="gStudent">
+        <label for="gIn">Lesson code from your teacher</label>
+        <input class="gate-in" id="gIn" maxlength="9" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC234" inputmode="text">
+        <p class="gate-err" id="gErr" hidden>Please check the code. It has 6 letters and numbers.</p>
+        <button type="button" class="btn primary" id="gJoin">Join the lesson</button>
+      </div>
+      <div id="gTeacher" hidden>
+        <div id="gStartBox"><p>You’ll get a lesson code to send to your student.</p><button type="button" class="btn primary" id="gStart">Start a lesson</button></div>
+        <div id="gCodeBox" hidden>
+          <span class="muted small">Lesson code</span><span class="gate-code" id="gCode"></span>
+          <span class="muted small">Send your student this link:</span>
+          <input class="gate-link" id="gLink" readonly aria-label="Link for your student">
+          <div class="gate-row"><button type="button" class="btn" id="gCopy">Copy link</button><button type="button" class="btn primary" id="gGo">Open the lesson</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="watch" id="watchBar" hidden>
+  <div class="in">
+    <span class="dot" id="watchDot"></span>
+    <span class="code" id="watchCode"></span>
+    <span class="msg" id="watchMsg">Connecting…</span>
+    <button id="stopFollow" hidden>Stop watching</button>
+    <button id="revealBtn" hidden>Show answers to student</button>
+  </div>
+</div>
+
+<header class="top"><div class="in">
+  <div><h1>Atmosphere Detective</h1><p>English Language · Question 2 · How writers use language</p></div>
+  <button class="rubtn" id="ruBtn" type="button" aria-pressed="false">Show Russian</button>
+</div></header>
+
+<main class="shell" id="main">
+<div class="watching-note">👀 You are seeing your student's screen live. Their taps and answers appear here.</div>
+<nav class="tabs" aria-label="Lesson sections">
+  <button data-tab="structure" class="active">1 · Paragraph plan</button>
+  <button data-tab="phrases">2 · Useful phrases</button>
+  <button data-tab="atmos">3 · Features &amp; atmosphere</button>
+  <button data-tab="quiz">4 · Spot the feature</button>
+  <button data-tab="match">5 · Match the atmosphere</button>
+  <button data-tab="gatsby">6 · Gatsby detective</button>
+  <button data-tab="teacher" id="teacherTab" hidden>7 · Teacher key</button>
+</nav>
+
+<!-- 1 STRUCTURE -->
+<section class="page active" id="structure">
+  <div class="card">
+    <span class="pill">Question 2 · language</span>
+    <h2>How to build a Question 2 paragraph</h2>
+    <p>Each paragraph follows four steps. Repeat them for every example you choose from the text.</p>
+    <div class="steps">
+      <div class="step s1"><b>1 · Point</b>Name a piece of language that creates an effect.<br><em>“The writer uses [language feature]…”</em></div>
+      <div class="step s2"><b>2 · Example</b>Give a short quotation: a word or phrase from the text.</div>
+      <div class="step s3"><b>3 · Explain</b>Explain how this language creates a feeling, an atmosphere, or shows a character’s emotion.</div>
+      <div class="step s4"><b>4 · Link</b>Use different phrases and linking words so you don’t repeat yourself.</div>
+    </div>
+  </div>
+  <div class="card template">
+    <h3 style="font-family:system-ui,sans-serif;margin-top:0">Template: describing atmosphere</h3>
+    The writer creates a <span class="gap s1">adjective</span> atmosphere using <span class="gap s1">language feature</span>. For example, “<span class="gap s2">quote</span>”. This conveys <span class="gap s3">effect on the reader / character’s emotion</span>, suggesting <span class="gap s3">interpretation</span>. The choice of <span class="gap s4">word / phrase</span> also makes the reader feel <span class="gap s4">feeling</span>.
+  </div>
+  <div class="tip"><strong>Tip:</strong> always tie the feeling to a specific word or phrase in the text, not just a general description.</div>
+  <button class="btn primary" data-go="phrases">Useful phrases →</button>
+</section>
+
+<!-- 2 PHRASES -->
+<section class="page" id="phrases">
+  <div class="card">
+    <h2>Instead of “This suggests…”</h2>
+    <p class="muted">Use different phrases so your writing doesn’t get repetitive.</p>
+    <ul class="phr">
+      <li><strong>This shows that…</strong><span class="ru">Это показывает, что…</span></li>
+      <li><strong>This implies…</strong><span class="ru">Это подразумевает…</span></li>
+      <li><strong>This conveys…</strong><span class="ru">Это передаёт…</span></li>
+      <li><strong>This creates a sense of…</strong><span class="ru">Это создаёт ощущение…</span></li>
+      <li><strong>This gives the impression that…</strong><span class="ru">Это создаёт впечатление, что…</span></li>
+      <li><strong>This highlights…</strong><span class="ru">Это подчёркивает…</span></li>
+      <li><strong>This reflects…</strong><span class="ru">Это отражает…</span></li>
+      <li><strong>This portrays…</strong><span class="ru">Это изображает…</span></li>
+      <li><strong>This evokes…</strong> (a feeling, a sense of…)<span class="ru">Это вызывает…</span></li>
+      <li><strong>This demonstrates…</strong><span class="ru">Это демонстрирует (показывает)…</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Other useful linking phrases</h2>
+    <ul class="phr">
+      <li><strong>The word / phrase “[quote]”…</strong></li>
+      <li><strong>The writer’s use of [adjective] language…</strong></li>
+      <li><strong>Through [word / phrase], the writer…</strong><span class="ru">хочет сказать / показать… (что)</span></li>
+      <li><strong>The effect of this is…</strong></li>
+    </ul>
+  </div>
+  <button class="btn primary" data-go="atmos">Features &amp; atmosphere →</button>
+</section>
+
+<!-- 3 FEATURES & ATMOSPHERE -->
+<section class="page" id="atmos">
+  <div class="card">
+    <h2>Language features to mention</h2>
+    <div class="feat">
+      <div><b>Adjectives / adverbs</b>Describe feelings and atmosphere.<br><span class="small muted">adjective: a <em>good</em> book · adverb: this book is <em>well</em> written</span><span class="ru block">прилагательные / наречия</span></div>
+      <div><b>Verbs</b>Show action or mood.<span class="ru block">глаголы</span></div>
+      <div><b>Sound effects</b>Words that copy sounds (onomatopoeia).<span class="ru block">звуковые эффекты, звукоподражание</span></div>
+      <div><b>Short sentences / punctuation</b>Create tension and urgency.<span class="ru block">короткие предложения / пунктуация</span></div>
+      <div><b>Repetition</b>Emphasises emotion.<span class="ru block">повтор</span></div>
+      <div><b>Imagery / sensory details</b>Smell, sight, sound, touch.<span class="ru block">образность / детали, связанные с чувствами</span></div>
+      <div><b>Metaphors / similes</b>Comparisons for effect.<span class="ru block">метафоры / сравнения</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Types of atmosphere and feelings</h2>
+    <div class="atm" id="atmTags"></div>
+  </div>
+  <div class="card">
+    <h2>The setting</h2>
+    <p><strong>Setting</strong> means <strong>where</strong> and <strong>when</strong> a story takes place. Writers use it to add effect and build atmosphere.</p>
+    <p>Settings have <strong>connotations</strong> <span class="ru">(ассоциации)</span>: ideas and feelings we connect with them. The same place can feel completely different at another time: think of a school after dark, then the same school full of pupils at lunchtime.</p>
+    <div class="grid">
+      <div class="card"><h3>Night, dark, isolated</h3>Used in ghost stories and scary stories → <strong>scary, eerie, mysterious</strong></div>
+      <div class="card"><h3>A sunny day</h3>→ <strong>serene, uplifting, happy</strong></div>
+      <div class="card"><h3>Gloomy, rainy, windy weather</h3>→ <strong>anxious, tense, scary, suspenseful</strong>; often reflects the character’s feelings</div>
+      <div class="card"><h3>Nature</h3>→ <strong>calm, serene</strong>; being at peace, “at one with nature”</div>
+      <div class="card"><h3>A historical period</h3>e.g. World War Two → <strong>eerie, tense, serious, heroic, patriotic, moving</strong></div>
+    </div>
+    <p class="source">Setting notes based on <a href="https://www.bbc.co.uk/bitesize/guides/zcnbcwx/revision/1" target="_blank" rel="noopener">BBC Bitesize: setting, pages 1–2</a>.</p>
+  </div>
+  <button class="btn primary" data-go="quiz">Spot the feature →</button>
+</section>
+
+<!-- 4 QUIZ -->
+<section class="page" id="quiz">
+  <h2>Spot the feature</h2>
+  <p class="muted">Which language feature is the writer using? Choose one for each sentence.</p>
+  <div class="spaced"><strong id="qScore" aria-live="polite">Not checked yet</strong>
+    <div class="flex"><button class="btn primary" id="qCheck">Check answers</button><button class="btn" id="qReset">Try again</button></div></div>
+  <div class="progress"><div id="qBar" style="width:0"></div></div>
+  <div id="qList"></div>
+  <button class="btn primary" data-go="match">Match the atmosphere →</button>
+</section>
+
+<!-- 5 MATCH -->
+<section class="page" id="match">
+  <h2>Match the atmosphere</h2>
+  <p class="muted">What atmosphere would a writer most likely create in each setting?</p>
+  <div class="spaced"><strong id="mScore" aria-live="polite">Not checked yet</strong>
+    <div class="flex"><button class="btn primary" id="mCheck">Check answers</button><button class="btn" id="mReset">Try again</button></div></div>
+  <div class="progress"><div id="mBar" style="width:0"></div></div>
+  <div id="mList"></div>
+  <button class="btn primary" data-go="gatsby">Gatsby detective →</button>
+</section>
+
+<!-- 6 GATSBY -->
+<section class="page" id="gatsby">
+  <h2>Gatsby detective</h2>
+  <p>Read the extract. What atmosphere does the writer create? Find the language features yourself first, then press <strong>Show clues</strong> to check your ideas.</p>
+  <div class="flex" style="margin:0 0 16px">
+    <button class="btn" id="glossBtn" type="button" aria-pressed="false">📚 Difficult words</button>
+    <button class="btn primary" id="clueBtn" type="button" aria-pressed="false">🔎 Show clues</button>
+    <span class="muted small" id="clueStatus" aria-live="polite">Clues hidden: detective mode!</span>
+  </div>
+  <div class="card passage" id="passage"><p><mark data-id="0" tabindex="-1">In his blue gardens</mark> <mark data-id="1" tabindex="-1">men and girls came and went like moths</mark> <mark data-id="2" tabindex="-1">among the whisperings and the champagne and the stars</mark>. At high tide in the afternoon I watched his guests <mark data-id="3" tabindex="-1">diving from the tower of his raft</mark>, or <mark data-id="4" tabindex="-1">taking the sun on the hot sand of his beach</mark> while his two motor-boats <mark data-id="5" tabindex="-1">slit the waters</mark> of the Sound, drawing aquaplanes over <mark data-id="6" tabindex="-1">cataracts of foam</mark>. On weekends <mark data-id="7" tabindex="-1">his Rolls-Royce became an omnibus</mark>, bearing parties to and from the city <mark data-id="8" tabindex="-1">between nine in the morning and long past midnight</mark>, while his station wagon <mark data-id="9" tabindex="-1">scampered like a brisk yellow bug</mark> to meet all trains.</p>
+    <div class="source">From <em>The Great Gatsby</em> (1925) by F. Scott Fitzgerald, chapter 3. Extract and analysis ideas from <a href="https://www.bbc.co.uk/bitesize/guides/zcnbcwx/revision/1" target="_blank" rel="noopener">BBC Bitesize: setting, pages 1–2</a>.</div></div>
+  <div class="card" id="glossCard" hidden><h3 style="margin:0">Difficult words</h3><div class="gloss" id="gloss"></div></div>
+  <div class="card" id="picked" hidden aria-live="polite"></div>
+  <div class="grid">
+    <div class="card"><h3>Atmosphere</h3>An atmosphere of <strong>wealth</strong>, a <strong>luxury lifestyle</strong> and <strong>indulgence</strong><span class="ru"> (потакание своим желаниям, излишество)</span>.<p class="small muted" style="margin:6px 0 0"><strong>to indulge</strong><span class="ru"> (баловать себя)</span> = to let yourself enjoy something pleasant, often too much</p></div>
+    <div class="card"><h3>Who tells the story?</h3>The <strong>narrator</strong> <span class="ru">(рассказчик)</span> is the person telling the story. This is not always the writer.<p style="margin:6px 0 0"><strong>1st person:</strong> “I…” · <strong>3rd person / observer:</strong> “he…”</p><p class="small" style="margin:6px 0 0">“I watched his guests”: a 1st-person narrator who <em>watches</em> from the edge. He describes the parties but isn’t part of them.</p></div>
+    <div class="card"><h3>Discuss</h3>Find all the words that show <strong>movement</strong> <span class="ru">(движение)</span>. Why does the writer fill the scene with movement? How does the narrator seem to feel about the parties?</div>
+  </div>
+  <div class="card">
+    <h3>Question</h3>
+    <p>How does the writer use language to create an atmosphere of wealth and indulgence?</p>
+    <button class="btn primary" id="modelBtn">Reveal / hide model paragraph</button>
+    <div class="answer" id="model">
+      The writer creates a <span class="hl s1">lively, luxurious</span> atmosphere using <span class="hl s1">a simile</span>. For example, men and girls “<span class="hl s2">came and went like moths</span>”. This conveys <span class="hl s3">how Gatsby’s guests are pulled towards his glittering parties, the way moths fly to a light</span>, suggesting <span class="hl s3">they come for the glamour rather than for Gatsby himself</span>. The writer’s use of repetition in “<span class="hl s2">his blue gardens</span>” and “<span class="hl s2">his beach</span>” <span class="hl s4">highlights</span> how much Gatsby owns, which <span class="hl s4">gives the impression</span> of enormous wealth. Through the metaphor “<span class="hl s2">his Rolls-Royce became an omnibus</span>”, the writer shows that even a luxury car is used like a public bus, which <span class="hl s4">evokes</span> a sense of indulgence and parties that never end.
+    </div>
+  </div>
+</section>
+
+<!-- 7 TEACHER KEY (teacher only) -->
+<section class="page" id="teacher">
+  <div class="card">
+    <h2>Teacher key</h2>
+    <p class="muted">Only you see this tab. Your student sees ✓ and ✗ after checking; press <strong>Show answers to student</strong> in the dark bar to show them the answers and explanations.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>4 · Spot the feature</h3><ol id="keyQuiz" class="small"></ol></div>
+    <div class="card"><h3>5 · Match the atmosphere</h3><ol id="keyMatch" class="small"></ol></div>
+  </div>
+</section>
+</main>
+
+<script>
+const FEATS=['Adjectives / adverbs','Verbs','Sound effects','Short sentences / punctuation','Repetition','Imagery / sensory details','Metaphors / similes'];
+const QUIZ=[
+ ["The thunder crashed and boomed above the house.",2,"“Crashed” and “boomed” copy real sounds, so we can hear the storm."],
+ ["Run. Now. Don’t look back.",3,"Very short sentences and full stops make it feel urgent and tense."],
+ ["The air smelled of smoke and burnt sugar.",5,"Smell is a sensory detail: we can almost breathe the air."],
+ ["She was a ghost in her own house.",6,"A metaphor: she isn’t really a ghost, but she feels invisible and unseen."],
+ ["He crept slowly and nervously towards the door.",0,"The adverbs “slowly” and “nervously” show how he moves and how he feels."],
+ ["She waited and waited and waited.",4,"Repeating “waited” emphasises how long and frustrating the wait feels."],
+ ["The wind clawed at the windows.",1,"The verb “clawed” makes the wind sound violent, like an animal attacking."],
+ ["His hands shook like autumn leaves.",6,"A simile with “like”: it shows how weak and nervous he is."],
+ ["The gloomy, silent corridor stretched ahead.",0,"The adjectives “gloomy” and “silent” create an eerie atmosphere."]
+];
+const ATMS=[
+ ['Tense / suspenseful / anxious','напряжённая, тревожная'],
+ ['Calm / peaceful / serene','спокойная, умиротворённая, безмятежная'],
+ ['Eerie / mysterious / strange','жуткая, таинственная, странная'],
+ ['Exciting / thrilling / dramatic','волнующая, захватывающая, драматичная'],
+ ['Sad / gloomy / depressing','грустная, мрачная, угнетающая'],
+ ['Happy / joyful / uplifting','счастливая, радостная, воодушевляющая'],
+ ['Angry / aggressive / threatening','злая, агрессивная, угрожающая'],
+ ['Lonely / isolated / abandoned','одинокая, оторванная, заброшенная'],
+ ['Confusing / chaotic / overwhelming','запутанная, хаотичная, подавляющая']
+];
+const MATCH=[
+ ["An empty school at night. The corridors are dark and one door is creaking.",[2],"Darkness, emptiness and a strange sound are classic ghost-story connotations."],
+ ["A sunny afternoon in the park. Children are laughing on the swings.",[5],"Sunshine and laughter connote happiness and an uplifting mood."],
+ ["A storm rages outside while the character waits for news from the hospital.",[0,4],"The stormy weather reflects the character’s worry; it could also feel gloomy."],
+ ["A quiet lake at dawn. Mist rises slowly over the water.",[1],"Nature, quiet and slow movement create a serene feeling of being at one with nature."],
+ ["A funeral on a grey, rainy day.",[4],"Grey rain matches the sadness of the event."],
+ ["A crowded train station. Everyone is shouting, pushing and running.",[8],"Lots of noise and movement at once feel chaotic and overwhelming."],
+ ["An old house on a hill, miles from anyone, with broken windows.",[7,2],"Distance from people and decay suggest loneliness; it can also feel eerie."],
+ ["A dark alley. Footsteps follow you and a voice growls your name.",[6,0],"A hidden person and a growling voice feel threatening and tense."],
+ ["The final seconds of a cup final. The score is level.",[3,0],"High stakes and little time create excitement and suspense."],
+ ["London in 1940, during an air raid in World War Two.",[0,2],"War settings feel tense and eerie, but also serious, heroic and moving."]
+];
+const ANN=[
+ ["Adjective (colour)","“Blue” gardens: the colour of night, moonlight and water.","Makes the setting feel dreamy and magical, almost like a fairy tale."],
+ ["Simile","The guests are compared to moths with “like”.","Moths fly to a light, so the guests are pulled towards Gatsby’s glittering parties. “Came and went” creates constant movement and suggests the visitors don’t stay long."],
+ ["Repetition + sensory imagery","“and… and…” joins sound (whisperings), taste (champagne) and sight (stars).","The list seems to go on and on, creating a sense of abundance and indulgence."],
+ ["Verb","“Diving”: an energetic, playful action.","Shows the guests having fun freely, so the atmosphere is lively and carefree."],
+ ["Imagery + repetition","Touch and heat in “hot sand”; “his” keeps repeating: his gardens, his raft, his beach, his motor-boats, his Rolls-Royce.","Highlights how much Gatsby owns and creates a lazy, luxurious summer feeling."],
+ ["Verb","“Slit”: a sharp, quick cutting action.","Conveys speed and power: the expensive boats cut through the sea."],
+ ["Metaphor","The foam behind the boats is called “cataracts” (waterfalls).","Exaggerates the scene: even the spray seems huge and spectacular, reflecting extravagant wealth."],
+ ["Metaphor","A luxury car “became an omnibus” (an old word for a bus).","So many guests come that a Rolls-Royce works like public transport. Wealth is used carelessly: an image of indulgence."],
+ ["Time detail","The parties run from the morning until “long past midnight”.","Gives the impression that the celebration never stops."],
+ ["Simile + verb","The car “scampered like a brisk yellow bug”.","Gives the car the quick movement of a small, busy animal: lively, cheerful and a little comic."]
+];
+const GLOSS=[
+ ["moths","night insects that fly towards light","мотыльки"],
+ ["raft","a flat floating platform in the water","плот"],
+ ["motor-boats","small fast boats with an engine","моторные лодки"],
+ ["the Sound","a long stretch of sea between two pieces of land","пролив"],
+ ["aquaplanes","boards people ride while a boat pulls them","водные доски"],
+ ["cataracts","large waterfalls","водопады"],
+ ["omnibus","an old word for a bus","омнибус, автобус"],
+ ["bearing","carrying","везя, перевозя"],
+ ["station wagon","a large car with lots of space at the back","универсал (машина)"],
+ ["scampered","ran quickly with small, light steps","помчался, засеменил"],
+ ["brisk","quick and full of energy","бодрый, быстрый"]
+];
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e};
+
+/* Build static parts */
+ATMS.forEach(([en,ru])=>{const t=el('span','tag',en);t.append(el('span','ru',' · '+ru));$('#atmTags').append(t)});
+GLOSS.forEach(([w,d,r])=>{const g=el('div');g.append(el('b',null,w),document.createTextNode(': '+d+' '),el('span','ru','· '+r));$('#gloss').append(g)});
+function buildList(box,items,opts,key,prefix){
+  items.forEach((it,i)=>{
+    const c=el('div','card qcard');
+    c.append(el('span','pill',prefix+' '+(i+1)),el('p','q',it[0]));
+    const s=el('select');s.id=key+'Sel'+i;s.dataset.i=i;
+    s.append(new Option('Choose…',''));opts.forEach((o,j)=>s.append(new Option(o,j)));
+    s.setAttribute('aria-label',prefix+' '+(i+1));
+    const r=el('div','result');r.id=key+'Res'+i;
+    c.append(s,r);box.append(c);
+  });
+}
+buildList($('#qList'),QUIZ,FEATS,'q','Sentence');
+buildList($('#mList'),MATCH,ATMS.map(a=>a[0]),'m','Setting');
+$$('#passage mark').forEach(m=>{m.setAttribute('role','button')});
+
+/* Russian: each translation has a tap target (its item, or the word just before it) */
+const RU=$$('.ru');
+RU.forEach((r,i)=>{
+  r.dataset.r=i;
+  const t=r.closest('li,.tag,.feat > div,.gloss > div')||r.previousElementSibling;
+  if(!t)return;
+  t.classList.add('rut');t.dataset.rt=i;
+  const flip=()=>{if(!S.ru)return;act(()=>{S.ruOpen=S.ruOpen.includes(i)?S.ruOpen.filter(x=>x!==i):[...S.ruOpen,i]},{ru:i})};
+  t.addEventListener('click',flip);
+  t.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});
+});
+
+/* One state object; the page is drawn from it */
+function blank(){return {tab:'structure',reveal:false,ru:false,ruOpen:[],q:{},qChecked:false,m:{},mChecked:false,clues:false,found:[],picked:null,gloss:false,model:false,scroll:0}}
+let S=blank();
+let following=null, room=null;
+QUIZ.forEach(q=>$('#keyQuiz').append(el('li',null,FEATS[q[1]]+' · '+q[0])));
+MATCH.forEach(m=>$('#keyMatch').append(el('li',null,m[1].map(x=>ATMS[x][0]).join(' or '))));
+
+function scoreList(items,ans,checked,key,isMatch){
+  let right=0;
+  items.forEach((it,i)=>{
+    const sel=$('#'+key+'Sel'+i), res=$('#'+key+'Res'+i);
+    const v=ans[i]; sel.value=v==null?'':String(v);
+    const ok=v!=null&&(isMatch?it[1].includes(+v):+v===it[1]);
+    if(ok)right++;
+    res.className='result';res.textContent='';
+    if(S.reveal){
+      if(ok){res.classList.add('good');res.textContent='✓ '+it[2]}
+      else{res.classList.add('bad');res.textContent=(v==null?'':'✗ ')+(isMatch?'Best fit: '+it[1].map(x=>ATMS[x][0]).join(' or ')+'. ':'Answer: '+FEATS[it[1]]+'. ')+it[2]}
+    }else if(checked){
+      if(v==null){res.classList.add('bad');res.textContent='Please choose an answer.'}
+      else{res.classList.add(ok?'good':'bad');res.textContent=ok?'✓':'✗'}
+    }
+  });
+  return right;
+}
+function render(scrollToo){
+  document.body.classList.toggle('ru-on',S.ru);
+  $('#ruBtn').classList.toggle('on',S.ru);$('#ruBtn').setAttribute('aria-pressed',S.ru);
+  $('#ruBtn').textContent=S.ru?'Russian on · tap a word':'Show Russian';
+  RU.forEach(r=>r.classList.toggle('open',S.ruOpen.includes(+r.dataset.r)));
+  $$('.rut').forEach(t=>{if(S.ru){t.tabIndex=0;t.setAttribute('role','button')}else{t.removeAttribute('tabindex');t.removeAttribute('role')}});
+  $$('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===S.tab));
+  $$('.page').forEach(p=>p.classList.toggle('active',p.id===S.tab));
+  const qr=scoreList(QUIZ,S.q,S.qChecked,'q',false);
+  $('#qScore').textContent=S.qChecked?`Score: ${qr} / ${QUIZ.length}`:`Answered: ${Object.keys(S.q).length} / ${QUIZ.length}`;
+  $('#qBar').style.width=(Object.keys(S.q).length/QUIZ.length*100)+'%';
+  const mr=scoreList(MATCH,S.m,S.mChecked,'m',true);
+  $('#mScore').textContent=S.mChecked?`Score: ${mr} / ${MATCH.length}`:`Answered: ${Object.keys(S.m).length} / ${MATCH.length}`;
+  $('#mBar').style.width=(Object.keys(S.m).length/MATCH.length*100)+'%';
+  const P=$('#passage');P.classList.toggle('show-clues',S.clues);
+  $('#clueBtn').textContent=S.clues?'🙈 Hide clues':'🔎 Show clues';$('#clueBtn').setAttribute('aria-pressed',S.clues);
+  $('#clueStatus').textContent=S.clues?`Found ${S.found.length} / ${ANN.length}: tap the underlined phrases`:'Clues hidden: detective mode!';
+  $$('#passage mark').forEach(m=>{const id=+m.dataset.id;m.classList.toggle('found',S.clues&&S.found.includes(id));m.tabIndex=S.clues?0:-1});
+  const pk=$('#picked');
+  if(S.clues&&S.picked!=null){const a=ANN[S.picked];pk.textContent='';pk.append(el('span','pill',a[0]),el('p',null,a[1]));const e=el('p');e.append(el('strong',null,'Effect: '),document.createTextNode(a[2]));pk.append(e);pk.hidden=false}else pk.hidden=true;
+  $('#glossCard').hidden=!S.gloss;$('#glossBtn').setAttribute('aria-pressed',S.gloss);
+  $('#glossBtn').textContent=S.gloss?'📚 Hide difficult words':'📚 Difficult words';
+  $('#model').classList.toggle('open',S.model);
+  if(scrollToo){const max=document.documentElement.scrollHeight-innerHeight;window.scrollTo({top:Math.max(0,S.scroll*max),behavior:'instant'})}
+}
+
+/* Every action goes through act() */
+function act(fn,tap){if(following)return;fn();render();share(tap)}
+let tapSeq=0;
+function share(tap){
+  if(!room)return;
+  const patch={lesson:{...S,q:{...S.q},m:{...S.m}}};
+  if(patch.lesson.tab==='teacher')patch.lesson.tab='structure';
+  if(tap)patch.tap={n:++tapSeq,...tap};
+  room.presence(patch).catch(()=>{});
+}
+function go(tab){act(()=>{S.tab=tab;S.scroll=0},null);if(!following)scrollTo({top:0,behavior:'smooth'})}
+$$('.tabs button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.tab)));
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+$('#ruBtn').addEventListener('click',()=>act(()=>{S.ru=!S.ru;if(!S.ru)S.ruOpen=[]},{btn:'ruBtn'}));
+$$('#qList select').forEach(s=>s.addEventListener('change',()=>act(()=>{const i=s.dataset.i;if(s.value!=='')S.q[i]=+s.value;else delete S.q[i]})));
+$$('#mList select').forEach(s=>s.addEventListener('change',()=>act(()=>{const i=s.dataset.i;if(s.value!=='')S.m[i]=+s.value;else delete S.m[i]})));
+$('#qCheck').addEventListener('click',()=>act(()=>{S.qChecked=true},{btn:'qCheck'}));
+$('#qReset').addEventListener('click',()=>act(()=>{S.q={};S.qChecked=false},{btn:'qReset'}));
+$('#mCheck').addEventListener('click',()=>act(()=>{S.mChecked=true},{btn:'mCheck'}));
+$('#mReset').addEventListener('click',()=>act(()=>{S.m={};S.mChecked=false},{btn:'mReset'}));
+$('#clueBtn').addEventListener('click',()=>act(()=>{S.clues=!S.clues;if(!S.clues)S.picked=null},{btn:'clueBtn'}));
+$('#glossBtn').addEventListener('click',()=>act(()=>{S.gloss=!S.gloss},{btn:'glossBtn'}));
+$('#modelBtn').addEventListener('click',()=>act(()=>{S.model=!S.model},{btn:'modelBtn'}));
+$$('#passage mark').forEach(m=>{
+  const pick=()=>{if(!S.clues)return;act(()=>{const id=+m.dataset.id;if(S.found.includes(id)&&S.picked===id){S.found=S.found.filter(x=>x!==id);S.picked=null}else{if(!S.found.includes(id))S.found=[...S.found,id];S.picked=id}},{mark:+m.dataset.id})};
+  m.addEventListener('click',pick);m.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick()}});
+});
+let scrollTimer=null;
+addEventListener('scroll',()=>{
+  if(following)return;clearTimeout(scrollTimer);
+  scrollTimer=setTimeout(()=>{const max=document.documentElement.scrollHeight-innerHeight;S.scroll=max>0?+(scrollY/max).toFixed(3):0;share()},120);
+},{passive:true});
+
+/* Pink ring where the student tapped */
+function showTap(t){
+  let e=null;
+  if(t.ru!==undefined)e=$(`[data-rt="${+t.ru}"]`);
+  else if(t.mark!==undefined)e=$(`#passage mark[data-id="${+t.mark}"]`);
+  else if(typeof t.btn==='string'&&/^[A-Za-z]+$/.test(t.btn))e=document.getElementById(t.btn);
+  if(!e)return;
+  const r=e.getBoundingClientRect(),d=el('div','tap');
+  d.style.left=(r.left+r.width/2+scrollX)+'px';d.style.top=(r.top+r.height/2+scrollY)+'px';
+  document.body.append(d);setTimeout(()=>d.remove(),950);
+}
+
+render();
+
+  function cleanState(L){
+  const o=blank();
+  if(typeof L.tab==='string'&&$('#'+CSS.escape(L.tab))&&L.tab!=='teacher'&&$('#'+CSS.escape(L.tab)).classList.contains('page'))o.tab=L.tab;
+  ['reveal','ru','qChecked','mChecked','clues','gloss','model'].forEach(k=>o[k]=!!L[k]);
+  o.q={};o.m={};
+  if(L.q&&typeof L.q==='object')for(const k in L.q){const v=+L.q[k];if(+k>=0&&+k<QUIZ.length&&v>=0&&v<FEATS.length)o.q[+k]=v}
+  if(L.m&&typeof L.m==='object')for(const k in L.m){const v=+L.m[k];if(+k>=0&&+k<MATCH.length&&v>=0&&v<ATMS.length)o.m[+k]=v}
+  o.ruOpen=Array.isArray(L.ruOpen)?L.ruOpen.map(Number).filter(x=>x>=0&&x<RU.length):[];
+  o.found=Array.isArray(L.found)?L.found.map(Number).filter(x=>x>=0&&x<ANN.length):[];
+  o.picked=(typeof L.picked==='number'&&L.picked>=0&&L.picked<ANN.length)?L.picked:null;
+  o.scroll=typeof L.scroll==='number'?Math.min(1,Math.max(0,L.scroll)):0;
+  return o;
+}
+
+/* ---------- Lesson code + live link: student's phone sends, teacher's laptop watches ---------- */
+const BASE='skudra-live-66e3200f6d5a1c2c/lesson-atmosphere/';
+const isTeacher=location.hash==='#teacher';
+const ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const clean=x=>(x||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const valid=x=>x.length===6&&[...x].every(c=>ABC.includes(c));
+function newCode(){const a=new Uint32Array(6);crypto.getRandomValues(a);return [...a].map(n=>ABC[n%ABC.length]).join('')}
+const linkFor=c=>location.origin+location.pathname+'#'+c;
+const SAVE='ewj-atmosphere-live';
+let code='';
+
+if(isTeacher){$('#gStudent').hidden=true;$('#gTeacher').hidden=false}
+$('#gStart').addEventListener('click',()=>{code=newCode();$('#gCode').textContent=code;$('#gLink').value=linkFor(code);$('#gStartBox').hidden=true;$('#gCodeBox').hidden=false});
+$('#gCopy').addEventListener('click',()=>{
+  const done=()=>{$('#gCopy').textContent='Copied';setTimeout(()=>$('#gCopy').textContent='Copy link',1500)};
+  try{navigator.clipboard.writeText($('#gLink').value).then(done,()=>$('#gLink').select())}catch(e){$('#gLink').select()}
+});
+$('#gGo').addEventListener('click',()=>enter(code));
+$('#gJoin').addEventListener('click',()=>{const c=clean($('#gIn').value);if(!valid(c)){$('#gErr').hidden=false;return}enter(c)});
+$('#gIn').addEventListener('keydown',e=>{if(e.key==='Enter')$('#gJoin').click()});
+$('#gIn').addEventListener('input',()=>{$('#gErr').hidden=true});
+
+function enter(c){
+  code=c;
+  try{sessionStorage.setItem(SAVE,JSON.stringify({teacher:isTeacher,code}))}catch(e){}
+  $('#gate').hidden=true;document.body.classList.remove('locked');
+  if(isTeacher)$('#teacherTab').hidden=false;
+  if(!isTeacher&&location.hash.slice(1)!==c){try{history.replaceState(null,'',location.pathname+'#'+c)}catch(e){}}
+  connect();
+}
+
+// A link with the code in it opens the lesson straight away; a refresh goes back into the same lesson.
+(function(){
+  let saved=null;try{saved=JSON.parse(sessionStorage.getItem(SAVE)||'null')}catch(e){}
+  if(saved&&valid(saved.code)&&!!saved.teacher===isTeacher&&(isTeacher||clean(location.hash.slice(1))===saved.code||!location.hash)){enter(saved.code);return}
+  const fromLink=clean(location.hash.slice(1));
+  if(!isTeacher&&valid(fromLink)){enter(fromLink);return}
+  setTimeout(()=>{const el=isTeacher?$('#gStart'):$('#gIn');if(el)el.focus()},50);
+})();
+
+function connect(){
+  if(!window.mqtt)return;
+  // Only the real website connects. A downloaded copy stays offline, so it never shows up as a student.
+  let test=false;try{test=localStorage.getItem('ewj-live-test')==='1'}catch(e){}
+  if(!(/(^|\.)englishwithjelena\.com$/.test(location.hostname)||test))return;
+  const TOPIC=BASE+code,CTRL=TOPIC+'/answers';
+  const client=mqtt.connect('wss://broker.hivemq.com:8884/mqtt',{clientId:'sk'+Math.random().toString(16).slice(2,10),reconnectPeriod:2000,clean:true});
+  const bar=$('#watchBar');
+  if(isTeacher){bar.hidden=false;$('#watchCode').textContent='Lesson '+code}
+  let lastTapN=null,lastSeen=0,watching=true;
+  function status(t,on){if(!isTeacher)return;$('#watchMsg').textContent=t;$('#watchDot').classList.toggle('on',!!on)}
+  client.on('connect',()=>{
+    if(isTeacher){status('Waiting for your student to open the lesson…');client.subscribe(TOPIC);sendReveal()}
+    else{room={presence:p=>{try{client.publish(TOPIC,JSON.stringify(p),{qos:0,retain:true})}catch(e){};return Promise.resolve()}};client.subscribe(CTRL);share()}
+  });
+  if(!isTeacher){
+    client.on('message',(t,buf)=>{
+      if(t!==CTRL)return;let m;try{m=JSON.parse(buf.toString())}catch(e){return}
+      const on=!!(m&&m.reveal);if(S.reveal!==on){S.reveal=on;render();share()}
+    });
+  }
+  client.on('offline',()=>status('No connection — trying again…'));
+  if(!isTeacher){addEventListener('pagehide',()=>{try{client.end(true)}catch(e){}})}
+  let revealOn=false;
+  function sendReveal(){try{client.publish(CTRL,JSON.stringify({reveal:revealOn}),{qos:0,retain:true})}catch(e){}}
+  if(isTeacher){
+    const rb=$('#revealBtn');rb.hidden=false;
+    rb.addEventListener('click',()=>{revealOn=!revealOn;rb.textContent=revealOn?'Hide answers from student':'Show answers to student';rb.classList.toggle('on',revealOn);sendReveal()});
+    following='student';document.body.classList.add('following');$('#stopFollow').hidden=false;
+    $('#stopFollow').textContent='Stop watching';
+    $('#stopFollow').addEventListener('click',()=>{
+      watching=!watching;following=watching?'student':null;
+      document.body.classList.toggle('following',watching);
+      $('#stopFollow').textContent=watching?'Stop watching':'Watch student again';
+      if(!watching)status('Not watching — you can click around yourself',false);
+    });
+    client.on('message',(t,buf)=>{
+      let m;try{m=JSON.parse(buf.toString())}catch(e){return}
+      const first=!lastSeen;lastSeen=Date.now();
+      if(!watching)return;
+      status('👀 Watching your student live',true);
+      const L=m&&m.lesson;
+      if(L&&typeof L==='object'){S=cleanState(L);render(true)}
+      const tp=m&&m.tap;
+      if(tp&&typeof tp==='object'&&tp.n!==lastTapN){const old=lastTapN;lastTapN=tp.n;if(!first&&old!==null)showTap(tp)}
+    });
+  }
+}
+</script>
+</body></html>
