@@ -108,6 +108,12 @@ select:focus{outline:3px solid rgba(255,190,59,.35);border-color:var(--orange)}
 .answer{display:none;background:linear-gradient(180deg,#fff9d5,#fff2e0);padding:16px;border-radius:18px;margin-top:12px;font:18px/1.8 Georgia,serif}
 .answer.open{display:block}
 .answer .hl{background:var(--gbg);border-bottom:2px solid var(--gc);padding:0 2px}
+.setc{cursor:pointer;transition:transform .16s ease}
+.setc:hover{transform:translateY(-2px)}
+.setc:focus-visible{outline:3px solid var(--plum);outline-offset:2px}
+.setc .ans{display:none}
+.setc.open .ans{display:inline}
+.setc:not(.open)::after{content:"Tap to see the answer";display:inline-block;margin-left:4px;padding:2px 10px;border-radius:999px;border:2px dashed #ffbe3b;background:#fffbe6;color:#9a6a12;font-size:14px;font-weight:700}
 .gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:10px;margin-top:12px}
 .gloss div{background:linear-gradient(120deg,#e7f9ff,#fffbe6);border-radius:16px;padding:10px 14px}
 .gloss b{color:var(--plum)}
@@ -270,12 +276,13 @@ body.following .watching-note{display:block}
     <h2>The setting</h2>
     <p><strong>Setting</strong> means <strong>where</strong> and <strong>when</strong> a story takes place. Writers use it to add effect and build atmosphere.</p>
     <p>Settings have <strong>connotations</strong> <span class="ru">(ассоциации)</span>: ideas and feelings we connect with them. The same place can feel completely different at another time: think of a school after dark, then the same school full of pupils at lunchtime.</p>
+    <p><strong>What atmosphere does each setting create?</strong> Guess first, then tap a card to check.</p>
     <div class="grid">
-      <div class="card"><h3>Night, dark, isolated</h3>Used in ghost stories and scary stories → <strong>scary, eerie, mysterious</strong></div>
-      <div class="card"><h3>A sunny day</h3>→ <strong>serene, uplifting, happy</strong></div>
-      <div class="card"><h3>Gloomy, rainy, windy weather</h3>→ <strong>anxious, tense, scary, suspenseful</strong>; often reflects the character’s feelings</div>
-      <div class="card"><h3>Nature</h3>→ <strong>calm, serene</strong>; being at peace, “at one with nature”</div>
-      <div class="card"><h3>A historical period</h3>e.g. World War Two → <strong>eerie, tense, serious, heroic, patriotic, moving</strong></div>
+      <div class="card setc"><h3>Night, dark, isolated</h3>Used in ghost stories and scary stories → <span class="ans"><strong>scary, eerie, mysterious</strong></span></div>
+      <div class="card setc"><h3>A sunny day</h3>→ <span class="ans"><strong>serene, uplifting, happy</strong></span></div>
+      <div class="card setc"><h3>Gloomy, rainy, windy weather</h3>→ <span class="ans"><strong>anxious, tense, scary, suspenseful</strong>; often reflects the character’s feelings</span></div>
+      <div class="card setc"><h3>Nature</h3>→ <span class="ans"><strong>calm, serene</strong>; being at peace, “at one with nature”</span></div>
+      <div class="card setc"><h3>A historical period</h3>e.g. World War Two → <span class="ans"><strong>eerie, tense, serious, heroic, patriotic, moving</strong></span></div>
     </div>
     <p class="source">Setting notes based on <a href="https://www.bbc.co.uk/bitesize/guides/zcnbcwx/revision/1" target="_blank" rel="noopener">BBC Bitesize: setting, pages 1–2</a>.</p>
   </div>
@@ -338,7 +345,7 @@ body.following .watching-note{display:block}
 <section class="page" id="teacher">
   <div class="card">
     <h2>Teacher key</h2>
-    <p class="muted">Only you see this tab. Your student sees ✓ and ✗ after checking; press <strong>Show answers to student</strong> in the dark bar to show them the answers and explanations.</p>
+    <p class="muted">Only you see this tab. Your student sees ✓ and ✗ after checking. If <strong>Show answers to student</strong> (in the dark bar) is on, they also see the answers and explanations, but only after they press <strong>Check answers</strong> on that page.</p>
   </div>
   <div class="grid">
     <div class="card"><h3>4 · Spot the feature</h3><ol id="keyQuiz" class="small"></ol></div>
@@ -463,7 +470,7 @@ RU.forEach((r,i)=>{
 });
 
 /* One state object; the page is drawn from it */
-function blank(){return {tab:'structure',reveal:false,ru:false,ruOpen:[],q:{},qChecked:false,m:{},mChecked:false,clues:false,found:[],picked:null,gloss:false,model:false,vocab:false,word:null,scroll:0}}
+function blank(){return {tab:'structure',reveal:false,ru:false,ruOpen:[],q:{},qChecked:false,m:{},mChecked:false,clues:false,found:[],picked:null,gloss:false,model:false,vocab:false,word:null,setOpen:[],scroll:0}}
 let S=blank();
 let following=null, room=null;
 QUIZ.forEach(q=>$('#keyQuiz').append(el('li',null,FEATS[q[1]]+' · '+q[0])));
@@ -477,7 +484,7 @@ function scoreList(items,ans,checked,key,isMatch){
     const ok=v!=null&&(isMatch?it[1].includes(+v):+v===it[1]);
     if(ok)right++;
     res.className='result';res.textContent='';
-    if(S.reveal){
+    if(S.reveal&&checked&&v!=null){
       if(ok){res.classList.add('good');res.textContent='✓ '+it[2]}
       else{res.classList.add('bad');res.textContent=(v==null?'':'✗ ')+(isMatch?'Best fit: '+it[1].map(x=>ATMS[x][0]).join(' or ')+'. ':'Answer: '+FEATS[it[1]]+'. ')+it[2]}
     }else if(checked){
@@ -519,6 +526,7 @@ function render(scrollToo){
   $('#glossCard').hidden=!S.gloss;$('#glossBtn').setAttribute('aria-pressed',S.gloss);
   $('#glossBtn').textContent=S.gloss?'📝 Hide difficult words':'📝 Difficult words';
   $('#model').classList.toggle('open',S.model);
+  $$('.setc').forEach((c,i)=>{c.classList.toggle('open',S.setOpen.includes(i));c.setAttribute('aria-expanded',String(S.setOpen.includes(i)))});
   if(scrollToo){const max=document.documentElement.scrollHeight-innerHeight;window.scrollTo({top:Math.max(0,S.scroll*max),behavior:'instant'})}
 }
 
@@ -554,6 +562,12 @@ $$('.vocab-word').forEach(w=>{
   const pick=e=>{if(!S.vocab)return;e.stopPropagation();act(()=>{S.word=+w.dataset.w},{word:+w.dataset.w});$('#vocabPanel').scrollIntoView({behavior:'smooth',block:'nearest'})};
   w.addEventListener('click',pick);w.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(e)}});
 });
+$$('.setc').forEach((c,i)=>{
+  c.tabIndex=0;c.setAttribute('role','button');c.dataset.sc=i;
+  const flip=()=>act(()=>{S.setOpen=S.setOpen.includes(i)?S.setOpen.filter(x=>x!==i):[...S.setOpen,i]},{set:i});
+  c.addEventListener('click',e=>{if(e.target.closest('.rut')&&S.ru)return;flip()});
+  c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});
+});
 let scrollTimer=null;
 addEventListener('scroll',()=>{
   if(following)return;clearTimeout(scrollTimer);
@@ -564,6 +578,7 @@ addEventListener('scroll',()=>{
 function showTap(t){
   let e=null;
   if(t.ru!==undefined)e=$(`[data-rt="${+t.ru}"]`);
+  else if(t.set!==undefined)e=$(`.setc[data-sc="${+t.set}"]`);
   else if(t.word!==undefined)e=$(`.vocab-word[data-w="${+t.word}"]`);
   else if(t.mark!==undefined)e=$(`#passage mark[data-id="${+t.mark}"]`);
   else if(typeof t.btn==='string'&&/^[A-Za-z]+$/.test(t.btn))e=document.getElementById(t.btn);
@@ -586,6 +601,7 @@ render();
   o.found=Array.isArray(L.found)?L.found.map(Number).filter(x=>x>=0&&x<ANN.length):[];
   o.picked=(typeof L.picked==='number'&&L.picked>=0&&L.picked<ANN.length)?L.picked:null;
   o.word=(typeof L.word==='number'&&L.word>=0&&L.word<$$('.vocab-word').length)?L.word:null;
+  o.setOpen=Array.isArray(L.setOpen)?L.setOpen.map(Number).filter(x=>x>=0&&x<$$('.setc').length):[];
   o.scroll=typeof L.scroll==='number'?Math.min(1,Math.max(0,L.scroll)):0;
   return o;
 }
