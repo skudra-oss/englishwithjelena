@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My English Words</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Colourful "sunshine" look (same colours as Language Detective); body.plain = calm plain view */
+:root{--butter:#fff2a8;--peach:#ffd4a8;--hotpink:#ff6fa8;--gold:#ffbe3b;--orange:#ff964f;--plum:#6d3569;--ink:#4d3656;--soft:#7a6480;--bg:#fff9f2;--card:#fff;--line:#ffe6f0;
+--shadow:0 10px 26px rgba(255,111,168,.18);--green:#16804d;--green2:#e3f9ea;--red:#c2185b;--red2:#ffe0ee;--grad:linear-gradient(135deg,var(--hotpink),var(--orange));color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background-color:var(--bg);font:17px/1.5 Nunito,system-ui,-apple-system,sans-serif;
+ background-image:radial-gradient(circle at 8% 8%,rgba(255,223,93,.45) 0 8%,transparent 8.5%),radial-gradient(circle at 95% 22%,rgba(184,236,255,.55) 0 10%,transparent 10.5%),radial-gradient(circle at 18% 92%,rgba(255,183,213,.5) 0 9%,transparent 9.5%),radial-gradient(circle at 88% 88%,rgba(201,247,218,.65) 0 11%,transparent 11.5%),linear-gradient(180deg,#fffdf7 0%,#fff6ea 45%,#fff9f2 100%);background-attachment:fixed}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
+.top{background:linear-gradient(135deg,var(--hotpink),var(--orange) 46%,var(--gold));color:#fff;padding:22px 16px 20px;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(255,111,168,.28)}
+.top:before,.top:after{content:"";position:absolute;border-radius:50%;opacity:.25;background:#fff;pointer-events:none}
+.top:before{width:170px;height:170px;right:-40px;top:-65px}.top:after{width:110px;height:110px;left:-25px;bottom:-35px}
+.top .in{max-width:900px;margin:auto;position:relative}
+.top h1{margin:0;font-size:clamp(28px,5vw,40px);font-weight:900;padding-right:120px}
+.top p{margin:4px 0 0;color:#fff8dc;font-size:17px}
+#plainBtn{position:absolute;top:0;right:0;border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px;background:rgba(255,255,255,.25);color:#fff}
+.wrap{max-width:900px;margin:0 auto;padding:18px 14px 60px}
+.panel{background:rgba(255,255,255,.94);border-radius:24px;padding:14px 16px;box-shadow:var(--shadow);margin-bottom:14px}
+.label{font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--plum);margin:0 0 8px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;background:#fff3e3;border-radius:999px;padding:4px;gap:4px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:8px 14px;border-radius:999px;font-weight:800;color:var(--plum)}
+.seg button.on{background:var(--grad);color:#fff}
+.chip{border:2px solid var(--cb,#ffd8e8);background:var(--cbg,#fff);padding:7px 13px;border-radius:999px;font-weight:800;color:var(--ink)}
+.chip.on{background:var(--cc,var(--hotpink));border-color:var(--cc,var(--hotpink));color:#fff}
+.chip .n{opacity:.65;margin-left:4px}
+.c0{--cc:#e0a800;--cbg:#fff6cf;--cb:#ffe39a}.c1{--cc:#3fae6b;--cbg:#e9fbef;--cb:#c6efd3}.c2{--cc:#3b8fd9;--cbg:#e6f4ff;--cb:#c4e2fb}.c3{--cc:#e0558f;--cbg:#ffe9f2;--cb:#ffcde2}.c4{--cc:#9b5de5;--cbg:#f3ecff;--cb:#dccbfb}.c5{--cc:#ff8a3d;--cbg:#fff0e3;--cb:#ffd4a8}
+.chip.tricky{--cc:#9b5de5;--cbg:#f3ecff;--cb:#dccbfb}
+.tabs{display:flex;gap:10px;margin:4px 0 16px}
+.tab{flex:1;border:0;background:#fff;border-radius:999px;padding:12px 6px;font-weight:900;font-size:17px;color:var(--plum);box-shadow:var(--shadow)}
+.tab.on{background:var(--grad);color:#fff}
+.spk{border:0;background:#fff0c2;color:#b5651d;width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.spk svg{width:18px;height:18px}.spk.big{width:54px;height:54px}.spk.big svg{width:26px;height:26px}
+/* table */
+table{width:100%;border-collapse:separate;border-spacing:0 8px}
+th{text-align:left;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--plum);padding:4px 12px}
+td{padding:12px;vertical-align:top;background:linear-gradient(180deg,#fff,var(--gbg,#fff))}
+tr.wr td:first-child{border-left:8px solid var(--gc,var(--hotpink));border-radius:16px 0 0 16px}
+tr.wr td:last-child{border-radius:0 16px 16px 0}
+td.w{font-weight:900;font-size:18px;white-space:nowrap;color:var(--plum)}
+td.w .in{display:flex;gap:8px;align-items:center}
+td.ru{color:#8b3274;font-weight:700}
+.tag{font-size:12px;font-weight:800;color:var(--soft);background:#fff3e3;border-radius:6px;padding:1px 6px;margin-left:2px}
+.ex{display:block;font-style:italic;color:var(--soft);margin-top:3px}
+tr.group td{background:none;font-weight:900;color:var(--plum);font-size:19px;padding:14px 4px 0}
+.g0{--gc:#f2c300;--gbg:#fff1bd}.g1{--gc:#3fae6b;--gbg:#e3f9ea}.g2{--gc:#3b8fd9;--gbg:#dff1ff}.g3{--gc:#e0558f;--gbg:#ffe0ee}.g4{--gc:#9b5de5;--gbg:#efe6ff}.g5{--gc:#ff8a3d;--gbg:#ffe8d6}
+@media (max-width:620px){table,tbody,tr,td{display:block;width:100%}thead{display:none}tr.wr{margin-bottom:10px;border-radius:16px;overflow:hidden;border-left:8px solid var(--gc,var(--hotpink));background:linear-gradient(180deg,#fff,var(--gbg,#fff))}
+ tr.wr td,tr.wr td:first-child,tr.wr td:last-child{border:0;border-radius:0;background:none;padding:4px 14px}td.w{white-space:normal;padding-top:12px!important}td.ru{padding-bottom:12px!important}}
+/* flashcards */
+.fc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;color:var(--plum);font-weight:900}
+.card{perspective:1200px;height:310px;cursor:pointer;user-select:none}
+.card .inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.card.flip .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:linear-gradient(180deg,#fff,var(--gbg,#fff1bd));border:3px solid #fff;border-top:10px solid var(--gc,var(--gold));border-radius:28px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.face.back{transform:rotateY(180deg);background:linear-gradient(180deg,#fffdf5,#fff2e0)}
+.face .big{font-size:42px;font-weight:900;line-height:1.1;color:var(--plum)}
+.face .mean{font-size:22px;font-weight:700}
+.face .hint{position:absolute;bottom:14px;font-size:14px;color:var(--soft)}
+.face .spk{margin-top:16px}
+.btns{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.btn{border:0;border-radius:999px;padding:12px 20px;font-weight:900;background:#fff;color:var(--plum);box-shadow:var(--shadow)}
+.btn.blue{background:var(--grad);color:#fff}
+.btn.green{background:linear-gradient(135deg,#3fae6b,#7fd49a);color:#fff}
+.btn.red{background:linear-gradient(135deg,#e0558f,#ff8fb8);color:#fff}
+.btn.purple{background:linear-gradient(135deg,#9b5de5,#c49bff);color:#fff}
+.btn:active{transform:translateY(2px)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+/* practice */
+.prog{height:13px;background:#ffe6ac;border-radius:99px;overflow:hidden;margin-bottom:14px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--hotpink),var(--orange),var(--gold));border-radius:99px;transition:width .3s}
+.q{background:rgba(255,255,255,.96);border-radius:26px;padding:22px 18px;box-shadow:var(--shadow)}
+.qtype{display:inline-block;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#7d4c22;background:linear-gradient(135deg,var(--butter),var(--peach));padding:5px 12px;border-radius:999px;margin-bottom:10px}
+.qtext{font-size:20px;font-weight:800;margin-bottom:16px;color:var(--plum)}
+.qword{font-size:34px;font-weight:900;display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.opts{display:grid;gap:10px}
+.opt{border:2px solid #ffd8e8;background:#fff;border-radius:18px;padding:12px 14px;text-align:left;font-weight:700;font-size:17px}
+.opt:nth-child(1){border-left:8px solid #f2c300}.opt:nth-child(2){border-left:8px solid #3fae6b}.opt:nth-child(3){border-left:8px solid #3b8fd9}.opt:nth-child(4){border-left:8px solid #e0558f}
+.opt.ok{border-color:#3fae6b;background:var(--green2)}
+.opt.bad{border-color:#e0558f;background:var(--red2)}
+.inp{width:100%;font:inherit;font-size:24px;font-weight:800;padding:12px 14px;border:3px solid #ffd4a8;border-radius:18px;outline:none;color:var(--ink);background:#fffdf7}
+.inp:focus{border-color:var(--hotpink)}
+.inp.ok{border-color:#3fae6b;background:var(--green2)}.inp.bad{border-color:#e0558f;background:var(--red2)}
+.pattern{font-family:ui-monospace,Menlo,monospace;font-size:20px;letter-spacing:.15em;color:var(--soft);margin:10px 0 0}
+.feedback{margin-top:14px;padding:12px 14px;border-radius:20px;font-weight:800;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.feedback.ok{background:linear-gradient(180deg,#e9fbef,#d3f3de);color:var(--green)}.feedback.bad{background:linear-gradient(180deg,#fff3b7,#ffe9cc);color:#8b3274}
+.match{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+.match .col{display:grid;gap:10px;align-content:start}
+.mbtn{border:2px solid #ffd8e8;background:#fff;border-radius:16px;padding:10px 12px;font-weight:700;text-align:left;min-height:52px}
+.mbtn.w{font-weight:900;font-size:18px;color:var(--plum);background:linear-gradient(180deg,#fff,#fff1bd);border-color:#ffe39a}
+.mbtn.sel{border-color:var(--hotpink);background:#ffe0ee}
+.mbtn.done{border-color:#3fae6b;background:var(--green2);opacity:.75;pointer-events:none}
+.mbtn.shake{animation:sh .35s;border-color:#e0558f;background:var(--red2)}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.end{text-align:center;padding:30px 18px}
+.end .stars{font-size:46px;letter-spacing:6px}
+.end .score{font-size:30px;font-weight:900;margin:8px 0;color:var(--plum)}
+.empty{text-align:center;color:var(--soft);padding:30px;background:#fff;border-radius:24px;box-shadow:var(--shadow)}
+.start{text-align:center;padding:26px 18px}.start p{color:var(--soft)}
+
+.gate{position:fixed;inset:0;z-index:50;background:rgba(77,54,86,.35);display:grid;place-items:center;padding:20px}
+.gate[hidden]{display:none}
+.gate-card{width:min(420px,100%);background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 18px 50px rgba(255,111,168,.25)}
+.gate-head{background:linear-gradient(135deg,var(--hotpink),var(--orange) 46%,var(--gold));color:#fff;padding:20px 24px}
+.gate-head h2{margin:0;font-size:30px;color:#fff}.gate-head p{margin:4px 0 0;font-size:19px;color:#fff8dc}
+.gate-body{padding:20px 24px 24px}
+body.plain .gate-head{background:#3b5bdb}
+/* ---------- Plain view ---------- */
+body.plain{--ink:#1f2a44;--plum:#1f2a44;--soft:#6b7590;--shadow:0 1px 0 #e3e8f1;--grad:#3b5bdb;background:#f7f7f5}
+body.plain .top{background:#fff;color:#1f2a44;box-shadow:0 1px 0 #e3e8f1}
+body.plain .top:before,body.plain .top:after{display:none}
+body.plain .top p{color:#6b7590}
+body.plain #plainBtn{background:#eef1f6;color:#1f2a44}
+body.plain .panel,body.plain .q,body.plain .empty{background:#fff;border:1px solid #e3e8f1}
+body.plain .seg{background:#f0f2f6}
+body.plain .chip{--cc:#3b5bdb;--cbg:#fff;--cb:#dfe3ea}
+body.plain .tab{background:#fff;border:1px solid #e3e8f1}body.plain .tab.on{background:#3b5bdb;color:#fff;border-color:#3b5bdb}
+body.plain .spk{background:#eef1f6;color:#3b5bdb}
+body.plain tr[class*="g"]{--gc:#cfd5df;--gbg:#fff}
+body.plain td.ru{color:#1f2a44}
+body.plain .face{background:#fff;border:1px solid #e3e8f1;border-top:1px solid #e3e8f1}
+body.plain .face.back{background:#fafafa}
+body.plain .btn{border:1px solid #e3e8f1}
+body.plain .btn.green{background:#2f9e5b}body.plain .btn.red{background:#d9485f}body.plain .btn.purple{background:#6b5bd2}body.plain .btn.blue{background:#3b5bdb}
+body.plain .prog{background:#e8ebf0}body.plain .prog i{background:#2f9e5b}
+body.plain .qtype{background:#eef1f6;color:#1f2a44}
+body.plain .opt,body.plain .opt:nth-child(n){border:2px solid #e3e8f1}
+body.plain .opt.ok{border-color:#2f9e5b}body.plain .opt.bad{border-color:#d9485f}
+body.plain .inp{border-color:#dfe3ea;background:#fff}
+body.plain .mbtn,body.plain .mbtn.w{border-color:#e3e8f1;background:#fff}
+body.plain .mbtn.sel{border-color:#3b5bdb;background:#eef2ff}
+body.plain .feedback.bad{background:#fdeaea;color:#a8323f}
+body.plain .tag{background:#f0f2f6}
+@media (max-width:620px){body.plain tr.wr{border-left-color:#cfd5df;background:#fff}}
+</style>
+</head>
+<body>
+<div id="nameGate" class="gate" hidden><div class="gate-card"><div class="gate-head"><h2>Hi! 👋</h2><p>What's your name?</p></div>
+<form id="nameForm" class="gate-body"><input id="nameIn" class="inp" maxlength="30" autocomplete="off" placeholder="My name is…"><button class="btn blue" style="width:100%;margin-top:12px;font-size:19px">Start</button></form></div></div>
+<header class="top"><div class="in">
+  <h1>My English Words</h1>
+  <p>Look, listen and practise your words.</p>
+  <button id="plainBtn">Plain view</button>
+</div></header>
+<div class="wrap">
+
+  <div class="panel">
+    <p class="label">Choose words</p>
+    <div class="row" style="margin-bottom:10px">
+      <div class="seg" id="groupBy">
+        <button data-v="lesson" class="on">By lesson</button>
+        <button data-v="topic">By topic</button>
+      </div>
+    </div>
+    <div class="row" id="sets"></div>
+  </div>
+
+  <div class="panel">
+    <p class="label">Meaning</p>
+    <div class="seg" id="langSeg">
+      <button data-v="en" class="on">English – English</button>
+      <button data-v="ru">English – Russian</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-v="table">Word list</button>
+    <button class="tab" data-v="cards">Flashcards</button>
+    <button class="tab" data-v="practice">Practice</button>
+  </div>
+
+  <div id="view"></div>
+</div>
+
+<script>
+/* ============ WORDS ============
+   To add words: add a lesson to LESSONS and new lines to WORDS.
+   w = word, d = simple English explanation, ex = example, ru = Russian,
+   l = lesson id, t = topic id, tag = small label, name = true for names (no typing). */
+const LESSONS = {
+  l1: "Lesson 1 — 10.11.2026",
+  l2: "Lesson 2 — 12.11.2026: Try These Sports!"
+};
+const TOPICS = {
+  sport: "Sport",
+  time: "Time and how often",
+  desc: "Describing words",
+  act: "Doing words",
+  shapes: "Shapes",
+  weight: "Weight and numbers",
+  place: "Where things are",
+  nature: "Nature and the world",
+  names: "Places"
+};
+const WORDS = [
+  {w:"mountains", d:"Very high land.", ex:"You can climb mountains.", ru:"Горы", l:"l1", t:"nature"},
+  {w:"feel", d:"To be happy, sad, cold, tired, etc.", ru:"Чувствовать (себя)", l:"l1", t:"act"},
+  {w:"often", d:"Many times.", ru:"Часто", l:"l1", t:"time"},
+  {w:"usually", d:"Something you do most of the time.", ru:"Обычно", l:"l1", t:"time"},
+  {w:"spend time", d:"To use your time doing something.", ex:"I spend time with my friends.", ru:"Проводить время", l:"l1", t:"time"},
+  {w:"quiet", d:"Not loud. There is little or no noise.", ru:"Тихий, спокойный", l:"l1", t:"desc"},
+  {w:"future", d:"The time after now.", ex:"Tomorrow and next year are in the future.", ru:"Будущее", l:"l1", t:"time"},
+  {w:"famous", d:"A lot of people know this person or thing.", ru:"Знаменитый, известный", l:"l1", t:"desc"},
+  {w:"mean", d:"To tell us what a word, sign or action says or shows.", ex:"“Huge” means “very big”.", ru:"Означать", l:"l1", t:"act"},
+  {w:"front", d:"The part of something that is not at the back.", ru:"Передняя часть, спереди", l:"l1", t:"place"},
+  {w:"practice", tag:"verb", d:"To do something many times to get better at it.", ru:"Практиковаться, тренироваться", l:"l1", t:"act"},
+  {w:"boring", d:"Not interesting or fun.", ru:"Скучный", l:"l1", t:"desc"},
+  {w:"under", d:"Less than a number or age.", ex:"Children under 12 are younger than 12.", ru:"Меньше, младше", l:"l1", t:"weight"},
+  {w:"England", d:"A country in the UK.", ru:"Англия", l:"l1", t:"names", name:true},
+  {w:"national", d:"For the whole country.", ex:"a national sports team", ru:"Национальный, общенациональный", l:"l1", t:"sport"},
+
+  {w:"brakes", d:"Parts of a bike or car that help it stop.", ru:"Тормоза", l:"l2", t:"sport"},
+  {w:"weigh", d:"To say how heavy something is.", ex:"I weigh 50 kilograms.", ru:"Весить", l:"l2", t:"weight"},
+  {w:"winning team", d:"The team that wins a game.", ru:"Команда-победитель", l:"l2", t:"sport"},
+  {w:"ancient", d:"Very, very old; from a long time ago.", ru:"Древний", l:"l2", t:"desc"},
+  {w:"shape", d:"What something looks like: a circle, a square, a heart, etc.", ru:"Форма", l:"l2", t:"shapes"},
+  {w:"egg-shaped", d:"Having the shape of an egg. We can use -shaped with other words too.", ex:"heart-shaped, star-shaped, diamond-shaped", ru:"Яйцеобразный, в форме яйца", l:"l2", t:"shapes"},
+  {w:"circle", d:"A round shape, like the letter O.", ru:"Круг", l:"l2", t:"shapes"},
+  {w:"ground", d:"The place outside that we walk on.", ru:"Земля, поверхность земли", l:"l2", t:"nature"},
+  {w:"air", d:"It is all around us. We breathe it, but we cannot see it.", ru:"Воздух", l:"l2", t:"nature"},
+  {w:"touch", d:"To put your hand, foot or another part of your body on something.", ru:"Касаться, трогать", l:"l2", t:"act"},
+  {w:"puck", d:"A small, hard, flat thing that players hit in hockey.", ru:"Шайба", l:"l2", t:"sport"},
+  {w:"flat", d:"Not round or curved.", ex:"A table has a flat top.", ru:"Плоский, ровный", l:"l2", t:"shapes"},
+  {w:"heavy", d:"Something that weighs a lot.", ru:"Тяжёлый", l:"l2", t:"weight"},
+  {w:"weighs", d:"The he/she/it form of weigh.", ex:"The ball weighs one kilogram.", ru:"Весит", l:"l2", t:"weight"},
+  {w:"along", d:"Moving from one place to another next to or following something.", ex:"We walk along the river.", ru:"Вдоль, по", l:"l2", t:"place"},
+  {w:"bottom", d:"The lowest part of something.", ru:"Дно, нижняя часть", l:"l2", t:"place"}
+];
+WORDS.forEach(x=>x.id=x.l+":"+x.w);
+const TKEYS=Object.keys(TOPICS);const gcls=x=>"g"+(TKEYS.indexOf(x.t)%6);
+
+/* ============ STATE ============ */
+const S={groupBy:"lesson", set:"random", lang:"en", tab:"table"};
+const RANDOM_N=12;let RANDOM=[];
+/* Random words: words never practised or not practised for the longest time come first,
+   tricky words get a boost; a few fully random words keep it varied. */
+function newRandom(){
+  const seen=store.get("seen",{}),now=Date.now(),DAY=864e5;
+  const pr=x=>(seen[x.id]?(now-seen[x.id])/DAY:1000)+(tricky[x.id]||0)*2+Math.random()*1.5;
+  const n=Math.min(RANDOM_N,WORDS.length),ranked=WORDS.slice().sort((a,b)=>pr(b)-pr(a));
+  const main=ranked.slice(0,Math.max(0,n-3)),rest=shuffle(ranked.slice(main.length)).slice(0,n-main.length);
+  RANDOM=shuffle(main.concat(rest));return RANDOM}
+function markSeen(list){const s=store.get("seen",{}),t=Date.now();list.forEach(x=>s[x.id]=t);store.set("seen",s)}
+const store={get(k,d){try{const v=localStorage.getItem("vocab_"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+             set(k,v){try{localStorage.setItem("vocab_"+k,JSON.stringify(v))}catch(e){}}};
+Object.assign(S, store.get("prefs",{}));
+let tricky=store.get("tricky",{}); // id -> number
+function savePrefs(){store.set("prefs",{groupBy:S.groupBy,set:S.set,lang:S.lang,tab:S.tab})}
+function addTricky(x){tricky[x.id]=(tricky[x.id]||0)+1;store.set("tricky",tricky)}
+function goodAnswer(x){if(tricky[x.id]){tricky[x.id]--; if(tricky[x.id]<=0)delete tricky[x.id]; store.set("tricky",tricky)}}
+const trickyWords=()=>WORDS.filter(x=>tricky[x.id]);
+
+/* ============ VOICE (same choice as Luka's lesson) ============ */
+let VOICES=[];function loadV(){try{VOICES=speechSynthesis.getVoices()}catch(e){}}
+if('speechSynthesis' in window){loadV();try{speechSynthesis.onvoiceschanged=loadV}catch(e){}}
+function pick(){const v=VOICES.filter(x=>x.lang&&x.lang.replace('_','-').toLowerCase().startsWith('en'));
+ const good=v.filter(x=>/premium|enhanced|natural|neural/i.test(x.name));if(good.length)return good.find(x=>/GB/i.test(x.lang))||good[0];
+ for(const n of ['Google UK English Female','Google UK English Male','Serena','Kate','Daniel','Martha','Arthur','Samantha']){const f=v.find(x=>x.name.includes(n));if(f)return f}
+ return v.find(x=>/GB/i.test(x.lang))||v[0]}
+const canSpeak='speechSynthesis' in window;
+function say(t){if(!canSpeak)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);const v=pick();if(v){u.voice=v;u.lang=v.lang}else u.lang='en-GB';u.rate=.85;u.pitch=1.05;speechSynthesis.speak(u)}catch(e){}}
+const SPK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
+function spkBtn(w,big){return canSpeak?`<button class="spk${big?' big':''}" data-say="${esc(w)}" title="Listen">${SPK}</button>`:''}
+
+/* ============ HELPERS ============ */
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const $=s=>document.querySelector(s);
+function meaning(x){return S.lang==="ru"?x.ru:x.d}
+function maskWord(text,x){if(!text)return text;const re=new RegExp("\\b"+x.w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\w*","gi");return text.replace(re,"____")}
+function norm(s){return s.toLowerCase().replace(/[’']/g,"'").replace(/[-\s]+/g," ").replace(/[.!?,]+$/,"").trim()}
+
+function currentWords(){
+  if(S.set==="all")return WORDS;
+  if(S.set==="random")return S.tab==="table"?WORDS:(RANDOM.length?RANDOM:newRandom());
+  if(S.set==="tricky")return trickyWords();
+  const [kind,id]=S.set.split(":");
+  return WORDS.filter(x=>kind==="l"?x.l===id:x.t===id);
+}
+function setName(){
+  if(S.set==="all")return "All words";if(S.set==="random")return "Random words";if(S.set==="tricky")return "My tricky words";
+  const [kind,id]=S.set.split(":");return kind==="l"?LESSONS[id]:TOPICS[id];
+}
+
+/* ============ CONTROLS ============ */
+function renderSets(){
+  const box=$("#sets");let h=`<button class="chip c5${S.set==="random"?" on":""}" data-set="random">🎲 Random words<span class="n">${Math.min(RANDOM_N,WORDS.length)}</span></button><button class="chip${S.set==="all"?" on":""}" data-set="all">All words<span class="n">${WORDS.length}</span></button>`;
+  if(S.groupBy==="lesson"){
+    let ci=0;for(const id in LESSONS){const n=WORDS.filter(x=>x.l===id).length;if(n)h+=`<button class="chip c${ci++%6}${S.set==="l:"+id?" on":""}" data-set="l:${id}">${esc(LESSONS[id])}<span class="n">${n}</span></button>`}
+  }else{
+    let ci=0;for(const id in TOPICS){const n=WORDS.filter(x=>x.t===id).length;if(n)h+=`<button class="chip c${ci++%6}${S.set==="t:"+id?" on":""}" data-set="t:${id}">${esc(TOPICS[id])}<span class="n">${n}</span></button>`}
+  }
+  const tn=trickyWords().length;
+  h+=`<button class="chip tricky${S.set==="tricky"?" on":""}" data-set="tricky">★ My tricky words<span class="n">${tn}</span></button>`;
+  box.innerHTML=h;
+  document.querySelectorAll("#groupBy button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.groupBy));
+  document.querySelectorAll("#langSeg button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.lang));
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.v===S.tab));
+}
+$("#sets").addEventListener("click",e=>{const b=e.target.closest("[data-set]");if(!b)return;S.set=b.dataset.set;if(S.set==="random")newRandom();savePrefs();render()});
+$("#groupBy").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.groupBy=b.dataset.v;
+  if(S.set.startsWith("l:")&&S.groupBy==="topic"||S.set.startsWith("t:")&&S.groupBy==="lesson")S.set="all";savePrefs();render()});
+$("#langSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.lang=b.dataset.v;savePrefs();render()});
+document.querySelector(".tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;S.tab=b.dataset.v;savePrefs();render()});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-say]");if(b){e.stopPropagation();say(b.dataset.say)}},true);
+
+/* ============ TABLE ============ */
+function renderTable(list){
+  const groups=[];
+  if(S.set==="all"||S.set==="random"||S.set==="tricky"){
+    if(S.groupBy==="lesson"){for(const id in LESSONS){const g=list.filter(x=>x.l===id);if(g.length)groups.push([LESSONS[id],g])}}
+    else{for(const id in TOPICS){const g=list.filter(x=>x.t===id);if(g.length)groups.push([TOPICS[id],g])}}
+  }else groups.push([null,list]);
+  let h=`<table><thead><tr><th>Word</th><th>Meaning</th><th>Russian</th></tr></thead><tbody>`;
+  for(const [title,g] of groups){
+    if(title)h+=`<tr class="group"><td colspan="3">${esc(title)}</td></tr>`;
+    for(const x of g)h+=`<tr class="wr ${gcls(x)}"><td class="w"><div class="in">${spkBtn(x.w)}<span>${esc(x.w)}${x.tag?` <span class="tag">${x.tag}</span>`:""}</span></div></td>
+      <td>${esc(x.d)}${x.ex?`<span class="ex">Example: ${esc(x.ex)}</span>`:""}</td><td class="ru">${esc(x.ru)}</td></tr>`;
+  }
+  $("#view").innerHTML=h+"</tbody></table>";
+}
+
+/* ============ FLASHCARDS ============ */
+let FC={key:"",order:[],i:0};
+function renderCards(list){
+  const key=S.set+"|"+list.length;
+  if(FC.key!==key){FC={key,order:list.slice(),i:0}}
+  if(FC.i>=FC.order.length)FC.i=0;
+  const x=FC.order[FC.i];
+  const back=S.lang==="ru"?`<div class="mean" style="font-size:30px">${esc(x.ru)}</div>`
+    :`<div class="mean">${esc(x.d)}</div>${x.ex?`<div class="ex" style="font-size:18px;margin-top:10px">${esc(x.ex)}</div>`:""}`;
+  $("#view").innerHTML=`
+    <div class="fc-top"><span>${esc(setName())}</span><span>${FC.i+1} / ${FC.order.length}</span></div>
+    <div class="card ${gcls(x)}" id="card"><div class="inner">
+      <div class="face"><div class="big">${esc(x.w)}</div>${x.tag?`<span class="tag" style="margin-top:6px">${x.tag}</span>`:""}${spkBtn(x.w,true)}<div class="hint">Tap the card to see the meaning</div></div>
+      <div class="face back">${back}${spkBtn(x.w)}<div class="hint">Tap to turn back</div></div>
+    </div></div>
+    <div class="btns">
+      <button class="btn" id="prev">◀ Back</button>
+      <button class="btn red" id="notyet">Not yet</button>
+      <button class="btn green" id="knew">I knew it ✓</button>
+      <button class="btn" id="next">Next ▶</button>
+    </div>
+    <div class="btns"><button class="btn" id="shuf">🔀 Mix the cards</button></div>`;
+  $("#card").onclick=()=>{$("#card").classList.toggle("flip");T.flip(x.w);markSeen([x])};
+  const go=d=>{FC.i=(FC.i+d+FC.order.length)%FC.order.length;renderCards(list)};
+  $("#prev").onclick=()=>go(-1);$("#next").onclick=()=>go(1);
+  $("#knew").onclick=()=>{T.card(x.w,true);goodAnswer(x);renderSets();go(1)};
+  $("#notyet").onclick=()=>{T.card(x.w,false);addTricky(x);renderSets();go(1)};
+  $("#shuf").onclick=()=>{FC.order=shuffle(FC.order);FC.i=0;renderCards(list)};
+}
+
+/* ============ PRACTICE ============ */
+let P=null;
+function renderPracticeStart(list){
+  P=null;
+  $("#view").innerHTML=`<div class="q start"><div style="font-size:46px">🎯</div>
+    <div class="qtext" style="margin:6px 0">${esc(setName())}</div>
+    <p>${S.set==="random"?RANDOM_N+" random words from all your lessons":list.length+" words"} · choose, type, match and listen</p>
+    <button class="btn blue" id="go" style="font-size:20px;padding:14px 30px">Start</button></div>`;
+  $("#go").onclick=()=>startPractice(list);
+}
+function startPractice(list){
+  if(S.set==="random")list=newRandom();
+  const n=S.set==="random"?list.length:Math.min(10,Math.max(list.length,5));
+  let pool=[];while(pool.length<n)pool=pool.concat(shuffle(list));pool=pool.slice(0,n);
+  const types=["choice","choice","type","match"];if(canSpeak)types.push("listen");
+  const qs=pool.map((x,i)=>{let t=types[Math.floor(Math.random()*types.length)];
+    if(t==="type"&&x.name)t="choice";if(t==="match"&&list.length<3)t="choice";return {x,t}});
+  // make sure each type appears at least once if possible
+  if(qs.length>=4){qs[1].t=qs[1].x.name?"choice":"type";if(list.length>=3)qs[3].t="match";if(canSpeak&&qs.length>5)qs[5].t="listen"}
+  P={list,qs,i:0,score:0,wrong:[],setName:setName()};T.note("practice");nextQ();
+}
+function others(x,k){const from=WORDS.filter(y=>y.id!==x.id&&y.w!==x.w&&meaning(y)!==meaning(x));
+  const same=shuffle(from.filter(y=>!!y.name===!!x.name));return shuffle(same.concat(from.filter(y=>!same.includes(y)))).slice(0,k)}
+function shell(type,inner){
+  return `<div class="prog"><i style="width:${P.i/P.qs.length*100}%"></i></div>
+  <div class="q"><div class="qtype">${type} · ${P.i+1} of ${P.qs.length}</div>${inner}<div id="fb"></div></div>`}
+function done(ok,x,extra){
+  if(ok){P.score++;goodAnswer(x)}else{addTricky(x);if(!P.wrong.includes(x.w))P.wrong.push(x.w)}
+  renderSets();
+  const fb=$("#fb");
+  fb.innerHTML=`<div class="feedback ${ok?"ok":"bad"}">${ok?"✓ Great!":"✗ The answer is:"} ${ok?"":`<b>${esc(x.w)}</b> — ${esc(meaning(x))}`} ${extra||""} ${spkBtn(x.w)}
+    <span style="flex:1"></span><button class="btn blue" id="nx">Next ▶</button></div>`;
+  say(x.w);
+  $("#nx").onclick=()=>{P.i++;nextQ()};$("#nx").focus();
+}
+function nextQ(){
+  if(P.i>=P.qs.length)return endPractice();
+  const {x,t}=P.qs[P.i];markSeen([x]);
+  if(t==="choice")qChoice(x);else if(t==="type")qType(x);else if(t==="match")qMatch(x);else qListen(x);
+}
+function qChoice(x){
+  const reverse=Math.random()<.5;const opts=shuffle([x].concat(others(x,3)));
+  const m=S.lang==="ru"?x.ru:maskWord(x.d,x);
+  const inner=reverse
+    ?`<div class="qtext">Which word means this?</div><div class="qword" style="font-size:24px">${esc(m)}</div>
+      <div class="opts">${opts.map(o=>`<button class="opt" data-id="${esc(o.id)}">${esc(o.w)}</button>`).join("")}</div>`
+    :`<div class="qtext">What does it mean?</div><div class="qword">${esc(x.w)} ${spkBtn(x.w)}</div>
+      <div class="opts">${opts.map(o=>`<button class="opt" data-id="${esc(o.id)}">${esc(meaning(o))}</button>`).join("")}</div>`;
+  $("#view").innerHTML=shell("Choose",inner);wireOpts(x);
+}
+function qListen(x){
+  const opts=shuffle([x].concat(others(x,3)));
+  $("#view").innerHTML=shell("Listen",`<div class="qtext">Listen. Which word do you hear?</div>
+    <div class="qword">${spkBtn(x.w,true)}<span style="font-size:16px;color:var(--soft);font-weight:700">Tap to listen again</span></div>
+    <div class="opts">${opts.map(o=>`<button class="opt" data-id="${esc(o.id)}">${esc(o.w)}</button>`).join("")}</div>`);
+  wireOpts(x);setTimeout(()=>say(x.w),300);
+}
+function wireOpts(x){
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const ok=b.dataset.id===x.id;
+    document.querySelectorAll(".opt").forEach(o=>{o.disabled=true;if(o.dataset.id===x.id)o.classList.add("ok")});
+    if(!ok)b.classList.add("bad");done(ok,x);
+  });
+}
+function qType(x){
+  const clue=S.lang==="ru"?`<div class="qword" style="font-size:26px">${esc(x.ru)}</div>`
+    :`<div class="qword" style="font-size:22px;display:block">${esc(maskWord(x.d,x))}${x.ex?`<span class="ex">Example: ${esc(maskWord(x.ex,x))}</span>`:""}</div>`;
+  const pattern=x.w.split("").map(c=>c===" "?"  ":c==="-"?"-":"_").join(" ");
+  $("#view").innerHTML=shell("Write the word",`<div class="qtext">Write the English word.</div>${clue}
+    <input class="inp" id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type here…">
+    <div class="pattern" id="pat">${pattern}</div>
+    <div class="btns" style="justify-content:flex-start"><button class="btn" id="hint">💡 Hint</button><button class="btn blue" id="chk">Check</button></div>`);
+  const inp=$("#inp");inp.focus();let hints=0;
+  $("#hint").onclick=()=>{hints++;const show=x.w.slice(0,hints);
+    $("#pat").textContent=x.w.split("").map((c,i)=>i<hints?c:c===" "?"  ":c==="-"?"-":"_").join(" ");
+    if(!inp.value||show.toLowerCase().startsWith(inp.value.toLowerCase()))inp.value=show;inp.focus()};
+  const check=()=>{if(!inp.value.trim())return;const ok=norm(inp.value)===norm(x.w);
+    inp.classList.add(ok?"ok":"bad");inp.disabled=true;$("#chk").disabled=true;$("#hint").disabled=true;
+    done(ok,x)};
+  $("#chk").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter")check()};
+}
+function qMatch(x){
+  const set=shuffle([x].concat(shuffle(P.list.filter(y=>y.id!==x.id&&meaning(y)!==meaning(x))).slice(0,3)));
+  const right=shuffle(set);
+  $("#view").innerHTML=shell("Match",`<div class="qtext">Tap a word, then tap its meaning.</div>
+    <div class="match"><div class="col">${set.map(o=>`<button class="mbtn w" data-id="${esc(o.id)}">${esc(o.w)}</button>`).join("")}</div>
+    <div class="col">${right.map(o=>`<button class="mbtn m" data-id="${esc(o.id)}">${esc(S.lang==="ru"?o.ru:maskWord(o.d,o))}</button>`).join("")}</div></div>`);
+  markSeen(set);let sel=null,errors=0,matched=0;
+  document.querySelectorAll(".mbtn.w").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll(".mbtn.w").forEach(o=>o.classList.remove("sel"));b.classList.add("sel");sel=b;
+    say(set.find(o=>o.id===b.dataset.id).w)});
+  document.querySelectorAll(".mbtn.m").forEach(b=>b.onclick=()=>{
+    if(!sel)return;
+    if(b.dataset.id===sel.dataset.id){b.classList.add("done");sel.classList.remove("sel");sel.classList.add("done");sel=null;matched++;
+      if(matched===set.length){const ok=errors===0;if(ok){P.score++;set.forEach(goodAnswer)}renderSets();
+        $("#fb").innerHTML=`<div class="feedback ${ok?"ok":"bad"}">${ok?"✓ Perfect!":"✓ All matched!"}<span style="flex:1"></span><button class="btn blue" id="nx">Next ▶</button></div>`;
+        $("#nx").onclick=()=>{P.i++;nextQ()}}}
+    else{errors++;const mw=set.find(o=>o.id===sel.dataset.id);addTricky(mw);if(!P.wrong.includes(mw.w))P.wrong.push(mw.w);b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake")}
+  });
+}
+function endPractice(){
+  const n=P.qs.length,s=P.score,pct=s/n;T.round(P.setName,s,n,P.wrong);
+  const stars=pct>=.9?"⭐⭐⭐":pct>=.6?"⭐⭐":"⭐";
+  const msg=pct>=.9?"Amazing work!":pct>=.6?"Well done!":"Good job! Play again to practise more.";
+  const tn=trickyWords().length;
+  $("#view").innerHTML=`<div class="prog"><i style="width:100%"></i></div><div class="q end">
+    <div class="stars">${stars}</div><div class="score">${s} / ${n}</div><p>${msg}</p>
+    <div class="btns"><button class="btn blue" id="again">Play again</button>
+    ${tn?`<button class="btn purple" id="trk">★ Practise my tricky words (${tn})</button>`:""}</div></div>`;
+  $("#again").onclick=()=>startPractice(P.list);
+  if(tn)$("#trk").onclick=()=>{S.set="tricky";savePrefs();renderSets();startPractice(trickyWords())};
+}
+
+/* ============ RENDER ============ */
+function render(){
+  renderSets();
+  const list=currentWords();
+  if(!list.length){$("#view").innerHTML=`<div class="empty">${S.set==="tricky"?"No tricky words yet! Words you get wrong will appear here.":"No words here yet."}</div>`;return}
+  T.note(S.tab);if(S.tab==="table")renderTable(list);else if(S.tab==="cards")renderCards(list);else renderPracticeStart(list);
+}
+if(S.set!=="all"&&S.set!=="tricky"&&S.set!=="random"){const [k,id]=S.set.split(":");if(!(k==="l"?LESSONS[id]:TOPICS[id]))S.set="all"}
+
+/* ============ REPORTS TO THE TEACHER ============
+   One email per visit, through the same sending service as the homework page.
+   Only sent from englishwithjelena.com (not from copies or previews). */
+const FORM_ID="myekvbzl";
+const LIVE=/englishwithjelena\.com$/i.test(location.hostname);
+const T={start:Date.now(),active:0,lastVis:Date.now(),visible:!document.hidden,views:new Set(),flips:new Set(),known:[],notyet:[],rounds:[],sentSig:"",
+ note(v){this.views.add(v)},flip(w){this.flips.add(w)},
+ card(w,ok){(ok?this.known:this.notyet).push(w)},
+ round(set,s,n,wrong){this.rounds.push({set,s,n,wrong:wrong.slice()});
+   const hist=store.get("history",[]);hist.push({d:Date.now(),s,n});store.set("history",hist.slice(-50));this.save()},
+ activeMs(){return this.active+(this.visible?Date.now()-this.lastVis:0)},
+ report(){
+   const secs=Math.round(this.activeMs()/1000),mm=Math.floor(secs/60),ss=secs%60;
+   const viewNames={table:"word list",cards:"flashcards",practice:"practice"};
+   const hist=store.get("history",[]);
+   const prog=hist.slice(-8).map(r=>new Date(r.d).toLocaleDateString("en-GB",{day:"numeric",month:"short"})+" "+Math.round(r.s/r.n*100)+"%").join(" → ");
+   const tr=trickyWords().map(x=>x.w);
+   const name=store.get("name","")||"student";
+   return {
+     _subject:"Vocabulary practice: "+name+" — "+new Date(this.start).toLocaleDateString("en-GB"),
+     student:name,
+     opened:new Date(this.start).toLocaleString("en-GB"),
+     time_spent:(mm?mm+" min ":"")+ss+" s",
+     looked_at:[...this.views].map(v=>viewNames[v]||v).join(", ")||"nothing (opened and left)",
+     flashcards:this.flips.size?this.flips.size+" cards turned; knew: "+(this.known.join(", ")||"–")+"; not yet: "+(this.notyet.join(", ")||"–"):"not used",
+     practice_rounds:this.rounds.length?this.rounds.map((r,i)=>"Round "+(i+1)+" ("+r.set+"): "+r.s+"/"+r.n+(r.wrong.length?" — mistakes: "+r.wrong.join(", "):" — no mistakes")).join("\n"):"none",
+     progress_last_rounds:prog||"no rounds yet",
+     tricky_words_now:tr.length?tr.length+": "+tr.join(", "):"none",
+     not_practised_for_a_week:(()=>{const s=store.get("seen",{}),old=WORDS.filter(x=>!s[x.id]||Date.now()-s[x.id]>7*864e5);return old.length+" of "+WORDS.length+" words"})()
+   }},
+ sig(r){return JSON.stringify([r.looked_at,r.flashcards,r.practice_rounds,Math.floor(this.activeMs()/60000)])},
+ save(){try{if(this.activeMs()<3000&&!this.rounds.length)return;const r=this.report();if(this.sig(r)===this.sentSig)return;if(this.sentOnce)r._subject+=" (update)";store.set("pending",r)}catch(e){}},
+ send(){
+   if(!LIVE)return;
+   if(this.activeMs()<3000&&!this.rounds.length)return;
+   const r=this.report();const sig=this.sig(r);
+   if(sig===this.sentSig)return;this.sentSig=sig;
+   if(this.sentOnce)r._subject+=" (update)";
+   this.sentOnce=true;store.set("pending",r);
+   post(r).then(ok=>{if(ok)store.set("pending",null)});
+ }};
+function post(r){try{return fetch("https://formspree.io/f/"+FORM_ID,{method:"POST",keepalive:true,headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify(r)}).then(x=>x.ok).catch(()=>false)}catch(e){return Promise.resolve(false)}}
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){if(T.visible){T.active+=Date.now()-T.lastVis;T.visible=false}T.send()}
+  else{T.visible=true;T.lastVis=Date.now()}});
+window.addEventListener("pagehide",()=>T.send());
+// a report that didn't get through last time is sent now
+(function(){const old=store.get("pending",null);if(old&&LIVE){old._subject+=" (sent late)";post(old).then(ok=>{if(ok)store.set("pending",null)})}else if(old)store.set("pending",null)})();
+setInterval(()=>T.save(),15000);
+// name
+function askName(){if(store.get("name","")){return}
+  $("#nameGate").hidden=false;setTimeout(()=>$("#nameIn").focus(),50);
+  $("#nameForm").onsubmit=e=>{e.preventDefault();const v=$("#nameIn").value.trim();if(!v){$("#nameIn").focus();return}store.set("name",v);$("#nameGate").hidden=true}}
+askName();
+function applyPlain(){document.body.classList.toggle("plain",!!S.plain);$("#plainBtn").textContent=S.plain?"Colourful view":"Plain view"}
+S.plain=store.get("plain",false);applyPlain();
+$("#plainBtn").onclick=()=>{S.plain=!S.plain;store.set("plain",S.plain);applyPlain()};
+render();
+</script>
+</body>
+</html>
