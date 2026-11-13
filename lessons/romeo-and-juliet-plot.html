@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Romeo and Juliet – Put the Plot in Order</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap">
+<style>
+  :root { --dark:#3b1520; --light:#f6efe3; --card:#fffaf2; --line:#e3d3b8; --accent:#9c2f3f; --gold:#b07a1f; --ok:#2f6f4f; --bad:#c2571a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--light); color:#2b2220; font-family:Inter, Arial, sans-serif; }
+  main { max-width:880px; margin:0 auto; padding:28px 18px 48px; }
+  h1 { font-family:'Playfair Display', Georgia, serif; color:var(--dark); font-size:clamp(28px,5vw,44px); margin:0 0 6px; }
+  .intro { font-size:19px; color:#6b5a4c; margin:0 0 20px; }
+  .board { display:flex; gap:12px; align-items:flex-start; }
+  .slots { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; flex:none; }
+  .slots li { height:76px; width:52px; display:flex; align-items:center; justify-content:center; background:none; border:none; padding:0; cursor:default; }
+  #list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; flex:1; min-width:0; }
+  #list li { height:76px; overflow:hidden; background:var(--card); border:2px solid var(--line); border-radius:14px; padding:8px 16px; display:flex; align-items:center; gap:14px;
+       cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none; transition:border-color .15s, background .15s; }
+  #list li.dragging { cursor:grabbing; box-shadow:0 10px 24px rgba(59,21,32,.25); border-color:var(--accent); background:#fff; position:relative; z-index:2; }
+  .num { flex:none; width:40px; height:40px; border-radius:50%; background:var(--dark); color:#f2c46d; font-weight:700; font-size:20px; display:flex; align-items:center; justify-content:center; }
+  .txt b { display:block; font-size:19px; color:var(--dark); }
+  .txt span { font-size:17px; }
+  .grip { margin-left:auto; color:#b9a487; font-size:26px; line-height:1; }
+  #list li.ok { border-color:var(--ok); background:#dcefe2; }
+  #list li.bad { border-color:var(--bad); background:#fcdcc4; }
+  .buttons { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+  button { font:inherit; font-size:19px; font-weight:600; border:none; border-radius:999px; padding:12px 22px; cursor:pointer; }
+  .primary { background:var(--accent); color:#fbf3e6; }
+  .secondary { background:#e8dac3; color:var(--dark); }
+  #result { font-size:21px; font-weight:600; margin-top:16px; min-height:28px; color:var(--dark); }
+  .src { margin-top:28px; font-size:15px; color:#6b5a4c; }
+  .src a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Put the plot in order</h1>
+  <p class="intro">Drag the events into the order they happen in the play, from first to last. Then press <b>Check</b>.</p>
+  <div class="board">
+    <ol class="slots" id="slots" aria-label="Places 1 to 11"></ol>
+    <ol id="list"></ol>
+  </div>
+  <div class="buttons">
+    <button class="primary" id="check">Check</button>
+    <button class="secondary" id="shuffle">Shuffle again</button>
+    <button class="secondary" id="answer">Show the answer</button>
+  </div>
+  <div id="result" aria-live="polite"></div>
+  <p class="src">Sources: <a href="https://www.bbc.co.uk/bitesize/guides/z8dxg82/revision/4">BBC Bitesize – Romeo and Juliet themes</a> · <a href="https://cognito.org/cheat-sheets/gcse-english-literature/romeo-and-juliet-plot">Cognito – Romeo and Juliet plot summary</a></p>
+</main>
+<script>
+const EVENTS = [
+  ["The feud", "Montague and Capulet servants fight in the street."],
+  ["The party", "Romeo and Juliet meet and fall in love."],
+  ["The balcony", "They declare their love and agree to marry."],
+  ["Secret wedding", "Friar Lawrence marries them in secret."],
+  ["Two deaths", "Tybalt kills Mercutio, then Romeo kills Tybalt."],
+  ["Banished", "The Prince sends Romeo away from Verona."],
+  ["Paris", "Juliet's father promises her to Paris."],
+  ["The potion", "A potion makes Juliet look dead."],
+  ["Lost message", "The Friar's letter never reaches Romeo."],
+  ["The tomb", "Romeo drinks poison, and Juliet stabs herself."],
+  ["Peace", "The families finally make peace."]
+];
+const list = document.getElementById('list');
+const result = document.getElementById('result');
+
+function render(order) {
+  list.innerHTML = '';
+  order.forEach(i => {
+    const li = document.createElement('li');
+    li.dataset.i = i;
+    li.innerHTML = '<div class="txt"><b></b><span></span></div><div class="grip" aria-hidden="true">⋮⋮</div>';
+    li.querySelector('b').textContent = EVENTS[i][0];
+    li.querySelector('span').textContent = EVENTS[i][1];
+    list.appendChild(li);
+  });
+  renumber();
+  result.textContent = '';
+}
+function renumber() {
+  // the numbers are fixed places on the left; cards move, numbers don't
+}
+function clearMarks() {
+  [...list.children].forEach(li => li.classList.remove('ok', 'bad'));
+  result.textContent = '';
+}
+function shuffled() {
+  let a;
+  do {
+    a = EVENTS.map((_, i) => i);
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  } while (a.every((v, i) => v === i));
+  return a;
+}
+
+// Drag with mouse, finger or pen
+let drag = null;
+// Move the held card so it stays under the finger/mouse, and reorder the list as it passes other cards
+function update(clientY) {
+  const li = drag.li;
+  const items = [...list.children].filter(x => x !== li);
+  let before = null;
+  for (const it of items) {
+    const r = it.getBoundingClientRect();
+    if (clientY < r.top + r.height / 2) { before = it; break; }
+  }
+  if (before !== li.nextElementSibling) list.insertBefore(li, before);
+  const natural = li.getBoundingClientRect().top - drag.t;
+  drag.t = clientY - drag.grab - natural;
+  li.style.transform = 'translateY(' + drag.t + 'px)';
+}
+// Scroll the page by itself when the held card is near the top or bottom of the screen
+function autoScroll() {
+  if (!drag) return;
+  const edge = 100, y = drag.y, h = window.innerHeight;
+  let step = 0;
+  if (y < edge) step = -Math.ceil((edge - y) / 6);
+  else if (y > h - edge) step = Math.ceil((y - (h - edge)) / 6);
+  if (step) { window.scrollBy(0, step); update(y); }
+  drag.raf = requestAnimationFrame(autoScroll);
+}
+list.addEventListener('pointerdown', e => {
+  const li = e.target.closest('li');
+  if (!li) return;
+  e.preventDefault();
+  clearMarks();
+  drag = { li, t: 0, y: e.clientY, grab: e.clientY - li.getBoundingClientRect().top };
+  li.classList.add('dragging');
+  drag.raf = requestAnimationFrame(autoScroll);
+});
+window.addEventListener('pointermove', e => {
+  if (!drag) return;
+  drag.y = e.clientY;
+  update(e.clientY);
+});
+function endDrag() {
+  if (!drag) return;
+  cancelAnimationFrame(drag.raf);
+  drag.li.classList.remove('dragging');
+  drag.li.style.transform = '';
+  drag = null;
+}
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('pointercancel', endDrag);
+window.addEventListener('blur', endDrag);
+
+document.getElementById('check').addEventListener('click', () => {
+  let right = 0;
+  [...list.children].forEach((li, k) => {
+    const good = Number(li.dataset.i) === k;
+    li.classList.toggle('ok', good);
+    li.classList.toggle('bad', !good);
+    if (good) right++;
+  });
+  result.textContent = right === EVENTS.length
+    ? 'All ' + right + ' in the right place — well done!'
+    : right + ' out of ' + EVENTS.length + ' are in the right place. Move the orange ones and check again.';
+});
+document.getElementById('shuffle').addEventListener('click', () => render(shuffled()));
+document.getElementById('answer').addEventListener('click', () => {
+  render(EVENTS.map((_, i) => i));
+  [...list.children].forEach(li => li.classList.add('ok'));
+  result.textContent = 'This is the correct order.';
+});
+
+const slots = document.getElementById('slots');
+EVENTS.forEach((_, k) => { const li = document.createElement('li'); li.innerHTML = '<div class="num">' + (k + 1) + '</div>'; slots.appendChild(li); });
+render(shuffled());
+</script>
+</body>
+</html>
