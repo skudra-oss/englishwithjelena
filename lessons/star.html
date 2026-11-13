@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Star Reward</title>
+<meta name="robots" content="noindex">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden}
+  body{font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
+    background:radial-gradient(circle at 50% 40%,#ffb36b 0%,#ff6f91 55%,#c2447a 100%);
+    color:#fff;display:flex;align-items:center;justify-content:center;user-select:none}
+  canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+  #start{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:22px}
+  #btn{font:inherit;font-size:clamp(26px,7vw,44px);font-weight:800;color:#7a2b00;
+    background:linear-gradient(180deg,#fff3a6,#ffc93c);border:none;border-radius:999px;
+    padding:28px 52px;box-shadow:0 10px 0 #c98a00,0 18px 30px rgba(0,0,0,.25);cursor:pointer}
+  #btn:active{transform:translateY(6px);box-shadow:0 4px 0 #c98a00,0 8px 16px rgba(0,0,0,.25)}
+  #count{font-size:clamp(18px,4.5vw,26px);font-weight:700;opacity:.95;min-height:1.4em;text-align:center}
+  #sound{position:fixed;top:14px;right:14px;z-index:5;font:inherit;font-size:15px;font-weight:700;
+    color:#fff;background:rgba(0,0,0,.18);border:2px solid rgba(255,255,255,.6);border-radius:999px;padding:6px 14px}
+  #show{position:fixed;inset:0;z-index:3;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+  #show.on{display:flex}
+  #bigstar{width:min(70vw,62vh);height:min(70vw,62vh);filter:drop-shadow(0 0 30px #fff6b0) drop-shadow(0 10px 20px rgba(0,0,0,.25));
+    animation:pop 1.1s cubic-bezier(.2,1.6,.4,1) both, glow 1.6s ease-in-out 1.1s infinite alternate}
+  #word{font-size:clamp(40px,11vw,84px);font-weight:900;letter-spacing:1px;
+    text-shadow:0 4px 0 #b8325f,0 8px 18px rgba(0,0,0,.25);animation:rise .8s .5s both}
+  #hint{position:fixed;bottom:18px;left:0;right:0;text-align:center;font-size:15px;opacity:0;transition:opacity .6s}
+  #hint.on{opacity:.85}
+  @keyframes pop{0%{transform:scale(0) rotate(-200deg)}100%{transform:scale(1) rotate(0)}}
+  @keyframes glow{0%{transform:scale(1) rotate(-4deg)}100%{transform:scale(1.07) rotate(4deg)}}
+  @keyframes rise{0%{opacity:0;transform:translateY(30px) scale(.6)}100%{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<button id="sound" aria-label="Sound on or off">🔊 Sound on</button>
+
+<div id="start">
+  <button id="btn">⭐ Give a star!</button>
+  <div id="count"></div>
+</div>
+
+<div id="show">
+  <svg id="bigstar" viewBox="0 0 100 100" aria-hidden="true">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff7b0"/><stop offset=".55" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffa600"/>
+      </linearGradient>
+    </defs>
+    <path d="M50 4 L62.4 36.2 L96.8 38 L69.9 59.6 L78.9 93 L50 74 L21.1 93 L30.1 59.6 L3.2 38 L37.6 36.2 Z"
+      fill="url(#g)" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="40" cy="50" r="4" fill="#5a2a00"/><circle cx="60" cy="50" r="4" fill="#5a2a00"/>
+    <circle cx="41.3" cy="48.6" r="1.3" fill="#fff"/><circle cx="61.3" cy="48.6" r="1.3" fill="#fff"/>
+    <path d="M41 60 Q50 69 59 60" fill="none" stroke="#5a2a00" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="33" cy="58" r="4" fill="#ff8fab" opacity=".7"/><circle cx="67" cy="58" r="4" fill="#ff8fab" opacity=".7"/>
+  </svg>
+  <div id="word">Well done!</div>
+</div>
+<div id="hint">Tap anywhere to go back</div>
+
+<canvas id="fx"></canvas>
+
+<script>
+(function(){
+  var cv=document.getElementById('fx'),ctx=cv.getContext('2d'),W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2);
+  function size(){W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+  size();addEventListener('resize',size);
+
+  var parts=[],running=false,showing=false,canClose=false,timers=[],stars=0,soundOn=true;
+  var COLS=['#ffd23f','#ff6f91','#ffffff','#7ee8fa','#b4f8c8','#ff9f43','#c77dff'];
+  var words=['Well done!','Great job!','Super!','Excellent!','Amazing!','Fantastic!'];
+  var startEl=document.getElementById('start'),showEl=document.getElementById('show'),
+      wordEl=document.getElementById('word'),hint=document.getElementById('hint'),
+      countEl=document.getElementById('count'),soundBtn=document.getElementById('sound');
+
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  function confetti(n,x,y,spread){
+    for(var i=0;i<n;i++){var a=rnd(-Math.PI,0)+rnd(-spread,spread),s=rnd(6,15);
+      parts.push({k:'c',x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:.28,w:rnd(7,13),h:rnd(4,8),
+        r:rnd(0,6.3),vr:rnd(-.3,.3),c:COLS[i%COLS.length],life:rnd(160,240)})}
+  }
+  function firework(x,y){
+    var c=COLS[Math.floor(Math.random()*COLS.length)],n=46;
+    for(var i=0;i<n;i++){var a=i/n*6.283,s=rnd(3,6.5);
+      parts.push({k:'f',x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:.06,c:c,life:rnd(70,100),max:100})}
+    for(var j=0;j<10;j++){var b=rnd(0,6.283),t=rnd(1,3);
+      parts.push({k:'s',x:x,y:y,vx:Math.cos(b)*t,vy:Math.sin(b)*t,g:.03,c:'#fff7b0',life:rnd(60,90),max:90})}
+  }
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=parts.length-1;i>=0;i--){var p=parts[i];
+      p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.life--;
+      if(p.k==='c'){p.vx*=.985;p.vy=Math.min(p.vy,4.5);p.r+=p.vr;
+        ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.globalAlpha=Math.min(1,p.life/40);
+        ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h*Math.abs(Math.cos(p.r*2)));ctx.restore();}
+      else{p.vx*=.97;p.vy*=.97;ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.fillStyle=p.c;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.k==='s'?2:3,0,6.283);ctx.fill();ctx.globalAlpha=1;}
+      if(p.life<=0||p.y>H+40)parts.splice(i,1);
+    }
+    if(parts.length||showing)requestAnimationFrame(loop);else running=false;
+  }
+  function go(){if(!running){running=true;requestAnimationFrame(loop)}}
+
+  // Build the "ta-da" as a real sound file, so it plays through an audio player
+  // (on iPhone this also plays when the phone is on silent).
+  var sfx=null;
+  try{
+    var SR=22050,dur=1.7,N=Math.floor(SR*dur),data=new Float32Array(N);
+    var notes=[[523,0,.5],[659,.12,.5],[784,.24,.5],[1047,.36,.6],[1319,.55,1.1]];
+    notes.forEach(function(n){var f=n[0],s=Math.floor(n[1]*SR),L=Math.floor(n[2]*SR);
+      for(var i=0;i<L&&s+i<N;i++){var t=i/SR,env=Math.min(1,t/.015)*Math.exp(-t*4.2);
+        var ph=(t*f)%1,tri=4*Math.abs(ph-.5)-1;data[s+i]+=tri*env*.32+Math.sin(6.283*f*2*t)*env*.06}});
+    var buf=new ArrayBuffer(44+N*2),v=new DataView(buf);
+    function str(o,s){for(var i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))}
+    str(0,'RIFF');v.setUint32(4,36+N*2,true);str(8,'WAVE');str(12,'fmt ');v.setUint32(16,16,true);
+    v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,SR,true);v.setUint32(28,SR*2,true);
+    v.setUint16(32,2,true);v.setUint16(34,16,true);str(36,'data');v.setUint32(40,N*2,true);
+    for(var i=0;i<N;i++){var x=Math.max(-1,Math.min(1,data[i]));v.setInt16(44+i*2,x*32767,true)}
+    sfx=new Audio(URL.createObjectURL(new Blob([buf],{type:'audio/wav'})));sfx.preload='auto';
+  }catch(e){}
+  function tada(){if(!soundOn||!sfx)return;
+    try{sfx.pause();sfx.currentTime=0;var pr=sfx.play();if(pr&&pr.catch)pr.catch(function(){})}catch(e){}}
+
+  function celebrate(){
+    stars++;showing=true;canClose=false;
+    wordEl.textContent=words[Math.floor(Math.random()*words.length)];
+    showEl.classList.remove('on');void showEl.offsetWidth;showEl.classList.add('on');
+    startEl.style.display='none';hint.classList.remove('on');
+    tada();go();
+    confetti(130,W*.15,H,.5);confetti(130,W*.85,H,.5);
+    // keep the party going for about 9 seconds
+    for(var k=1;k<=16;k++){(function(k){timers.push(setTimeout(function(){
+      firework(rnd(W*.12,W*.88),rnd(H*.1,H*.45));
+      if(k%4===0){confetti(70,rnd(W*.2,W*.8),H,.6)}
+    },k*520))})(k)}
+    timers.push(setTimeout(function(){canClose=true;hint.classList.add('on')},2500));
+  }
+  function back(){
+    timers.forEach(clearTimeout);timers=[];showing=false;
+    showEl.classList.remove('on');hint.classList.remove('on');startEl.style.display='flex';
+    countEl.textContent='⭐'.repeat(Math.min(stars,10))+(stars>10?'  ×'+stars:'');
+  }
+  document.getElementById('btn').addEventListener('click',function(e){e.stopPropagation();celebrate()});
+  document.addEventListener('click',function(e){if(showing&&canClose&&e.target!==soundBtn)back()});
+  soundBtn.addEventListener('click',function(e){e.stopPropagation();soundOn=!soundOn;
+    soundBtn.textContent=soundOn?'🔊 Sound on':'🔇 Sound off'});
+})();
+</script>
+</body>
+</html>
