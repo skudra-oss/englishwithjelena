@@ -55,9 +55,7 @@
     <path d="M41 60 Q50 69 59 60" fill="none" stroke="#5a2a00" stroke-width="3.2" stroke-linecap="round"/>
     <circle cx="33" cy="58" r="4" fill="#ff8fab" opacity=".7"/><circle cx="67" cy="58" r="4" fill="#ff8fab" opacity=".7"/>
   </svg>
-  <div id="word">Well done!</div>
 </div>
-<div id="hint">Tap anywhere to go back</div>
 
 <canvas id="fx"></canvas>
 
@@ -71,7 +69,7 @@
   var COLS=['#ffd23f','#ff6f91','#ffffff','#7ee8fa','#b4f8c8','#ff9f43','#c77dff'];
   var words=['Well done!','Great job!','Super!','Excellent!','Amazing!','Fantastic!'];
   var startEl=document.getElementById('start'),showEl=document.getElementById('show'),
-      wordEl=document.getElementById('word'),hint=document.getElementById('hint'),
+      
       countEl=document.getElementById('count'),soundBtn=document.getElementById('sound');
 
   function rnd(a,b){return a+Math.random()*(b-a)}
@@ -124,9 +122,8 @@
 
   function celebrate(){
     stars++;showing=true;canClose=false;
-    wordEl.textContent=words[Math.floor(Math.random()*words.length)];
-    showEl.classList.remove('on');void showEl.offsetWidth;showEl.classList.add('on');
-    startEl.style.display='none';hint.classList.remove('on');
+        showEl.classList.remove('on');void showEl.offsetWidth;showEl.classList.add('on');
+    startEl.style.display='none';
     tada();go();
     confetti(130,W*.15,H,.5);confetti(130,W*.85,H,.5);
     // keep the party going for about 9 seconds
@@ -134,11 +131,11 @@
       firework(rnd(W*.12,W*.88),rnd(H*.1,H*.45));
       if(k%4===0){confetti(70,rnd(W*.2,W*.8),H,.6)}
     },k*520))})(k)}
-    timers.push(setTimeout(function(){canClose=true;hint.classList.add('on')},2500));
+    timers.push(setTimeout(function(){canClose=true},2500));
   }
   function back(){
     timers.forEach(clearTimeout);timers=[];showing=false;
-    showEl.classList.remove('on');hint.classList.remove('on');startEl.style.display='flex';
+    showEl.classList.remove('on');startEl.style.display='flex';
     countEl.textContent='⭐'.repeat(Math.min(stars,10))+(stars>10?'  ×'+stars:'');
   }
   document.getElementById('btn').addEventListener('click',function(e){e.stopPropagation();celebrate()});
