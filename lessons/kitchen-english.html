@@ -90,6 +90,9 @@ body.plain .card .r,body.plain .cathead .ru{color:#333}
   </section>
 
   <section id="practice" class="hidden">
+    <div class="chips" id="pchips"></div>
+    <div id="topicPractice" class="hidden"></div>
+    <div id="mixed">
     <div class="task" id="t1">
       <h3>1. What is it?</h3>
       <p class="inst">Read what each thing is for. Choose the right word.</p>
@@ -131,6 +134,7 @@ body.plain .card .r,body.plain .cathead .ru{color:#333}
         <li>A customer wants their steak medium rare, but it comes out well done. What do you say and do?</li>
       </ol>
     </div>
+    </div>
   </section>
 </div>
 
@@ -138,7 +142,7 @@ body.plain .card .r,body.plain .cathead .ru{color:#333}
 const CATS = [
  {id:"tools", t:"Hand tools", ru:"Ручной инвентарь", w:[
   ["grater","тёрка","for cheese, carrots, etc."],
-  ["colander","дуршлаг","a bowl with holes — to drain pasta or vegetables"],
+  ["strainer","дуршлаг","a bowl with holes — to drain pasta or vegetables"],
   ["sieve","сито","fine mesh — to strain sauces or sift flour"],
   ["whisk","венчик","to beat eggs and cream (also a verb: to whisk)"],
   ["ladle","половник","to serve soup and sauces"],
@@ -158,6 +162,8 @@ const CATS = [
   ["mandoline","мандолина (слайсер)","to slice vegetables very thin — very sharp!"],
   ["zester","зестер (тёрка для цедры)","to take the zest off lemons and oranges"],
   ["garlic press","чеснокодавилка",""],
+  ["pepper mill / pepper grinder","мельница для перца",""],
+  ["salt mill / salt grinder","мельница для соли",""],
   ["pestle and mortar","ступка и пестик","to crush spices and herbs"],
   ["piping bag","кондитерский мешок","with a nozzle (насадка) — for cream, mash, etc."],
   ["pastry brush","кондитерская кисточка","to brush egg or oil onto food"],
@@ -461,9 +467,9 @@ const pb=document.getElementById('plainBtn');
 pb.onclick=()=>{const p=document.body.classList.toggle('plain');pb.textContent=p?'Colour view':'Plain view'};
 
 // ---- Practice
-const T1=[["You use it to drain pasta.","colander"],["You use it to make cheese into small pieces.","grater"],["You use it to serve soup.","ladle"],["You use it to beat eggs and cream.","whisk"],["You use it to pick up and turn hot food.","tongs"],["You use it to roll out pastry.","rolling pin"],["You use it to check the temperature inside meat.","probe thermometer"],["You use it every day to keep your knife sharp.","sharpening steel"],["It cools hot food down very quickly.","blast chiller"],["It takes steam and smoke out of the kitchen.","extractor hood"]];
-const T1opts=["blast chiller","colander","extractor hood","grater","ladle","probe thermometer","rolling pin","sharpening steel","tongs","whisk"];
-const T2=[["___ the oven to 180 degrees.","Preheat"],["___ the onions into small cubes.","Dice"],["___ the steak in a very hot pan to get a brown crust.","Sear"],["Let the meat ___ for five minutes before you cut it.","rest"],["___ the beans in boiling water for one minute, then put them in ice water.","Blanch"],["Turn the heat down and let the soup ___ for twenty minutes.","simmer"],["___ the pasta in the colander.","Drain"],["___ the sauce through a sieve to make it smooth.","Strain"],["___ the eggs and sugar until they are light and fluffy.","Whisk"],["Taste the sauce and ___ it with salt and pepper.","season"]];
+const T1=[["You use it to drain pasta.","strainer"],["You use it to make cheese into small pieces.","grater"],["You use it to serve soup.","ladle"],["You use it to beat eggs and cream.","whisk"],["You use it to pick up and turn hot food.","tongs"],["You use it to roll out pastry.","rolling pin"],["You use it to check the temperature inside meat.","probe thermometer"],["You use it every day to keep your knife sharp.","sharpening steel"],["It cools hot food down very quickly.","blast chiller"],["It takes steam and smoke out of the kitchen.","extractor hood"]];
+const T1opts=["blast chiller","extractor hood","grater","ladle","probe thermometer","rolling pin","sharpening steel","strainer","tongs","whisk"];
+const T2=[["___ the oven to 180 degrees.","Preheat"],["___ the onions into small cubes.","Dice"],["___ the steak in a very hot pan to get a brown crust.","Sear"],["Let the meat ___ for five minutes before you cut it.","rest"],["___ the beans in boiling water for one minute, then put them in ice water.","Blanch"],["Turn the heat down and let the soup ___ for twenty minutes.","simmer"],["___ the pasta in the strainer.","Drain"],["___ the sauce through a sieve to make it smooth.","Strain"],["___ the eggs and sugar until they are light and fluffy.","Whisk"],["Taste the sauce and ___ it with salt and pepper.","season"]];
 const T3=[["You are walking behind a colleague with a tray.","Behind!"],["You are carrying a pan of boiling oil.","Hot!"],["You are walking with a knife in your hand.","Sharp!"],["You are coming round a corner and can't see who is there.","Corner!"],["The head chef gives you an instruction.","Yes, Chef!"],["The dish is ready on the pass for the waiter.","Service, please!"],["The kitchen has no more salmon tonight.","86 the salmon"],["You need help from a colleague.","Can you give me a hand?"]];
 const T3opts=["86 the salmon","Behind!","Can you give me a hand?","Corner!","Hot!","Service, please!","Sharp!","Yes, Chef!"];
 const T4=[["Bread and cakes — you ___ them in the oven.","bake"],["Chips — you ___ them in hot oil.","deep-fry"],["An egg without its shell in gently bubbling water — you ___ it.","poach"],["Beef cheeks — brown them, then cook them slowly in a little wine for 3 hours. You ___ them.","braise"],["A sauce that is too thin — you ___ it.","reduce"],["A whole chicken in the oven with oil — you ___ it.","roast"],["Vegetables in a wok, moving them all the time — you ___ them.","stir-fry"],["Fish over hot water, not in it — you ___ it.","steam"]];
@@ -489,6 +495,38 @@ document.querySelectorAll('[data-show]').forEach(b=>b.onclick=()=>{
   fields(id).forEach((f,i)=>{f.value=ANS[id][i][1];f.classList.add('right');f.classList.remove('wrong')});
   document.querySelector(`#${id} .score`).textContent='';
 });
+
+// ---- Practise by topic
+const pchips=document.getElementById('pchips'),tp=document.getElementById('topicPractice'),mixed=document.getElementById('mixed');
+let ptopic='mixed';
+[{id:'mixed',t:'Mixed practice'},...CATS].forEach(c=>{const b=document.createElement('button');b.textContent=c.t;b.dataset.id=c.id;b.onclick=()=>{ptopic=c.id;renderP()};pchips.appendChild(b)});
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=x=>x.toLowerCase().replace(/[()!?.,’'"«»—-]/g,' ').replace(/\s+/g,' ').trim();
+function accepted(en){const out=new Set();en.split(' / ').forEach(p=>{out.add(norm(p));out.add(norm(p.replace(/\(.*?\)/g,'')))});out.add(norm(en));return out}
+function renderP(){
+  [...pchips.children].forEach(b=>b.classList.toggle('on',b.dataset.id===ptopic));
+  mixed.classList.toggle('hidden',ptopic!=='mixed');tp.classList.toggle('hidden',ptopic==='mixed');
+  if(ptopic==='mixed')return;
+  const c=CATS.find(x=>x.id===ptopic);
+  const opts=c.w.map(w=>w[0]).sort((a,b)=>a.localeCompare(b));
+  const A=shuffle(c.w),B=shuffle(c.w);
+  const clue=w=>`<b>${w[1]}</b>${w[2]?` <span class="note" style="color:#7a6380">(${w[2]})</span>`:''}`;
+  tp.innerHTML=`<div class="cathead"><h2>${c.t}</h2><div class="ru">${c.ru}</div></div>
+  <div class="task" id="pa"><h3>1. Choose the English word</h3><p class="inst">Read the Russian. Choose the English word.</p>
+  <ol class="q">${A.map(w=>`<li>${clue(w)} <select><option value="">— choose —</option>${opts.map(o=>`<option>${o}</option>`).join('')}</select></li>`).join('')}</ol>
+  <div class="btns"><button data-pc="pa">Check</button><button class="alt" data-ps="pa">Show answers</button><span class="score"></span></div></div>
+  <div class="task" id="pb"><h3>2. Write the English word</h3><p class="inst">Read the Russian. Write the word in English.</p>
+  <ol class="q">${B.map(w=>`<li>${clue(w)} <input type="text" autocomplete="off" style="width:200px"></li>`).join('')}</ol>
+  <div class="btns"><button data-pc="pb">Check</button><button class="alt" data-ps="pb">Show answers</button><span class="score"></span></div></div>`;
+  const PANS={pa:A,pb:B};
+  tp.querySelectorAll('[data-pc]').forEach(b=>b.onclick=()=>{const id=b.dataset.pc;let ok=0;
+    fields(id).forEach((f,i)=>{const en=PANS[id][i][0];const good=id==='pa'?f.value===en:accepted(en).has(norm(f.value));f.classList.toggle('right',good);f.classList.toggle('wrong',!good);if(good)ok++});
+    tp.querySelector(`#${id} .score`).textContent=`${ok} / ${PANS[id].length}`});
+  tp.querySelectorAll('[data-ps]').forEach(b=>b.onclick=()=>{const id=b.dataset.ps;
+    fields(id).forEach((f,i)=>{f.value=PANS[id][i][0];f.classList.add('right');f.classList.remove('wrong')});
+    tp.querySelector(`#${id} .score`).textContent=''});
+}
+renderP();
 </script>
 </body>
 </html>
