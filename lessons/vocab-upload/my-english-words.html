@@ -185,7 +185,8 @@ body.plain .tag{background:#f0f2f6}
    l = lesson id, t = topic id, tag = small label, name = true for names (no typing). */
 const LESSONS = {
   l1: "Lesson 1 — 10.11.2026",
-  l2: "Lesson 2 — 12.11.2026: Try These Sports!"
+  l2: "Lesson 2 — 12.11.2026: Try These Sports!",
+  l3: "Lesson 3 — 17.11.2026"
 };
 const TOPICS = {
   sport: "Sport",
@@ -196,7 +197,9 @@ const TOPICS = {
   weight: "Weight and numbers",
   place: "Where things are",
   nature: "Nature and the world",
-  names: "Places"
+  names: "Places",
+  family: "Family",
+  useful: "Small useful words"
 };
 const WORDS = [
   {w:"mountains", d:"Very high land.", ex:"You can climb mountains.", ru:"Горы", l:"l1", t:"nature"},
@@ -230,7 +233,20 @@ const WORDS = [
   {w:"heavy", d:"Something that weighs a lot.", ru:"Тяжёлый", l:"l2", t:"weight"},
   {w:"weighs", d:"The he/she/it form of weigh.", ex:"The ball weighs one kilogram.", ru:"Весит", l:"l2", t:"weight"},
   {w:"along", d:"Moving from one place to another next to or following something.", ex:"We walk along the river.", ru:"Вдоль, по", l:"l2", t:"place"},
-  {w:"bottom", d:"The lowest part of something.", ru:"Дно, нижняя часть", l:"l2", t:"place"}
+  {w:"bottom", d:"The lowest part of something.", ru:"Дно, нижняя часть", l:"l2", t:"place"},
+
+  {w:"describe", d:"To say what someone or something is like.", ex:"Can you describe your sport?", ru:"Описывать", l:"l3", t:"act"},
+  {w:"difficult", d:"Not easy. You need to try hard to do it.", ex:"That sounds difficult!", ru:"Трудный, сложный", l:"l3", t:"desc"},
+  {w:"unusual", d:"Different from most things; not normal or common.", ex:"The ball is unusual. It has six handles.", ru:"Необычный", l:"l3", t:"desc"},
+  {w:"each", d:"Every one in a group.", ex:"There are four players in each team.", ru:"Каждый", l:"l3", t:"useful"},
+  {w:"another", d:"One more, or a different one.", ex:"He takes the ball from another player.", ru:"Ещё один, другой", l:"l3", t:"useful"},
+  {w:"a bit", d:"A little.", ex:"It's a bit like polo.", ru:"Немного, чуть-чуть", l:"l3", t:"useful"},
+  {w:"good at", d:"Able to do something well.", ex:"She is good at English.", ru:"Хорошо уметь что-то делать", l:"l3", t:"useful"},
+  {w:"score a goal", d:"To get the ball into the net and win a point.", ex:"Players throw the ball into the net to score a goal.", ru:"Забить гол", l:"l3", t:"sport"},
+  {w:"celebrate", d:"To do something fun because a day is special or something good happened.", ex:"We celebrate my birthday with a cake.", ru:"Праздновать, отмечать", l:"l3", t:"act"},
+  {w:"uncle", d:"The brother of your mum or dad.", ru:"Дядя", l:"l3", t:"family"},
+  {w:"put on", d:"To start wearing clothes or shoes.", ex:"Put on your shoes!", ru:"Надевать", l:"l3", t:"act"},
+  {w:"tidy", tag:"verb", d:"To put things in the right places so a room looks nice.", ex:"Tidy your room, please!", ru:"Убирать, наводить порядок", l:"l3", t:"act"}
 ];
 WORDS.forEach(x=>x.id=x.l+":"+x.w);
 const TKEYS=Object.keys(TOPICS);const gcls=x=>"g"+(TKEYS.indexOf(x.t)%6);
