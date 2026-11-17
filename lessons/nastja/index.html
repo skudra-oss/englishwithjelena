@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Nastja · English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#ff5d8f;--orange:#ff9a3c;--gold:#ffc93c;--ink:#3a2340;--bg1:#fff0f5;--bg2:#fff6e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Nunito,"Trebuchet MS",Arial,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%,#fffbe6);min-height:100vh}
+header{background:linear-gradient(90deg,var(--pink),var(--orange),var(--gold));color:#fff;padding:20px 20px 24px;text-align:center;border-radius:0 0 28px 28px;box-shadow:0 6px 18px rgba(255,93,143,.25)}
+header h1{margin:0;font-size:clamp(26px,5vw,40px);font-weight:900;text-shadow:0 2px 0 rgba(0,0,0,.12)}
+header p{margin:6px 0 0;font-size:17px}
+header a.back{display:inline-block;margin-bottom:6px;color:#fff;font-weight:800;text-decoration:none;font-size:16px;background:rgba(255,255,255,.25);padding:4px 12px;border-radius:14px}
+#plainBtn{position:fixed;top:10px;right:10px;z-index:9;border:2px solid #fff;background:rgba(255,255,255,.25);color:#fff;font-weight:800;border-radius:20px;padding:6px 12px;cursor:pointer;font-size:14px;font-family:inherit}
+main{max-width:1000px;margin:0 auto;padding:10px 14px 50px}
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 10px 6px}
+nav button{border:none;border-radius:22px;padding:10px 18px;font-size:17px;font-weight:800;cursor:pointer;background:#fff;color:var(--pink);box-shadow:0 3px 0 #ffc2d6;font-family:inherit}
+nav button.on{background:var(--pink);color:#fff;box-shadow:0 3px 0 #c93d6b}
+section{display:none} section.on{display:block}
+h2{text-align:center;margin:16px 0 6px;font-size:26px}
+h3{margin:22px 4px 10px;font-size:21px;color:var(--orange)}
+.hint{text-align:center;margin:0 0 14px;font-size:16px;opacity:.8}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.card{background:#fff;border-radius:20px;padding:10px 10px 12px;text-align:center;cursor:pointer;box-shadow:0 4px 0 #ffd7a8,0 8px 18px rgba(255,154,60,.15);border:3px solid transparent;transition:transform .12s}
+.card:hover{transform:translateY(-3px)} .card.say{border-color:var(--gold)}
+.ph{height:120px;display:flex;align-items:center;justify-content:center}
+.ph img{max-width:100%;max-height:120px;border-radius:12px}
+.ph svg{width:100%;height:110px}
+.word{font-size:22px;font-weight:900;margin-top:6px;color:var(--pink)}
+.ru{font-size:14px;opacity:.7;display:none} body.showru .ru{display:block}
+.toggle{text-align:center;margin-bottom:6px}
+.toggle label{background:#fff;padding:6px 14px;border-radius:16px;font-size:15px;cursor:pointer}
+.panel{background:#fff;border-radius:24px;padding:18px;box-shadow:0 6px 18px rgba(255,154,60,.18);max-width:760px;margin:0 auto}
+.big{display:block;margin:0 auto 14px;border:none;border-radius:30px;padding:14px 26px;font-size:22px;font-weight:900;cursor:pointer;color:#fff;background:linear-gradient(90deg,var(--pink),var(--orange));box-shadow:0 4px 0 #c93d6b;font-family:inherit}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.opt{background:#fffaf2;border:3px solid #ffe2bd;border-radius:18px;padding:8px;cursor:pointer;height:150px;display:flex;align-items:center;justify-content:center}
+.opt img{max-width:100%;max-height:130px;border-radius:10px} .opt svg{width:100%;height:120px}
+.opt.ok{border-color:#3cc47c;background:#eafff2} .opt.no{border-color:#ff5d5d;background:#fff0f0}
+.score{text-align:center;font-size:18px;font-weight:800;margin:10px 0 0}
+.tt{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.tcard{background:#fff;border-radius:22px;padding:14px;text-align:center;cursor:pointer;box-shadow:0 4px 0 #ffc2d6,0 8px 18px rgba(255,93,143,.15)}
+.tword{font-size:34px;font-weight:900} .tword.near{color:var(--pink)} .tword.far{color:var(--orange)}
+.scene{display:flex;align-items:center;height:120px;margin:8px 0;gap:4px;background:linear-gradient(#fff,#fff7e8);border-radius:14px;padding:6px;overflow:hidden}
+.me{font-size:52px;line-height:1;flex:none}
+.arrow{height:6px;background:var(--ink);border-radius:3px;position:relative;flex:none;margin-right:14px}
+.arrow:after{content:"";position:absolute;right:-12px;top:-7px;border-left:14px solid var(--ink);border-top:10px solid transparent;border-bottom:10px solid transparent}
+.arrow.far{flex:1 1 auto;min-width:60px;max-width:220px}
+.thing{flex:none;display:flex;align-items:center;justify-content:center}
+.thing svg{width:100%;height:100%}
+.sent{font-size:20px;font-weight:700}
+.tag{display:inline-block;font-size:13px;padding:3px 10px;border-radius:10px;background:var(--bg1);margin:2px}
+.rule{background:#fff;border-radius:20px;padding:14px 18px;margin:18px auto 0;max-width:640px;font-size:17px}
+.rule table{width:100%;border-collapse:collapse;text-align:center} .rule td,.rule th{padding:8px;border-bottom:2px dashed #ffd7a8}
+.qscene{justify-content:center;height:160px}
+.btns{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.btns button{border:none;border-radius:18px;padding:14px;font-size:24px;font-weight:900;cursor:pointer;background:#fff4dc;color:var(--ink);box-shadow:0 4px 0 #ffd27a;font-family:inherit}
+.btns button.ok{background:#3cc47c;color:#fff;box-shadow:0 4px 0 #23915a} .btns button.no{background:#ff7a7a;color:#fff;box-shadow:0 4px 0 #c94a4a}
+.feedback{text-align:center;font-size:22px;font-weight:800;min-height:34px;margin-top:10px}
+.next{display:none}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;margin-top:20px}
+.topic{display:block;background:#fff;border-radius:24px;padding:16px;text-align:center;text-decoration:none;color:var(--ink);box-shadow:0 5px 0 #ffd7a8,0 10px 22px rgba(255,154,60,.18);transition:transform .12s}
+.topic:hover{transform:translateY(-4px)}
+.topic .pic{height:150px;display:flex;align-items:center;justify-content:center}
+.topic .pic img{max-width:100%;max-height:150px;border-radius:14px} .topic .pic svg{height:140px;width:100%}
+.topic b{display:block;font-size:24px;margin-top:8px;color:var(--pink)}
+.topic span{font-size:15px;opacity:.75}
+body.plain{background:#fff}
+body.plain header{background:#fff;color:#222;box-shadow:none;border-bottom:2px solid #ddd;border-radius:0}
+body.plain header h1{text-shadow:none} body.plain header a.back{color:#333;background:#eee}
+body.plain #plainBtn{color:#333;border-color:#999;background:#f3f3f3}
+body.plain .card,body.plain .tcard,body.plain .panel,body.plain .rule,body.plain .topic{box-shadow:none;border:2px solid #ddd}
+body.plain .word,body.plain .tword,body.plain .topic b,body.plain h3{color:#222}
+body.plain nav button{box-shadow:none;border:2px solid #ccc;color:#333} body.plain nav button.on{background:#333;color:#fff}
+body.plain .big{background:#333;box-shadow:none} body.plain .scene{background:#fafafa}
+</style></head>
+<body>
+<button id="plainBtn" onclick="document.body.classList.toggle('plain');try{localStorage.setItem('nastja-plain',document.body.classList.contains('plain')?'1':'')}catch(e){}">Plain view</button>
+<script>try{if(localStorage.getItem('nastja-plain'))document.body.classList.add('plain')}catch(e){}</script>
+<header><h1>Nastja · English</h1><p>Choose a topic</p></header>
+<main><div class="topics"><a class="topic" href="clothes.html"><div class="pic"><svg viewBox="40 87 120 126" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><g transform="translate(100 150) scale(1) translate(-100 -150)"><path d="M60 98 L82 94 Q100 106 118 94 L140 98 L154 140 L136.5 145 L135 208 L65 208 L63.5 145 L46 140 Z" fill="#f2c94c" stroke="rgba(0,0,0,.28)" stroke-width="1.5"></path><path d="M84 97 Q100 110 116 97" fill="none" stroke="rgb(189,157,59)" stroke-width="3"></path></g></svg></div><b>Clothes</b><span>clothes · this, that, these, those</span></a><a class="topic" href="house.html"><div class="pic"><img src="img/house.jpg" alt=""></div><b>In the house</b><span>rooms and furniture</span></a></div></main></body></html>

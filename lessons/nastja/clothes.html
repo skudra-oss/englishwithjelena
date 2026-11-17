@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Clothes · Nastja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#ff5d8f;--orange:#ff9a3c;--gold:#ffc93c;--ink:#3a2340;--bg1:#fff0f5;--bg2:#fff6e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Nunito,"Trebuchet MS",Arial,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%,#fffbe6);min-height:100vh}
+header{background:linear-gradient(90deg,var(--pink),var(--orange),var(--gold));color:#fff;padding:20px 20px 24px;text-align:center;border-radius:0 0 28px 28px;box-shadow:0 6px 18px rgba(255,93,143,.25)}
+header h1{margin:0;font-size:clamp(26px,5vw,40px);font-weight:900;text-shadow:0 2px 0 rgba(0,0,0,.12)}
+header p{margin:6px 0 0;font-size:17px}
+header a.back{display:inline-block;margin-bottom:6px;color:#fff;font-weight:800;text-decoration:none;font-size:16px;background:rgba(255,255,255,.25);padding:4px 12px;border-radius:14px}
+#plainBtn{position:fixed;top:10px;right:10px;z-index:9;border:2px solid #fff;background:rgba(255,255,255,.25);color:#fff;font-weight:800;border-radius:20px;padding:6px 12px;cursor:pointer;font-size:14px;font-family:inherit}
+main{max-width:1000px;margin:0 auto;padding:10px 14px 50px}
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 10px 6px}
+nav button{border:none;border-radius:22px;padding:10px 18px;font-size:17px;font-weight:800;cursor:pointer;background:#fff;color:var(--pink);box-shadow:0 3px 0 #ffc2d6;font-family:inherit}
+nav button.on{background:var(--pink);color:#fff;box-shadow:0 3px 0 #c93d6b}
+section{display:none} section.on{display:block}
+h2{text-align:center;margin:16px 0 6px;font-size:26px}
+h3{margin:22px 4px 10px;font-size:21px;color:var(--orange)}
+.hint{text-align:center;margin:0 0 14px;font-size:16px;opacity:.8}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.card{background:#fff;border-radius:20px;padding:10px 10px 12px;text-align:center;cursor:pointer;box-shadow:0 4px 0 #ffd7a8,0 8px 18px rgba(255,154,60,.15);border:3px solid transparent;transition:transform .12s}
+.card:hover{transform:translateY(-3px)} .card.say{border-color:var(--gold)}
+.ph{height:120px;display:flex;align-items:center;justify-content:center}
+.ph img{max-width:100%;max-height:120px;border-radius:12px}
+.ph svg{width:100%;height:110px}
+.word{font-size:22px;font-weight:900;margin-top:6px;color:var(--pink)}
+.ru{font-size:14px;opacity:.7;display:none} body.showru .ru{display:block}
+.toggle{text-align:center;margin-bottom:6px}
+.toggle label{background:#fff;padding:6px 14px;border-radius:16px;font-size:15px;cursor:pointer}
+.panel{background:#fff;border-radius:24px;padding:18px;box-shadow:0 6px 18px rgba(255,154,60,.18);max-width:760px;margin:0 auto}
+.big{display:block;margin:0 auto 14px;border:none;border-radius:30px;padding:14px 26px;font-size:22px;font-weight:900;cursor:pointer;color:#fff;background:linear-gradient(90deg,var(--pink),var(--orange));box-shadow:0 4px 0 #c93d6b;font-family:inherit}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.opt{background:#fffaf2;border:3px solid #ffe2bd;border-radius:18px;padding:8px;cursor:pointer;height:150px;display:flex;align-items:center;justify-content:center}
+.opt img{max-width:100%;max-height:130px;border-radius:10px} .opt svg{width:100%;height:120px}
+.opt.ok{border-color:#3cc47c;background:#eafff2} .opt.no{border-color:#ff5d5d;background:#fff0f0}
+.score{text-align:center;font-size:18px;font-weight:800;margin:10px 0 0}
+.tt{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.tcard{background:#fff;border-radius:22px;padding:14px;text-align:center;cursor:pointer;box-shadow:0 4px 0 #ffc2d6,0 8px 18px rgba(255,93,143,.15)}
+.tword{font-size:34px;font-weight:900} .tword.near{color:var(--pink)} .tword.far{color:var(--orange)}
+.scene{display:flex;align-items:center;height:120px;margin:8px 0;gap:4px;background:linear-gradient(#fff,#fff7e8);border-radius:14px;padding:6px;overflow:hidden}
+.me{font-size:52px;line-height:1;flex:none}
+.arrow{height:6px;background:var(--ink);border-radius:3px;position:relative;flex:none;margin-right:14px}
+.arrow:after{content:"";position:absolute;right:-12px;top:-7px;border-left:14px solid var(--ink);border-top:10px solid transparent;border-bottom:10px solid transparent}
+.arrow.far{flex:1 1 auto;min-width:60px;max-width:220px}
+.thing{flex:none;display:flex;align-items:center;justify-content:center}
+.thing svg{width:100%;height:100%}
+.sent{font-size:20px;font-weight:700}
+.tag{display:inline-block;font-size:13px;padding:3px 10px;border-radius:10px;background:var(--bg1);margin:2px}
+.rule{background:#fff;border-radius:20px;padding:14px 18px;margin:18px auto 0;max-width:640px;font-size:17px}
+.rule table{width:100%;border-collapse:collapse;text-align:center} .rule td,.rule th{padding:8px;border-bottom:2px dashed #ffd7a8}
+.qscene{justify-content:center;height:160px}
+.btns{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.btns button{border:none;border-radius:18px;padding:14px;font-size:24px;font-weight:900;cursor:pointer;background:#fff4dc;color:var(--ink);box-shadow:0 4px 0 #ffd27a;font-family:inherit}
+.btns button.ok{background:#3cc47c;color:#fff;box-shadow:0 4px 0 #23915a} .btns button.no{background:#ff7a7a;color:#fff;box-shadow:0 4px 0 #c94a4a}
+.feedback{text-align:center;font-size:22px;font-weight:800;min-height:34px;margin-top:10px}
+.next{display:none}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;margin-top:20px}
+.topic{display:block;background:#fff;border-radius:24px;padding:16px;text-align:center;text-decoration:none;color:var(--ink);box-shadow:0 5px 0 #ffd7a8,0 10px 22px rgba(255,154,60,.18);transition:transform .12s}
+.topic:hover{transform:translateY(-4px)}
+.topic .pic{height:150px;display:flex;align-items:center;justify-content:center}
+.topic .pic img{max-width:100%;max-height:150px;border-radius:14px} .topic .pic svg{height:140px;width:100%}
+.topic b{display:block;font-size:24px;margin-top:8px;color:var(--pink)}
+.topic span{font-size:15px;opacity:.75}
+body.plain{background:#fff}
+body.plain header{background:#fff;color:#222;box-shadow:none;border-bottom:2px solid #ddd;border-radius:0}
+body.plain header h1{text-shadow:none} body.plain header a.back{color:#333;background:#eee}
+body.plain #plainBtn{color:#333;border-color:#999;background:#f3f3f3}
+body.plain .card,body.plain .tcard,body.plain .panel,body.plain .rule,body.plain .topic{box-shadow:none;border:2px solid #ddd}
+body.plain .word,body.plain .tword,body.plain .topic b,body.plain h3{color:#222}
+body.plain nav button{box-shadow:none;border:2px solid #ccc;color:#333} body.plain nav button.on{background:#333;color:#fff}
+body.plain .big{background:#333;box-shadow:none} body.plain .scene{background:#fafafa}
+</style></head>
+<body>
+<button id="plainBtn" onclick="document.body.classList.toggle('plain');try{localStorage.setItem('nastja-plain',document.body.classList.contains('plain')?'1':'')}catch(e){}">Plain view</button>
+<script>try{if(localStorage.getItem('nastja-plain'))document.body.classList.add('plain')}catch(e){}</script>
+<header><a class="back" href="./">← All topics</a><h1>👕 Clothes</h1><p>Tap a picture to hear the word</p></header>
+<nav><button class="on" data-s="words">📖 Words</button><button data-s="tt">👉 this / that</button><button data-s="g1">🎧 Listen and tap</button><button data-s="g2">❓ This or that?</button></nav>
+<main>
+<section id="words" class="on"><div class="toggle"><label><input type="checkbox" onchange="document.body.classList.toggle('showru',this.checked)"> Show Russian</label></div><div id="wordlist"></div></section>
+<section id="tt"><h2>this, that, these, those</h2>
+ <p class="hint">Short arrow = <b>here</b> (near me). Long arrow = <b>there</b> (far from me). Tap a card to listen.</p>
+ <div class="tt" id="ttcards"></div>
+ <div class="rule"><table><tr><th></th><th>→ here (near)</th><th>———→ there (far)</th></tr>
+ <tr><th>one</th><td><b>This</b> is …</td><td><b>That</b> is …</td></tr>
+ <tr><th>two or more</th><td><b>These</b> are …</td><td><b>Those</b> are …</td></tr></table></div></section>
+<section id="g2"><h2>This, that, these or those?</h2><div class="panel">
+ <div class="scene qscene" id="g2scene"></div><div class="btns" id="g2btns"></div><div class="feedback" id="g2fb"></div>
+ <button class="big next" id="g2next">Next ➜</button><div class="score" id="g2score"></div></div></section>
+<section id="g1"><h2>Listen and tap</h2><div class="panel"><button class="big" id="g1play">🔊 Listen</button><div class="opts" id="g1opts"></div><div class="score" id="g1score"></div></div></section>
+</main>
+<script>const G=[{"g": "Clothes", "items": [{"w": "T-shirt", "p": "<svg viewBox=\"40 87 120 126\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 150) scale(1) translate(-100 -150)\"><path d=\"M60 98 L82 94 Q100 106 118 94 L140 98 L154 140 L136.5 145 L135 208 L65 208 L63.5 145 L46 140 Z\" fill=\"#f2c94c\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M84 97 Q100 110 116 97\" fill=\"none\" stroke=\"rgb(189,157,59)\" stroke-width=\"3\"></path></g></svg>", "ru": "\u0444\u0443\u0442\u0431\u043e\u043b\u043a\u0430", "pl": false}, {"w": "top", "p": "<svg viewBox=\"57 87 86 130\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 155) scale(1) translate(-100 -155)\"><path d=\"M77 97 L79 91 M123 97 L121 91\" stroke=\"#f08a3c\" stroke-width=\"5\" stroke-linecap=\"round\"></path><path d=\"M61 96 L84 95.5 Q100 113 116 95.5 L139 96 L136 212 L64 212 Z\" fill=\"#f08a3c\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M66 200 L134 200\" stroke=\"rgb(187,108,47)\" stroke-width=\"3\"></path></g></svg>", "ru": "\u0442\u043e\u043f, \u043a\u043e\u0444\u0442\u043e\u0447\u043a\u0430", "pl": false}, {"w": "shirt", "p": "<svg viewBox=\"19 87 162 152\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 163) scale(1) translate(-100 -163)\"><path d=\"M60 98 L82 94 Q100 106 118 94 L140 98 L174 226 L146 232 L137.5 142 L134 210 L66 210 L62.5 142 L54 232 L26 226 Z\" fill=\"#f4f4f4\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M27 224 L54 230 M173 224 L146 230\" stroke=\"rgb(190,190,190)\" stroke-width=\"5\"></path><path d=\"M82 94 L92 112 L100 102 L108 112 L118 94 Z\" fill=\"#f4f4f4\" stroke=\"rgb(190,190,190)\" stroke-width=\"2\"></path><path d=\"M100 102 L100 210\" stroke=\"rgb(190,190,190)\" stroke-width=\"2\"></path><g fill=\"rgb(190,190,190)\"><circle cx=\"104\" cy=\"125\" r=\"2.5\"></circle><circle cx=\"104\" cy=\"148\" r=\"2.5\"></circle><circle cx=\"104\" cy=\"171\" r=\"2.5\"></circle><circle cx=\"104\" cy=\"194\" r=\"2.5\"></circle></g><path d=\"M76 128 L90 128 L90 142 L76 142 Z\" fill=\"none\" stroke=\"rgb(190,190,190)\" stroke-width=\"1.6\"></path></g></svg>", "ru": "\u0440\u0443\u0431\u0430\u0448\u043a\u0430", "pl": false}, {"w": "jumper", "p": "<svg viewBox=\"19 87 162 152\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 163) scale(1) translate(-100 -163)\"><path d=\"M60 98 L82 94 Q100 106 118 94 L140 98 L174 226 L146 232 L137.5 142 L134 214 L66 214 L62.5 142 L54 232 L26 226 Z\" fill=\"#3f9b5a\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M27 224 L54 230 M173 224 L146 230\" stroke=\"rgb(49,121,70)\" stroke-width=\"7\"></path><rect x=\"66\" y=\"206\" width=\"68\" height=\"8\" fill=\"rgb(49,121,70)\"></rect><path d=\"M82 96 Q100 110 118 96\" fill=\"none\" stroke=\"rgb(49,121,70)\" stroke-width=\"5\"></path><path d=\"M80 150 L120 150 M80 170 L120 170\" stroke=\"#ffffff\" stroke-opacity=\".75\" stroke-width=\"4\" stroke-dasharray=\"6 5\"></path></g></svg>", "ru": "\u0441\u0432\u0438\u0442\u0435\u0440", "pl": false}, {"w": "hoodie", "p": "<svg viewBox=\"19 84 162 155\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 163) scale(1) translate(-100 -163)\"><path d=\"M60 98 L82 94 Q100 106 118 94 L140 98 L174 226 L146 232 L137.5 142 L134 214 L66 214 L62.5 142 L54 232 L26 226 Z\" fill=\"#8e979d\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M76 92 Q100 120 124 92 L131 100 Q100 134 69 100 Z\" fill=\"rgb(111,118,122)\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M94 112 L92 138 M106 112 L108 138\" stroke=\"#ffffff\" stroke-opacity=\".85\" stroke-width=\"2\" stroke-linecap=\"round\"></path><path d=\"M78 168 L122 168 L128 200 L72 200 Z\" fill=\"rgb(111,118,122)\" opacity=\".7\"></path><path d=\"M27 224 L54 230 M173 224 L146 230\" stroke=\"rgb(111,118,122)\" stroke-width=\"7\"></path></g></svg>", "ru": "\u0445\u0443\u0434\u0438, \u0442\u043e\u043b\u0441\u0442\u043e\u0432\u043a\u0430 \u0441 \u043a\u0430\u043f\u044e\u0448\u043e\u043d\u043e\u043c", "pl": false}, {"w": "jacket", "p": "<svg viewBox=\"19 87 162 152\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 160) scale(1) translate(-100 -160)\"><path d=\"M60 98 L82 94 Q100 106 118 94 L140 98 L174 226 L146 232 L137.5 142 L134 210 L66 210 L62.5 142 L54 232 L26 226 Z\" fill=\"#3b6fb6\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M100 104 L100 210\" stroke=\"#ffffff\" stroke-opacity=\".7\" stroke-width=\"3\"></path><path d=\"M82 94 L92 120 L100 104 L108 120 L118 94\" fill=\"rgb(46,87,142)\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><rect x=\"72\" y=\"170\" width=\"18\" height=\"14\" rx=\"2\" fill=\"none\" stroke=\"#ffffff\" stroke-opacity=\".7\" stroke-width=\"2\"></rect><rect x=\"110\" y=\"170\" width=\"18\" height=\"14\" rx=\"2\" fill=\"none\" stroke=\"#ffffff\" stroke-opacity=\".7\" stroke-width=\"2\"></rect></g></svg>", "ru": "\u043a\u0443\u0440\u0442\u043a\u0430, \u043f\u0438\u0434\u0436\u0430\u043a", "pl": false}, {"w": "coat", "p": "<svg viewBox=\"19 87 162 220\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 198) scale(1) translate(-100 -198)\"><path d=\"M60 98 L82 94 Q100 106 118 94 L140 98 L174 226 L146 232 L138 150 L142 300 L58 300 L62 150 L54 232 L26 226 Z\" fill=\"#8a5a3b\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M82 94 L92 124 L100 108 L108 124 L118 94\" fill=\"rgb(108,70,46)\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M100 108 L100 300\" stroke=\"rgb(108,70,46)\" stroke-width=\"2\"></path><g fill=\"rgb(108,70,46)\" stroke=\"#ffffff\" stroke-opacity=\".6\"><circle cx=\"106\" cy=\"135\" r=\"3.5\"></circle><circle cx=\"106\" cy=\"170\" r=\"3.5\"></circle><circle cx=\"106\" cy=\"205\" r=\"3.5\"></circle><circle cx=\"106\" cy=\"240\" r=\"3.5\"></circle></g></g></svg>", "ru": "\u043f\u0430\u043b\u044c\u0442\u043e", "pl": false}, {"w": "dress", "p": "<svg viewBox=\"37 88 126 219\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 198) scale(1) translate(-100 -198)\"><path d=\"M61 99 L86 96 Q100 109 114 96 L139 99 L137 160 L135.5 206 L156 300 L44 300 L64.5 206 L63 160 Z\" fill=\"#8e5bd6\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><rect x=\"64\" y=\"200\" width=\"72\" height=\"8\" rx=\"3\" fill=\"rgb(111,71,167)\"></rect><g fill=\"#ffffff\" opacity=\".7\"><circle cx=\"85\" cy=\"250\" r=\"3\"></circle><circle cx=\"110\" cy=\"235\" r=\"3\"></circle><circle cx=\"120\" cy=\"275\" r=\"3\"></circle><circle cx=\"72\" cy=\"285\" r=\"3\"></circle><circle cx=\"98\" cy=\"275\" r=\"3\"></circle><circle cx=\"100\" cy=\"150\" r=\"3\"></circle></g></g></svg>", "ru": "\u043f\u043b\u0430\u0442\u044c\u0435", "pl": false}, {"w": "skirt", "p": "<svg viewBox=\"45 191 110 106\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 243) scale(1) translate(-100 -243)\"><path d=\"M66 197 L134 197 L149 290 L51 290 Z\" fill=\"#e66aa0\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M84 206 L76 290 M100 206 L100 290 M116 206 L124 290\" stroke=\"rgb(179,83,125)\" stroke-width=\"2\"></path><rect x=\"66\" y=\"197\" width=\"68\" height=\"8\" fill=\"rgb(179,83,125)\"></rect></g></svg>", "ru": "\u044e\u0431\u043a\u0430", "pl": false}, {"w": "trousers", "p": "<svg viewBox=\"59 193 82 208\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 297) scale(1) translate(-100 -297)\"><path d=\"M66 200 L134 200 L130 394 L101 394 L100 246 L99 394 L70 394 Z\" fill=\"#8e979d\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><rect x=\"66\" y=\"200\" width=\"68\" height=\"9\" fill=\"rgb(111,118,122)\"></rect></g></svg>", "ru": "\u0431\u0440\u044e\u043a\u0438", "pl": true}, {"w": "jeans", "p": "<svg viewBox=\"59 193 82 208\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 297) scale(1) translate(-100 -297)\"><path d=\"M66 200 L134 200 L130 394 L101 394 L100 246 L99 394 L70 394 Z\" fill=\"#3b6fb6\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M74 212 Q80 226 92 224 M126 212 Q120 226 108 224 M100 210 L100 240\" fill=\"none\" stroke=\"#e2b13a\" stroke-width=\"1.6\" stroke-dasharray=\"3 3\"></path><rect x=\"66\" y=\"200\" width=\"68\" height=\"9\" fill=\"rgb(46,87,142)\"></rect></g></svg>", "ru": "\u0434\u0436\u0438\u043d\u0441\u044b", "pl": true}, {"w": "shorts", "p": "<svg viewBox=\"59 193 82 84\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 234) scale(1) translate(-100 -234)\"><path d=\"M66 200 L134 200 L133 270 L104 270 L100 238 L96 270 L67 270 Z\" fill=\"#f08a3c\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><rect x=\"66\" y=\"200\" width=\"68\" height=\"8\" fill=\"rgb(187,108,47)\"></rect></g></svg>", "ru": "\u0448\u043e\u0440\u0442\u044b", "pl": true}, {"w": "tracksuit", "p": "<svg viewBox=\"19 87 162 314\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(100 245) scale(1) translate(-100 -245)\"><path d=\"M66 200 L134 200 L130 394 L101 394 L100 246 L99 394 L70 394 Z\" fill=\"#d9443a\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M69 214 L72 384 M131 214 L128 384\" stroke=\"#ffffff\" stroke-width=\"3\"></path><rect x=\"70\" y=\"384\" width=\"29\" height=\"10\" fill=\"rgb(169,53,45)\"></rect><rect x=\"101\" y=\"384\" width=\"29\" height=\"10\" fill=\"rgb(169,53,45)\"></rect><path d=\"M60 98 L82 94 Q100 106 118 94 L140 98 L174 226 L146 232 L137.5 142 L134 210 L66 210 L62.5 142 L54 232 L26 226 Z\" fill=\"#d9443a\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M64 106 L36 224 M136 106 L164 224\" stroke=\"#ffffff\" stroke-width=\"3\"></path><path d=\"M100 104 L100 210\" stroke=\"#ffffff\" stroke-opacity=\".8\" stroke-width=\"2.5\"></path><path d=\"M82 94 Q100 108 118 94 L116 102 Q100 114 84 102 Z\" fill=\"rgb(169,53,45)\"></path><rect x=\"66\" y=\"203\" width=\"68\" height=\"8\" fill=\"rgb(169,53,45)\"></rect><path d=\"M27 224 L54 230 M173 224 L146 230\" stroke=\"rgb(169,53,45)\" stroke-width=\"6\"></path></g></svg>", "ru": "\u0441\u043f\u043e\u0440\u0442\u0438\u0432\u043d\u044b\u0439 \u043a\u043e\u0441\u0442\u044e\u043c", "pl": false}]}, {"g": "Shoes and more", "items": [{"w": "trainers", "p": "<svg viewBox=\"54 381 92 37\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(81 400) scale(1) translate(-81 -400)\"><path d=\"M63 410 Q61 392 74 388 L97 388 L99 410 Z\" fill=\"#f4f4f4\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><rect x=\"61\" y=\"406\" width=\"39\" height=\"5\" rx=\"2\" fill=\"#555\"></rect><path d=\"M70 399 L92 394\" stroke=\"rgb(190,190,190)\" stroke-width=\"3\"></path></g><g transform=\"translate(119 400) scale(1) translate(-119 -400)\"><path d=\"M137 410 Q139 392 126 388 L103 388 L101 410 Z\" fill=\"#f4f4f4\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><rect x=\"100\" y=\"406\" width=\"39\" height=\"5\" rx=\"2\" fill=\"#555\"></rect><path d=\"M130 399 L108 394\" stroke=\"rgb(190,190,190)\" stroke-width=\"3\"></path></g></svg>", "ru": "\u043a\u0440\u043e\u0441\u0441\u043e\u0432\u043a\u0438", "pl": true}, {"w": "shoes", "p": "<svg viewBox=\"52 382 96 36\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(82 404) scale(1) translate(-82 -404)\"><path d=\"M61.5 406 Q61.5 399.5 70 399.5 Q84 405.5 98.5 400 Q101 401 101 405.5 Q101 410.8 93 410.8 L68 410.8 Q61.5 410.8 61.5 406 Z\" fill=\"#e66aa0\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M63 410 L100 410\" stroke=\"rgb(179,83,125)\" stroke-width=\"2\" stroke-linecap=\"round\"></path><path d=\"M70.5 401 Q84 407 98 401.5\" fill=\"none\" stroke=\"rgb(179,83,125)\" stroke-width=\"1.4\"></path><ellipse cx=\"65.5\" cy=\"401.3\" rx=\"3.4\" ry=\"2.1\" transform=\"rotate(-25 65.5 401.3)\" fill=\"rgb(179,83,125)\"></ellipse><ellipse cx=\"71.5\" cy=\"400.9\" rx=\"3.4\" ry=\"2.1\" transform=\"rotate(25 71.5 400.9)\" fill=\"rgb(179,83,125)\"></ellipse><circle cx=\"68.5\" cy=\"401.5\" r=\"1.7\" fill=\"#e66aa0\" stroke=\"rgb(179,83,125)\" stroke-width=\"1\"></circle></g><g transform=\"translate(118 404) scale(1) translate(-118 -404)\"><path d=\"M 138.5 406 Q 138.5 399.5 130 399.5 Q 116 405.5 101.5 400 Q 99 401 99 405.5 Q 99 410.8 107 410.8 L 132 410.8 Q 138.5 410.8 138.5 406 Z\" fill=\"#e66aa0\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M 137 410 L 100 410\" stroke=\"rgb(179,83,125)\" stroke-width=\"2\" stroke-linecap=\"round\"></path><path d=\"M 129.5 401 Q 116 407 102 401.5\" fill=\"none\" stroke=\"rgb(179,83,125)\" stroke-width=\"1.4\"></path><ellipse cx=\"134.5\" cy=\"401.3\" rx=\"3.4\" ry=\"2.1\" transform=\"rotate(25 134.5 401.3)\" fill=\"rgb(179,83,125)\"></ellipse><ellipse cx=\"128.5\" cy=\"400.9\" rx=\"3.4\" ry=\"2.1\" transform=\"rotate(-25 128.5 400.9)\" fill=\"rgb(179,83,125)\"></ellipse><circle cx=\"131.5\" cy=\"401.5\" r=\"1.7\" fill=\"#e66aa0\" stroke=\"rgb(179,83,125)\" stroke-width=\"1\"></circle></g></svg>", "ru": "\u0442\u0443\u0444\u043b\u0438", "pl": true}, {"w": "boots", "p": "<svg viewBox=\"53 333 94 85\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(80 376) scale(1) translate(-80 -376)\"><path d=\"M67 340 L99 340 L99.5 410 L62 410 Q61 397 70 394 Z\" fill=\"#8a5a3b\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><rect x=\"60\" y=\"406\" width=\"39\" height=\"5\" fill=\"#3b2516\"></rect><rect x=\"67\" y=\"340\" width=\"32\" height=\"6\" fill=\"rgb(108,70,46)\"></rect></g><g transform=\"translate(120 376) scale(1) translate(-120 -376)\"><path d=\"M133 340 L101 340 L100.5 410 L138 410 Q139 397 130 394 Z\" fill=\"#8a5a3b\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><rect x=\"101\" y=\"406\" width=\"39\" height=\"5\" fill=\"#3b2516\"></rect><rect x=\"101\" y=\"340\" width=\"32\" height=\"6\" fill=\"rgb(108,70,46)\"></rect></g></svg>", "ru": "\u0441\u0430\u043f\u043e\u0433\u0438, \u0431\u043e\u0442\u0438\u043d\u043a\u0438", "pl": true}, {"w": "sandals", "p": "<svg viewBox=\"56 380 88 38\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(82 402) scale(1) translate(-82 -402)\"><path d=\"M64 408 Q62 400 70 398 L98 398 L99 410 L64 410 Z\" fill=\"rgb(189,157,59)\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M70 399 Q84 386 98 396\" stroke=\"#f2c94c\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"></path><path d=\"M76 405 L80 395\" stroke=\"#f2c94c\" stroke-width=\"4\" stroke-linecap=\"round\"></path></g><g transform=\"translate(118 402) scale(1) translate(-118 -402)\"><path d=\"M136 408 Q138 400 130 398 L102 398 L101 410 L136 410 Z\" fill=\"rgb(189,157,59)\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M130 399 Q116 386 102 396\" stroke=\"#f2c94c\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"></path><path d=\"M124 405 L120 395\" stroke=\"#f2c94c\" stroke-width=\"4\" stroke-linecap=\"round\"></path></g></svg>", "ru": "\u0441\u0430\u043d\u0434\u0430\u043b\u0438\u0438", "pl": true}, {"w": "cap", "p": "<svg viewBox=\"60 -2 110 50\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(112 24) scale(1) translate(-112 -24)\"><path d=\"M68 36 Q68 6 100 6 Q132 6 132 36 Z\" fill=\"#d9443a\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><path d=\"M124 30 Q158 28 162 40 L122 40 Z\" fill=\"rgb(169,53,45)\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></path><circle cx=\"100\" cy=\"7\" r=\"3\" fill=\"rgb(169,53,45)\"></circle></g></svg>", "ru": "\u043a\u0435\u043f\u043a\u0430", "pl": false}, {"w": "bag", "p": "<svg viewBox=\"135 224 54 67\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><g transform=\"translate(162 250) scale(1) translate(-162 -250)\"><rect x=\"142\" y=\"250\" width=\"40\" height=\"34\" rx=\"6\" fill=\"#e66aa0\" stroke=\"rgba(0,0,0,.28)\" stroke-width=\"1.5\"></rect><rect x=\"142\" y=\"250\" width=\"40\" height=\"10\" rx=\"4\" fill=\"rgb(179,83,125)\"></rect><circle cx=\"162\" cy=\"263\" r=\"3\" fill=\"#d9b13a\"></circle><path d=\"M150 254 Q162 222 174 254\" stroke=\"rgb(179,83,125)\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"></path></g></svg>", "ru": "\u0441\u0443\u043c\u043a\u0430", "pl": false}]}];
+
+let voice=null;
+function pickVoice(){const vs=speechSynthesis.getVoices();
+ voice=vs.find(v=>/en-GB/i.test(v.lang)&&/female|Serena|Kate|Libby|Sonia|Martha|Stephanie|Google UK English Female/i.test(v.name))
+  ||vs.find(v=>/en-GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;}
+try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);if(voice)u.voice=voice;u.lang='en-GB';u.rate=.82;speechSynthesis.speak(u);}catch(e){}}
+const pic=p=>p.startsWith('<svg')?p:`<img src="${p}" alt="">`;
+const ALL=G.flatMap(g=>g.items);
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+ document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.s));
+ if(b.dataset.s==='g1'&&!g1cur)g1new(); if(b.dataset.s==='g2'&&!g2cur)g2new();});
+const wordsEl=document.getElementById('wordlist');
+G.forEach(g=>{const h=document.createElement('h3');h.textContent=g.g;wordsEl.appendChild(h);
+ const grid=document.createElement('div');grid.className='grid';wordsEl.appendChild(grid);
+ g.items.forEach(o=>{const c=document.createElement('div');c.className='card';
+  c.innerHTML=`<div class="ph">${pic(o.p)}</div><div class="word">${o.w}</div><div class="ru">${o.ru}</div><div>🔊</div>`;
+  c.onclick=()=>{say(o.w);c.classList.add('say');setTimeout(()=>c.classList.remove('say'),700)};grid.appendChild(c);});});
+const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+let g1cur=null,g1ok=0,g1tot=0,g1lock=false,g1last=null;
+function g1new(){g1lock=false;const pool=ALL.filter(o=>o!==g1last);g1cur=pool[Math.floor(Math.random()*pool.length)];g1last=g1cur;
+ const opts=shuffle([g1cur,...shuffle(ALL.filter(o=>o!==g1cur&&!(o.x&&g1cur.x))).slice(0,3)]);
+ const box=document.getElementById('g1opts');box.innerHTML='';
+ opts.forEach(o=>{const d=document.createElement('div');d.className='opt';d.innerHTML=pic(o.p);
+  d.onclick=()=>{if(g1lock)return;
+   if(o===g1cur){g1lock=true;d.classList.add('ok');g1ok++;g1tot++;say('Yes! '+o.w);setTimeout(g1new,1300);}
+   else{d.classList.add('no');g1tot++;say(o.w);}
+   document.getElementById('g1score').textContent=`⭐ ${g1ok} / ${g1tot}`;};box.appendChild(d);});
+ setTimeout(()=>say(g1cur.w),300);}
+document.getElementById('g1play').onclick=()=>g1cur&&say(g1cur.w);
+
+
+const by=w=>ALL.find(o=>o.w===w);
+function scene(o,far){const s=far?50:100;
+ return `<span class="me">🧒</span><span class="arrow ${far?'far':''}" style="${far?'':'width:28px'}"></span><span class="thing" style="width:${s}px;height:${s}px">${pic(o.p)}</span>`;}
+const TT=[['This','cap',false,'This is a cap.'],['These','trainers',false,'These are trainers.'],['That','dress',true,'That is a dress.'],['Those','jeans',true,'Those are jeans.']];
+const ttc=document.getElementById('ttcards');
+TT.forEach(([w,item,far,s])=>{const c=document.createElement('div');c.className='tcard';
+ c.innerHTML=`<div class="tword ${far?'far':'near'}">${w}</div><div class="scene">${scene(by(item),far)}</div>
+ <div class="sent">${s.replace(w,'<b>'+w+'</b>')} 🔊</div><div><span class="tag">${far?'there · far':'here · near'}</span><span class="tag">${w==='This'||w==='That'?'one':'two or more'}</span></div>`;
+ c.onclick=()=>say(s);ttc.appendChild(c);});
+let g2cur=null,g2ok=0,g2tot=0,g2done=false;
+const art=w=>/^[aeiou]/i.test(w)?'an':'a';
+function g2new(){g2done=false;const o=ALL[Math.floor(Math.random()*ALL.length)],far=Math.random()<.5;
+ const ans=o.pl?(far?'Those':'These'):(far?'That':'This');
+ g2cur={sent:`${ans} ${o.pl?'are':'is'} ${o.pl?'':art(o.w)+' '}${o.w}.`};
+ document.getElementById('g2scene').innerHTML=scene(o,far);
+ document.getElementById('g2fb').textContent='';document.getElementById('g2next').style.display='none';
+ const b=document.getElementById('g2btns');b.innerHTML='';
+ ['This','That','These','Those'].forEach(w=>{const x=document.createElement('button');x.textContent=w;
+  x.onclick=()=>{if(g2done)return;
+   if(w===ans){g2done=true;x.classList.add('ok');g2ok++;g2tot++;document.getElementById('g2fb').textContent='✅ '+g2cur.sent;say(g2cur.sent);document.getElementById('g2next').style.display='block';}
+   else{x.classList.add('no');g2tot++;document.getElementById('g2fb').textContent='Try again 🙂';}
+   document.getElementById('g2score').textContent=`⭐ ${g2ok} / ${g2tot}`;};b.appendChild(x);});}
+document.getElementById('g2next').onclick=g2new;
+
+</script></body></html>
