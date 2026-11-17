@@ -28,7 +28,7 @@ h3{margin:22px 4px 10px;font-size:21px;color:var(--orange)}
 .ph{height:120px;display:flex;align-items:center;justify-content:center}
 .ph img{max-width:100%;max-height:120px;border-radius:12px}
 .ph svg{width:100%;height:110px}
-.word{font-size:22px;font-weight:900;margin-top:6px;color:var(--pink)}
+.word{font-size:21px;font-weight:900;margin-top:6px;color:var(--pink);white-space:nowrap}
 .ru{font-size:14px;opacity:.7;display:none} body.showru .ru{display:block}
 .toggle{text-align:center;margin-bottom:6px}
 .toggle label{background:#fff;padding:6px 14px;border-radius:16px;font-size:15px;cursor:pointer}
@@ -63,7 +63,8 @@ h3{margin:22px 4px 10px;font-size:21px;color:var(--orange)}
 .topic{display:block;background:#fff;border-radius:24px;padding:16px;text-align:center;text-decoration:none;color:var(--ink);box-shadow:0 5px 0 #ffd7a8,0 10px 22px rgba(255,154,60,.18);transition:transform .12s}
 .topic:hover{transform:translateY(-4px)}
 .topic .pic{height:150px;display:flex;align-items:center;justify-content:center}
-.topic .pic img{max-width:100%;max-height:150px;border-radius:14px} .topic .pic svg{height:140px;width:100%}
+.topic .pic img{max-width:100%;max-height:150px;border-radius:14px}
+.topic .pic img:not(:only-child){max-width:46%;max-height:120px} .topic .pic svg{height:140px;width:100%}
 .topic b{display:block;font-size:24px;margin-top:8px;color:var(--pink)}
 .topic span{font-size:15px;opacity:.75}
 body.plain{background:#fff}
@@ -79,4 +80,4 @@ body.plain .big{background:#333;box-shadow:none} body.plain .scene{background:#f
 <button id="plainBtn" onclick="document.body.classList.toggle('plain');try{localStorage.setItem('nastja-plain',document.body.classList.contains('plain')?'1':'')}catch(e){}">Plain view</button>
 <script>try{if(localStorage.getItem('nastja-plain'))document.body.classList.add('plain')}catch(e){}</script>
 <header><h1>Nastja · English</h1><p>Choose a topic</p></header>
-<main><div class="topics"><a class="topic" href="clothes.html"><div class="pic"><svg viewBox="40 87 120 126" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><g transform="translate(100 150) scale(1) translate(-100 -150)"><path d="M60 98 L82 94 Q100 106 118 94 L140 98 L154 140 L136.5 145 L135 208 L65 208 L63.5 145 L46 140 Z" fill="#f2c94c" stroke="rgba(0,0,0,.28)" stroke-width="1.5"></path><path d="M84 97 Q100 110 116 97" fill="none" stroke="rgb(189,157,59)" stroke-width="3"></path></g></svg></div><b>Clothes</b><span>clothes · this, that, these, those</span></a><a class="topic" href="house.html"><div class="pic"><img src="img/house.jpg" alt=""></div><b>In the house</b><span>rooms and furniture</span></a></div></main></body></html>
+<main><div class="topics"><a class="topic" href="clothes.html"><div class="pic"><svg viewBox="40 87 120 126" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><g transform="translate(100 150) scale(1) translate(-100 -150)"><path d="M60 98 L82 94 Q100 106 118 94 L140 98 L154 140 L136.5 145 L135 208 L65 208 L63.5 145 L46 140 Z" fill="#f2c94c" stroke="rgba(0,0,0,.28)" stroke-width="1.5"></path><path d="M84 97 Q100 110 116 97" fill="none" stroke="rgb(189,157,59)" stroke-width="3"></path></g></svg></div><b>Clothes</b><span>clothes · this, that, these, those</span></a><a class="topic" href="house.html"><div class="pic"><img src="img/house.jpg" alt=""></div><b>In the house</b><span>rooms and furniture</span></a><a class="topic" href="fruit-and-vegetables.html"><div class="pic"><img src="img/fv-strawberry.jpg" alt=""><img src="img/fv-carrot.jpg" alt=""></div><b>Fruit and vegetables</b><span>fruit · vegetables</span></a></div></main></body></html>
