@@ -186,7 +186,8 @@ body.plain .tag{background:#f0f2f6}
 const LESSONS = {
   l1: "Lesson 1 — 10.11.2026",
   l2: "Lesson 2 — 12.11.2026: Try These Sports!",
-  l3: "Lesson 3 — 17.11.2026"
+  l3: "Lesson 3 — 17.11.2026",
+  l4: "Lesson 4 — 19.11.2026"
 };
 const TOPICS = {
   sport: "Sport",
@@ -199,7 +200,11 @@ const TOPICS = {
   nature: "Nature and the world",
   names: "Places",
   family: "Family",
-  useful: "Small useful words"
+  useful: "Small useful words",
+  food: "Food",
+  tech: "Phones and computers",
+  money: "Money",
+  clock: "Telling the time"
 };
 const WORDS = [
   {w:"mountains", d:"Very high land.", ex:"You can climb mountains.", ru:"Горы", l:"l1", t:"nature"},
@@ -238,7 +243,29 @@ const WORDS = [
   {w:"celebrate", d:"To do something fun because a day is special or something good happened.", ex:"We celebrate my birthday with a cake.", ru:"Праздновать, отмечать", l:"l3", t:"act"},
   {w:"uncle", d:"The brother of your mum or dad.", ru:"Дядя", l:"l3", t:"family"},
   {w:"put on", d:"To start wearing clothes or shoes.", ex:"Put on your shoes!", ru:"Надевать", l:"l3", t:"act"},
-  {w:"tidy", tag:"verb", d:"To put things in the right places so a room looks nice.", ex:"Tidy your room, please!", ru:"Убирать, наводить порядок", l:"l3", t:"act"}
+  {w:"tidy", tag:"verb", d:"To put things in the right places so a room looks nice.", ex:"Tidy your room, please!", ru:"Убирать, наводить порядок", l:"l3", t:"act"},
+
+  {w:"yesterday", d:"The day before today.", ex:"Yesterday was Wednesday.", ru:"Вчера", l:"l4", t:"time"},
+  {w:"tomorrow", d:"The day after today.", ex:"Tomorrow is Friday.", ru:"Завтра", l:"l4", t:"time"},
+  {w:"nuts", d:"Small hard fruits that grow on trees. They have a hard shell.", ex:"Squirrels love nuts.", ru:"Орехи", l:"l4", t:"food"},
+  {w:"habits", d:"Things you do often, usually without thinking about it.", ex:"Reading every day and drinking water are good habits.", ru:"Привычки", l:"l4", t:"time"},
+  {w:"after", d:"Later than something.", ex:"I do my homework after school.", ru:"После", l:"l4", t:"time"},
+  {w:"before", d:"Earlier than something.", ex:"I wash my hands before dinner.", ru:"До, перед", l:"l4", t:"time"},
+  {w:"apps", d:"Programs on a phone or tablet, for games, music, messages and more.", ex:"I have a lot of games apps on my phone.", ru:"Приложения", l:"l4", t:"tech"},
+  {w:"spend money", d:"To use money to buy things.", ex:"I spend money on sweets.", ru:"Тратить деньги", l:"l4", t:"money"},
+
+  {w:"o'clock", d:"We say it when the time is exactly on the hour (00 minutes).", ex:"3:00 — It's three o'clock.", ru:"Ровно (3:00 — три часа ровно)", l:"l4", t:"clock"},
+  {w:"five past", d:"5 minutes after the hour.", ex:"3:05 — It's five past three.", ru:"5 минут после часа (3:05 — пять минут четвёртого)", l:"l4", t:"clock"},
+  {w:"ten past", d:"10 minutes after the hour.", ex:"3:10 — It's ten past three.", ru:"10 минут после часа (3:10 — десять минут четвёртого)", l:"l4", t:"clock"},
+  {w:"quarter past", d:"15 minutes (a quarter of an hour) after the hour.", ex:"3:15 — It's quarter past three.", ru:"Четверть после часа (3:15 — четверть четвёртого)", l:"l4", t:"clock"},
+  {w:"twenty past", d:"20 minutes after the hour.", ex:"3:20 — It's twenty past three.", ru:"20 минут после часа (3:20 — двадцать минут четвёртого)", l:"l4", t:"clock"},
+  {w:"twenty-five past", d:"25 minutes after the hour.", ex:"3:25 — It's twenty-five past three.", ru:"25 минут после часа (3:25 — двадцать пять минут четвёртого)", l:"l4", t:"clock"},
+  {w:"half past", d:"30 minutes (half an hour) after the hour.", ex:"3:30 — It's half past three.", ru:"Половина (3:30 — половина четвёртого)", l:"l4", t:"clock"},
+  {w:"twenty-five to", d:"25 minutes before the next hour.", ex:"3:35 — It's twenty-five to four.", ru:"Без 25 минут (3:35 — без двадцати пяти четыре)", l:"l4", t:"clock"},
+  {w:"twenty to", d:"20 minutes before the next hour.", ex:"3:40 — It's twenty to four.", ru:"Без 20 минут (3:40 — без двадцати четыре)", l:"l4", t:"clock"},
+  {w:"quarter to", d:"15 minutes (a quarter of an hour) before the next hour.", ex:"3:45 — It's quarter to four.", ru:"Без четверти (3:45 — без четверти четыре)", l:"l4", t:"clock"},
+  {w:"ten to", d:"10 minutes before the next hour.", ex:"3:50 — It's ten to four.", ru:"Без 10 минут (3:50 — без десяти четыре)", l:"l4", t:"clock"},
+  {w:"five to", d:"5 minutes before the next hour.", ex:"3:55 — It's five to four.", ru:"Без 5 минут (3:55 — без пяти четыре)", l:"l4", t:"clock"}
 ];
 WORDS.forEach(x=>x.id=x.l+":"+x.w);
 const TKEYS=Object.keys(TOPICS);const gcls=x=>"g"+(TKEYS.indexOf(x.t)%6);
