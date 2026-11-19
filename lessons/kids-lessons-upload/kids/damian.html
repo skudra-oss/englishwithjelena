@@ -113,7 +113,7 @@ const ME=Math.random().toString(36).slice(2,10);let client=null;const peers={};
 function pub(m){if(!client||!client.connected)return;m.from=ME;try{client.publish(TOPIC,JSON.stringify(m))}catch(e){}}
 const TOPIC='skudra-live-66e3200f6d5a1c2c/kids/'+ROOM+'/'+LESSON;
 function liveUI(){const n=Object.values(peers).filter(t=>Date.now()-t<12000).length;const el=document.getElementById('live');
- el.classList.toggle('on',n>0);document.getElementById('liveT').textContent=!client||!client.connected?'offline':(n>0?'together ✓':'waiting…')}
+ el.classList.toggle('on',n>0);document.getElementById('liveT').textContent=!client||!client.connected?'offline':(n>0?'together ✓'+(n>1?' ('+n+' others!)':''):'waiting…')}
 function snapshot(){save();const out={};strokes.forEach((d,k)=>{if(!d)return;const c=document.createElement('canvas');c.width=1600;c.height=1000;c.getContext('2d').putImageData(d,0,0);
  const blank=!d.data.some((v,ix)=>ix%4==3&&v);if(!blank)out[k]=c.toDataURL('image/png')});return out}
 function loadStrokes(map){Object.entries(map||{}).forEach(([k,url])=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=1600;c.height=1000;const g=c.getContext('2d');g.drawImage(img,0,0);strokes[+k]=g.getImageData(0,0,1600,1000);if(+k===i)show()};img.src=url})}
