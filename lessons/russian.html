@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Russian with Sound</title>
+<style>
+  :root{
+    --bg1:#fff4ec; --bg2:#ffe9f1;
+    --pink:#e84a8a; --pink-soft:#ffd6e7;
+    --orange:#f07a2a; --orange-soft:#ffe0c7;
+    --gold:#e0a400; --gold-soft:#fff1b8;
+    --purple:#8a5cd6; --purple-soft:#eadfff;
+    --ink:#3a2433; --muted:#7a5a6c;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: Arial, Helvetica, "Segoe UI", sans-serif; color:var(--ink);
+    background:linear-gradient(135deg,var(--bg1),var(--bg2)); min-height:100vh;
+  }
+  header{
+    background:linear-gradient(90deg,var(--pink),var(--orange),var(--gold));
+    color:#fff; padding:28px 20px 22px; text-align:center;
+  }
+  header h1{margin:0;font-size:2rem;letter-spacing:.5px}
+  header p{margin:6px 0 0;font-size:1.05rem;opacity:.95}
+  #plainBtn{
+    position:fixed; top:12px; right:12px; z-index:20;
+    background:#fff; color:var(--ink); border:2px solid var(--ink); border-radius:20px;
+    padding:6px 14px; font-size:.9rem; cursor:pointer; font-weight:bold;
+  }
+  nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:14px}
+  nav a{
+    text-decoration:none; color:var(--ink); background:#fff; border-radius:20px; padding:8px 16px;
+    font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,.08)
+  }
+  main{max-width:1100px;margin:0 auto;padding:0 16px 60px}
+  section{background:var(--card);border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 4px 14px rgba(232,74,138,.10)}
+  h2{margin:0 0 6px;font-size:1.6rem;color:var(--pink)}
+  h3{margin:20px 0 10px;font-size:1.15rem;color:var(--orange)}
+  .hint{color:var(--muted);margin:0 0 14px}
+  #voiceWarn{
+    display:none; background:#fff1b8; border:2px solid var(--gold); border-radius:12px;
+    padding:10px 14px; margin:14px auto 0; max-width:1100px;
+  }
+  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  .toggle{
+    border:2px solid var(--orange); background:#fff; color:var(--ink); border-radius:20px;
+    padding:6px 14px; cursor:pointer; font-weight:bold; font-size:.95rem
+  }
+  .toggle.on{background:var(--orange);color:#fff}
+
+  /* Alphabet */
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:.95rem}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:16px;height:16px;border-radius:50%;display:inline-block}
+  .alphabet{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:12px}
+  .letter{
+    border:none; border-radius:16px; padding:12px 6px 10px; cursor:pointer; text-align:center;
+    font-family:inherit; color:var(--ink); transition:transform .12s;
+  }
+  .letter:hover,.letter:focus{transform:scale(1.05)}
+  .letter.playing{outline:4px solid var(--ink)}
+  .letter .big{font-size:2.6rem;font-weight:bold;line-height:1.1}
+  .letter .small{font-size:2.6rem;font-weight:normal;opacity:.75;margin-left:4px}
+  .letter .snd{display:block;font-size:.85rem;margin-top:6px;line-height:1.25}
+  .vowel{background:var(--pink-soft)} .vowel .big,.vowel .small{color:var(--pink)}
+  .cons1{background:var(--orange-soft)} .cons1 .big,.cons1 .small{color:#c85a10}
+  .cons2{background:var(--gold-soft)} .cons2 .big,.cons2 .small{color:#a77800}
+  .sign{background:var(--purple-soft)} .sign .big,.sign .small{color:var(--purple)}
+
+  /* Phrases + words */
+  .note{
+    background:var(--gold-soft); border-left:6px solid var(--gold); border-radius:10px;
+    padding:12px 16px; margin:12px 0 16px; line-height:1.5
+  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+  .item{
+    display:flex;align-items:center;gap:12px;background:#fff7f2;border:2px solid var(--orange-soft);
+    border-radius:14px;padding:10px 12px;cursor:pointer;text-align:left;font-family:inherit;color:var(--ink);width:100%
+  }
+  .item:hover,.item:focus{border-color:var(--orange)}
+  .item.playing{border-color:var(--pink);background:var(--pink-soft)}
+  .play{
+    flex:0 0 38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--orange));
+    color:#fff;display:flex;align-items:center;justify-content:center;font-size:1rem
+  }
+  .ru{font-size:1.35rem;font-weight:bold}
+  .en{font-size:.98rem;color:var(--muted);margin-top:2px}
+  .stress{color:var(--pink)}
+  .phrases .item{background:#fff3f8;border-color:var(--pink-soft)}
+  .phrases .item:hover,.phrases .item:focus{border-color:var(--pink)}
+  .tip{font-size:.85rem;color:var(--orange);margin-top:3px}
+
+  /* Plain view */
+  body.plain{background:#fff}
+  body.plain header{background:#fff;color:#000;border-bottom:2px solid #000}
+  body.plain section{box-shadow:none;border:1px solid #bbb}
+  body.plain h2,body.plain h3{color:#000}
+  body.plain .letter,body.plain .item{background:#fff !important;border:1px solid #999 !important}
+  body.plain .letter .big,body.plain .letter .small{color:#000 !important}
+  body.plain .play{background:#555}
+  body.plain .stress,body.plain .tip{color:#000}
+  body.plain .stress{text-decoration:underline}
+  body.plain .note{background:#f4f4f4;border-left-color:#000}
+  body.plain .legend{display:none}
+  body.plain nav a{box-shadow:none;border:1px solid #999}
+
+.dlg{margin-bottom:30px}
+.kicker{font-size:.85rem;font-weight:bold;letter-spacing:2px;color:var(--orange);margin:0}
+.dlg h2{margin:2px 0 14px}
+.playall{border:none;background:linear-gradient(90deg,var(--pink),var(--orange));color:#fff;border-radius:20px;padding:8px 18px;font-weight:bold;font-size:1rem;cursor:pointer;margin-bottom:12px}
+.lines{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.line{display:flex;align-items:center;gap:12px;border:none;border-radius:16px;padding:10px 14px;cursor:pointer;font-family:inherit;color:var(--ink);text-align:left;max-width:560px;font-size:1.3rem;font-weight:bold}
+.line.a{background:var(--pink-soft);align-self:flex-start}
+.line.b{background:var(--gold-soft);align-self:flex-end}
+.line.playing{outline:3px solid var(--ink)}
+.expl{border-top:2px dashed var(--orange-soft);margin-top:18px;padding-top:6px}
+.expl p{line-height:1.55;margin:8px 0}
+.important{background:var(--pink-soft);border-left:6px solid var(--pink);border-radius:10px;padding:10px 14px;margin:10px 0;line-height:1.5}
+body.plain .line{background:#fff !important;border:1px solid #999}
+body.plain .kicker{color:#000}
+body.plain .playall{background:#555}
+body.plain .important{background:#f4f4f4;border-left-color:#000}
+
+.tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:16px}
+.tab{border:2px solid var(--pink);background:#fff;color:var(--ink);border-radius:22px;padding:9px 18px;font-weight:bold;font-size:1rem;cursor:pointer;font-family:inherit}
+.tab.active{background:linear-gradient(90deg,var(--pink),var(--orange));color:#fff;border-color:transparent}
+.pg{display:none}
+.pg.active{display:block}
+body.plain .tab{border-color:#999}
+body.plain .tab.active{background:#333;color:#fff}
+</style>
+</head>
+<body>
+<button id="plainBtn" aria-pressed="false">Plain view</button>
+<header>
+  <h1>Russian with Sound</h1>
+  <p>Tap any letter, word or line to hear it 🔊</p>
+</header>
+<div id="voiceWarn">
+  ⚠️ Your device doesn't seem to have a Russian voice, so the sound may be wrong or silent.
+  On a Mac or iPhone/iPad try Safari; on Android, install Russian in Google “Text-to-speech” settings.
+</div>
+<main>
+<nav class="tabs">
+  <button class="tab active" data-page="pLetters">Letters</button>
+  <button class="tab" data-page="pPhrases">Useful phrases</button>
+  <button class="tab" data-page="pReading">Reading words</button>
+  <button class="tab" data-page="pDialogues">Dialogues</button>
+</nav>
+<div class="pg active" id="pLetters">
+<section>
+  <h2>The Russian alphabet</h2>
+  <p class="hint">33 letters. Tap a letter to hear its name.</p>
+  <div class="legend">
+    <span><i class="dot" style="background:var(--pink)"></i> vowels</span>
+    <span><i class="dot" style="background:var(--orange)"></i><i class="dot" style="background:var(--gold)"></i> consonants</span>
+    <span><i class="dot" style="background:var(--purple)"></i> signs (no sound of their own)</span>
+  </div>
+  <div class="alphabet" id="alphabet"></div>
+</section>
+</div>
+<div class="pg" id="pPhrases"><section>
+  <h2>Useful phrases</h2>
+  <p class="hint">The pink letter shows the stress – say that part louder and longer.</p>
+  <div id="phraseGroups"></div>
+</section></div>
+<div class="pg" id="pReading"><section>
+  <h2>Words from reading practice</h2>
+  <p class="hint">The pink letter shows the stress – say that part louder and longer.</p>
+  <div id="readingGroups"></div>
+</section></div>
+<div class="pg" id="pDialogues"><section>
+  <h2>Dialogues</h2>
+  <p class="hint">Tap a line to hear it, or press “Play the whole dialogue”.</p>
+  <div id="dialogues"></div>
+</section></div>
+</main>
+<script>
+
+let ruVoice = null;
+function pickVoice(){
+  const vs = speechSynthesis.getVoices();
+  ruVoice = vs.find(v => v.lang && v.lang.toLowerCase().startsWith("ru")) || null;
+  document.getElementById("voiceWarn").style.display = (vs.length && !ruVoice) ? "block" : "none";
+}
+if ("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+else { document.getElementById("voiceWarn").style.display = "block"; }
+
+function speak(text, el){
+  if (!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  let clean = text.normalize("NFD").replace(/\u0301/g, "").normalize("NFC").replace(/[—–]/g, " ").trim();
+  /* Text in CAPITALS: read it as normal sentences */
+  if (clean === clean.toUpperCase() && /[А-ЯЁ]{2}/.test(clean)){
+    clean = clean.toLowerCase().replace(/(^|[.!?]\s+)([а-яё])/g, (m, p, c) => p + c.toUpperCase());
+  }
+  /* Say each sentence separately, so the voice pauses at . ! ? */
+  const parts = (clean.match(/[^.!?]+[.!?]*/g) || [clean]).map(p => p.trim()).filter(Boolean);
+  document.querySelectorAll(".playing").forEach(x => x.classList.remove("playing"));
+  if (el) el.classList.add("playing");
+  parts.forEach((p, i) => {
+    const u = new SpeechSynthesisUtterance(p);
+    u.lang = "ru-RU"; if (ruVoice) u.voice = ruVoice; u.rate = 0.8;
+    if (i === parts.length - 1 && el) u.onend = () => el.classList.remove("playing");
+    speechSynthesis.speak(u);
+  });
+}
+function withStress(text){
+  const safe = text.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  return safe.replace(/(.)́/g, '<span class="stress">$1́</span>');
+}
+function makeItem(ru, en, tip){
+  const b = document.createElement("button");
+  b.className = "item";
+  b.innerHTML = `<span class="play">🔊</span><span><div class="ru">${withStress(ru)}</div><div class="en">${en}</div>${tip ? `<div class="tip">${tip}</div>` : ""}</span>`;
+  b.onclick = () => speak(ru, b);
+  return b;
+}
+/* Each group: {title, note (optional HTML), words: [[ru, en, tip?], ...]} */
+function buildGroups(boxId, groups){
+  const box = document.getElementById(boxId);
+  groups.forEach(g => {
+    const h = document.createElement("h3"); h.textContent = g.title; box.appendChild(h);
+    const grid = document.createElement("div"); grid.className = "grid";
+    g.words.forEach(([ru, en, tip]) => grid.appendChild(makeItem(ru, en, tip)));
+    box.appendChild(grid);
+    if (g.note){ const n = document.createElement("div"); n.className = "note"; n.innerHTML = g.note; box.appendChild(n); }
+  });
+}
+const plainBtn = document.getElementById("plainBtn");
+plainBtn.onclick = () => {
+  const on = document.body.classList.toggle("plain");
+  plainBtn.textContent = on ? "Colour view" : "Plain view";
+  plainBtn.setAttribute("aria-pressed", on);
+};
+
+const letters = [["А", "а", "а", "a as in “father”", "v"], ["Б", "б", "бэ", "b as in “bed”", "c"], ["В", "в", "вэ", "v as in “van”", "c"], ["Г", "г", "гэ", "g as in “go”", "c"], ["Д", "д", "дэ", "d as in “dog”", "c"], ["Е", "е", "е", "ye as in “yes”", "v"], ["Ё", "ё", "ё", "yo as in “yoghurt”", "v"], ["Ж", "ж", "жэ", "zh like “s” in “pleasure”", "c"], ["З", "з", "зэ", "z as in “zoo”", "c"], ["И", "и", "и", "ee as in “see”", "v"], ["Й", "й", "и краткое", "y as in “boy”", "c"], ["К", "к", "ка", "k as in “kite”", "c"], ["Л", "л", "эль", "l as in “lamp”", "c"], ["М", "м", "эм", "m as in “mum”", "c"], ["Н", "н", "эн", "n as in “no”", "c"], ["О", "о", "о", "o as in “more”", "v"], ["П", "п", "пэ", "p as in “pen”", "c"], ["Р", "р", "эр", "r – rolled", "c"], ["С", "с", "эс", "s as in “sun”", "c"], ["Т", "т", "тэ", "t as in “top”", "c"], ["У", "у", "у", "oo as in “moon”", "v"], ["Ф", "ф", "эф", "f as in “fish”", "c"], ["Х", "х", "ха", "kh like “ch” in Scottish “loch”", "c"], ["Ц", "ц", "цэ", "ts as in “cats”", "c"], ["Ч", "ч", "че", "ch as in “chair”", "c"], ["Ш", "ш", "ша", "sh as in “shop”", "c"], ["Щ", "щ", "ща", "a long, soft “sh”", "c"], ["Ъ", "ъ", "твёрдый знак", "hard sign – no sound", "s"], ["Ы", "ы", "ы", "no English sound – say “i” with your tongue pulled back", "v"], ["Ь", "ь", "мягкий знак", "soft sign – makes the letter before it soft", "s"], ["Э", "э", "э", "e as in “end”", "v"], ["Ю", "ю", "ю", "yu as in “you”", "v"], ["Я", "я", "я", "ya as in “yard”", "v"]];
+const alpha = document.getElementById("alphabet");
+let consCount = 0;
+letters.forEach(([up, low, name, hint, type]) => {
+  const b = document.createElement("button");
+  const cls = type === "v" ? "vowel" : type === "s" ? "sign" : (consCount++ % 2 ? "cons2" : "cons1");
+  b.className = "letter " + cls;
+  b.innerHTML = `<span class="big">${up}</span><span class="small">${low}</span><span class="snd">${hint}</span>`;
+  b.setAttribute("aria-label", `Letter ${up}: ${hint}`);
+  b.onclick = () => speak(name, b);
+  alpha.appendChild(b);
+});
+
+/* ===== USEFUL PHRASES: add new groups or words here ===== */
+const phraseGroups = [
+  {
+    "title": "Greetings for the time of day",
+    "words": [
+      [
+        "До́брое у́тро!",
+        "Good morning!"
+      ],
+      [
+        "До́брый день!",
+        "Good afternoon! / Good day!"
+      ],
+      [
+        "До́брый ве́чер!",
+        "Good evening!"
+      ]
+    ],
+    "note": "<b>До́брое / до́брый</b> here means <b>good</b>: <i>Доброе утро</i> = Good morning.<br>But on its own, the word <b>до́брый</b> usually means <b>kind</b>. When we talk about people, it means kind, good-hearted: <i>Она́ до́брая.</i> = She is kind.<br>For “good” in general (a good book, a good film) we usually use <b>хоро́ший</b>."
+  },
+  {
+    "title": "Everyday words",
+    "words": [
+      [
+        "Приве́т!",
+        "Hi! (to friends)"
+      ],
+      [
+        "Здра́вствуйте!",
+        "Hello! (polite)",
+        "The first в is not pronounced: “zdrastvuyte”"
+      ],
+      [
+        "Как дела́?",
+        "How are you?"
+      ],
+      [
+        "Хорошо́.",
+        "Good. / Fine. / Well."
+      ],
+      [
+        "То́же",
+        "too, also"
+      ],
+      [
+        "Пожа́луйста",
+        "please / you're welcome"
+      ],
+      [
+        "Спаси́бо",
+        "thank you"
+      ]
+    ]
+  },
+  {
+    "title": "Yes and no",
+    "words": [
+      [
+        "да",
+        "yes"
+      ],
+      [
+        "нет",
+        "no"
+      ]
+    ]
+  },
+  {
+    "title": "“You”: ВЫ or ТЫ?",
+    "words": [
+      [
+        "вы",
+        "you – polite (to an adult you don't know well, a teacher), or more than one person"
+      ],
+      [
+        "ты",
+        "you – informal (to a friend, family, a child), only one person"
+      ]
+    ]
+  },
+  {
+    "title": "Family and friends",
+    "words": [
+      [
+        "ма́ма",
+        "mum"
+      ],
+      [
+        "сестра́",
+        "sister"
+      ],
+      [
+        "брат",
+        "brother"
+      ],
+      [
+        "муж",
+        "husband"
+      ],
+      [
+        "жена́",
+        "wife"
+      ],
+      [
+        "друг",
+        "friend"
+      ]
+    ]
+  },
+  {
+    "title": "Seasons",
+    "words": [
+      [
+        "весна́",
+        "spring"
+      ],
+      [
+        "зима́",
+        "winter"
+      ]
+    ]
+  }
+];
+buildGroups('phraseGroups', phraseGroups);
+
+/* ===== READING WORDS: add new groups or words here ===== */
+const readingGroups = [
+  {
+    "title": "People",
+    "words": [
+      [
+        "ма́ма",
+        "mum"
+      ],
+      [
+        "сестра́",
+        "sister"
+      ],
+      [
+        "брат",
+        "brother"
+      ],
+      [
+        "муж",
+        "husband"
+      ],
+      [
+        "жена́",
+        "wife"
+      ],
+      [
+        "друг",
+        "friend"
+      ]
+    ]
+  },
+  {
+    "title": "Animals",
+    "words": [
+      [
+        "кот",
+        "cat"
+      ],
+      [
+        "ёж",
+        "hedgehog"
+      ]
+    ]
+  },
+  {
+    "title": "Body",
+    "words": [
+      [
+        "рука́",
+        "hand, arm"
+      ],
+      [
+        "нос",
+        "nose"
+      ]
+    ]
+  },
+  {
+    "title": "Home",
+    "words": [
+      [
+        "дом",
+        "house, home"
+      ],
+      [
+        "ко́мната",
+        "room"
+      ],
+      [
+        "окно́",
+        "window"
+      ]
+    ]
+  },
+  {
+    "title": "Things, food and drink",
+    "words": [
+      [
+        "су́мка",
+        "bag"
+      ],
+      [
+        "кни́га",
+        "book"
+      ],
+      [
+        "зонт",
+        "umbrella"
+      ],
+      [
+        "сок",
+        "juice"
+      ],
+      [
+        "вода́",
+        "water"
+      ],
+      [
+        "торт",
+        "cake"
+      ],
+      [
+        "мёд",
+        "honey"
+      ],
+      [
+        "у́жин",
+        "dinner"
+      ]
+    ]
+  },
+  {
+    "title": "Places in town",
+    "words": [
+      [
+        "метро́",
+        "underground (train)"
+      ],
+      [
+        "магази́н",
+        "shop"
+      ],
+      [
+        "рестора́н",
+        "restaurant"
+      ],
+      [
+        "теа́тр",
+        "theatre"
+      ],
+      [
+        "музе́й",
+        "museum"
+      ]
+    ]
+  },
+  {
+    "title": "Nature and time",
+    "words": [
+      [
+        "мо́ре",
+        "sea"
+      ],
+      [
+        "снег",
+        "snow"
+      ],
+      [
+        "зима́",
+        "winter"
+      ],
+      [
+        "у́тро",
+        "morning"
+      ],
+      [
+        "за́втра",
+        "tomorrow"
+      ],
+      [
+        "год",
+        "year"
+      ]
+    ]
+  },
+  {
+    "title": "Little words",
+    "words": [
+      [
+        "где",
+        "where"
+      ],
+      [
+        "да",
+        "yes"
+      ],
+      [
+        "и",
+        "and"
+      ],
+      [
+        "мой",
+        "my"
+      ],
+      [
+        "мо́жно",
+        "May I? / It's allowed"
+      ]
+    ]
+  }
+];
+buildGroups('readingGroups', readingGroups);
+
+/* ===== DIALOGUES: add new dialogues here ===== */
+const dialogues = [
+  {
+    "kicker": "ЧИТАЕМ ПО-РУССКИ",
+    "title": "МИНИ-ДИАЛОГ  •  MINI DIALOGUE",
+    "lines": [
+      "— ПРИВЕТ!",
+      "— ПРИВЕТ! КАК ДЕЛА?",
+      "— ХОРОШО! А У ТЕБЯ?",
+      "— ТОЖЕ ХОРОШО! ЧТО ДЕЛАЕШЬ?",
+      "— СМОТРЮ В ОКНО. ВЕСНА!",
+      "— А НА СЕВЕРЕ ЕЩЁ ХОЛОДНО?",
+      "— ДА! Я СКОРО ВЕРНУСЬ!"
+    ],
+    "glossary": [
+      [
+        "ПРИВЕТ!",
+        "Hello! / Hi!"
+      ],
+      [
+        "КАК ДЕЛА?",
+        "How are you?"
+      ],
+      [
+        "ХОРОШО!",
+        "Good! / Fine!"
+      ],
+      [
+        "А У ТЕБЯ?",
+        "And you?"
+      ],
+      [
+        "ТОЖЕ ХОРОШО!",
+        "Good too!"
+      ],
+      [
+        "ЧТО ДЕЛАЕШЬ?",
+        "What are you doing?"
+      ],
+      [
+        "СМОТРЮ В ОКНО.",
+        "I’m looking out of the window."
+      ],
+      [
+        "ВЕСНА!",
+        "It’s spring!"
+      ],
+      [
+        "А НА СЕВЕРЕ?",
+        "What about in the north?"
+      ],
+      [
+        "ЕЩЁ ХОЛОДНО?",
+        "Is it still cold?"
+      ],
+      [
+        "ДА!",
+        "Yes!"
+      ],
+      [
+        "Я СКОРО ВЕРНУСЬ!",
+        "I’ll be back soon!"
+      ]
+    ],
+    "notes": [
+      {
+        "title": "1. WHAT DOES «ДЕЛА» MEAN?",
+        "text": [
+          "ДЕЛО means a matter, a task, or something you need to do. ДЕЛА is its plural form: matters, tasks, or things going on."
+        ],
+        "examples": [
+          [
+            "У МЕНЯ ДЕЛА.",
+            "I have things to do. / I’m busy."
+          ],
+          [
+            "У ТЕБЯ ДЕЛА?",
+            "Do you have things to do? / Are you busy?"
+          ],
+          [
+            "КАК ДЕЛА?",
+            "How are things going? / How are you?"
+          ]
+        ],
+        "important": "<b>Important:</b> КАК ДЕЛА? is a fixed, everyday greeting. It does not usually mean “How are your tasks?”"
+      },
+      {
+        "title": "2. WHY DO WE SAY «У МЕНЯ» AND «У ТЕБЯ»?",
+        "text": [
+          "English says “I have” and “you have”. Russian often expresses possession differently: У + person + ЕСТЬ + thing. Think of У as “with” or “in someone’s possession” in this pattern, not as the English verb “have”."
+        ],
+        "examples": [
+          [
+            "У МЕНЯ ЕСТЬ КНИГА.",
+            "I have a book."
+          ],
+          [
+            "У ТЕБЯ ЕСТЬ КНИГА?",
+            "Do you have a book?"
+          ],
+          [
+            "У МЕНЯ ЕСТЬ ДЕЛА.",
+            "I have things to do."
+          ],
+          [
+            "У ТЕБЯ ДЕЛА?",
+            "Have you got things to do?"
+          ]
+        ],
+        "important": "<b>У МЕНЯ</b> = I have / on my side &nbsp;•&nbsp; <b>У ТЕБЯ</b> = you have / on your side<br>ЕСТЬ (“there is / there are”) is often left out when the meaning is clear: У МЕНЯ ДЕЛА = У МЕНЯ ЕСТЬ ДЕЛА. But don’t omit ЕСТЬ in every sentence: the choice depends on what you want to say."
+      },
+      {
+        "title": "3. «КАК ДЕЛА?» OR «КАК ТЫ?»",
+        "text": [
+          "КАК ДЕЛА? literally asks “How are things going?” and is a natural way to greet someone. КАК ТЫ? means “How are you?” and focuses more directly on the person. Both are common, but КАК ТЫ? can sound more personal.",
+          "After КАК ДЕЛА? you can reply: ХОРОШО! А У ТЕБЯ? (Good! And you?). Here У ТЕБЯ refers back to the other person’s ДЕЛА: “And how are things with you?”"
+        ],
+        "examples": [
+          [
+            "КАК ДЕЛА?",
+            "How are things going?"
+          ],
+          [
+            "КАК ТЫ?",
+            "How are you?"
+          ],
+          [
+            "ХОРОШО! А У ТЕБЯ?",
+            "Good! And you?"
+          ]
+        ],
+        "important": "<b>Compare:</b> У ТЕБЯ ДЕЛА? asks whether you are busy. А У ТЕБЯ? after КАК ДЕЛА? asks how the other person is doing. Context changes the meaning."
+      },
+      {
+        "title": "4. WHAT DOES «В ТОМ-ТО И ДЕЛО» MEAN?",
+        "text": [
+          "В ТОМ-ТО И ДЕЛО! = That’s exactly the point! / That’s just it! This fixed expression highlights the main point or problem. ДЕЛО here means “the point / the matter”, not “tasks”."
+        ],
+        "examples": [
+          [
+            "В ТОМ-ТО И ДЕЛО!",
+            "That’s exactly the point! / That’s just it!"
+          ],
+          [
+            "— ПОЧЕМУ ТЫ НЕ ИДЁШЬ?",
+            "— Why aren’t you going?"
+          ],
+          [
+            "— В ТОМ-ТО И ДЕЛО, ЧТО Я НЕ МОГУ!",
+            "— That’s just it: I can’t!"
+          ]
+        ]
+      }
+    ]
+  }
+];
+
+function speakList(items){
+  let i = 0;
+  function next(){
+    if (i >= items.length) return;
+    const [text, el] = items[i++];
+    speak(text, el);
+    const check = setInterval(() => { if (!speechSynthesis.speaking){ clearInterval(check); setTimeout(next, 400); } }, 150);
+  }
+  next();
+}
+const box = document.getElementById("dialogues");
+dialogues.forEach(d => {
+  const wrap = document.createElement("div"); wrap.className = "dlg";
+  wrap.innerHTML = `<p class="kicker">${d.kicker || ""}</p><h2>${d.title}</h2>`;
+  const btn = document.createElement("button"); btn.className = "playall"; btn.textContent = "▶ Play the whole dialogue";
+  wrap.appendChild(btn);
+  const lines = document.createElement("div"); lines.className = "lines";
+  const lineEls = [];
+  d.lines.forEach((t, idx) => {
+    const b = document.createElement("button");
+    b.className = "line " + (idx % 2 ? "b" : "a");
+    b.innerHTML = `<span class="play">🔊</span><span>${t}</span>`;
+    const spoken = t.replace(/^—\s*/, "");
+    b.onclick = () => speak(spoken, b);
+    lines.appendChild(b); lineEls.push([spoken, b]);
+  });
+  btn.onclick = () => speakList(lineEls);
+  wrap.appendChild(lines);
+
+  if (d.glossary){
+    const h = document.createElement("h3"); h.textContent = "СЛОВАРИК  •  PHRASE GLOSSARY"; wrap.appendChild(h);
+    const g = document.createElement("div"); g.className = "grid";
+    d.glossary.forEach(([ru, en]) => g.appendChild(makeItem(ru, en)));
+    wrap.appendChild(g);
+  }
+  (d.notes || []).forEach(n => {
+    const s = document.createElement("div"); s.className = "expl";
+    s.innerHTML = `<h3>${n.title}</h3>` + (n.text || []).map(p => `<p>${p}</p>`).join("");
+    if (n.examples){
+      const g = document.createElement("div"); g.className = "grid";
+      n.examples.forEach(([ru, en]) => g.appendChild(makeItem(ru, en)));
+      s.appendChild(g);
+    }
+    if (n.important){ const im = document.createElement("div"); im.className = "important"; im.innerHTML = n.important; s.appendChild(im); }
+    wrap.appendChild(s);
+  });
+  box.appendChild(wrap);
+});
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+  speechSynthesis && speechSynthesis.cancel();
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === t));
+  document.querySelectorAll(".pg").forEach(p => p.classList.toggle("active", p.id === t.dataset.page));
+  window.scrollTo(0, 0);
+});
+</script>
+</body>
+</html>
