@@ -125,6 +125,12 @@ body.plain .kicker{color:#000}
 body.plain .playall{background:#555}
 body.plain .important{background:#f4f4f4;border-left-color:#000}
 
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px}
+.chip{border:2px solid var(--orange);background:#fff;color:var(--ink);border-radius:18px;padding:6px 14px;font-weight:bold;font-size:.95rem;cursor:pointer;font-family:inherit}
+.chip.on{background:var(--orange);color:#fff}
+body.plain .chip{border-color:#999}
+body.plain .chip.on{background:#333;color:#fff}
+
 .tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:16px}
 .tab{border:2px solid var(--pink);background:#fff;color:var(--ink);border-radius:22px;padding:9px 18px;font-weight:bold;font-size:1rem;cursor:pointer;font-family:inherit}
 .tab.active{background:linear-gradient(90deg,var(--pink),var(--orange));color:#fff;border-color:transparent}
@@ -223,12 +229,28 @@ function makeItem(ru, en, tip){
 /* Each group: {title, note (optional HTML), words: [[ru, en, tip?], ...]} */
 function buildGroups(boxId, groups){
   const box = document.getElementById(boxId);
+  /* Topic buttons: "All" + one per group */
+  const bar = document.createElement("div"); bar.className = "chips";
+  const wraps = [];
+  function show(i){
+    bar.querySelectorAll(".chip").forEach((c, k) => c.classList.toggle("on", k === i + 1));
+    wraps.forEach((w, k) => w.style.display = (i === -1 || i === k) ? "" : "none");
+  }
+  const all = document.createElement("button"); all.className = "chip on"; all.textContent = "All";
+  all.onclick = () => show(-1); bar.appendChild(all);
+  groups.forEach((g, i) => {
+    const c = document.createElement("button"); c.className = "chip"; c.textContent = g.title;
+    c.onclick = () => show(i); bar.appendChild(c);
+  });
+  box.appendChild(bar);
   groups.forEach(g => {
-    const h = document.createElement("h3"); h.textContent = g.title; box.appendChild(h);
+    const w = document.createElement("div"); w.className = "grp";
+    const h = document.createElement("h3"); h.textContent = g.title; w.appendChild(h);
     const grid = document.createElement("div"); grid.className = "grid";
     g.words.forEach(([ru, en, tip]) => grid.appendChild(makeItem(ru, en, tip)));
-    box.appendChild(grid);
-    if (g.note){ const n = document.createElement("div"); n.className = "note"; n.innerHTML = g.note; box.appendChild(n); }
+    w.appendChild(grid);
+    if (g.note){ const n = document.createElement("div"); n.className = "note"; n.innerHTML = g.note; w.appendChild(n); }
+    box.appendChild(w); wraps.push(w);
   });
 }
 const plainBtn = document.getElementById("plainBtn");
