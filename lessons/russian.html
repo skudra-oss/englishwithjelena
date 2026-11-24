@@ -153,7 +153,8 @@ body.plain .tab.active{background:#333;color:#fff}
 <main>
 <nav class="tabs">
   <button class="tab active" data-page="pLetters">Letters</button>
-  <button class="tab" data-page="pPhrases">Useful phrases</button>
+  <button class="tab" data-page="pPhrases">Useful words</button>
+  <button class="tab" data-page="pSentences">Phrases</button>
   <button class="tab" data-page="pReading">Reading words</button>
   <button class="tab" data-page="pDialogues">Dialogues</button>
 </nav>
@@ -170,9 +171,14 @@ body.plain .tab.active{background:#333;color:#fff}
 </section>
 </div>
 <div class="pg" id="pPhrases"><section>
-  <h2>Useful phrases</h2>
+  <h2>Useful words</h2>
   <p class="hint">The pink letter shows the stress – say that part louder and longer.</p>
   <div id="phraseGroups"></div>
+</section></div>
+<div class="pg" id="pSentences"><section>
+  <h2>Phrases</h2>
+  <p class="hint">The pink letter shows the stress – say that part louder and longer.</p>
+  <div id="sentenceGroups"></div>
 </section></div>
 <div class="pg" id="pReading"><section>
   <h2>Words from reading practice</h2>
@@ -273,7 +279,7 @@ letters.forEach(([up, low, name, hint, type]) => {
   alpha.appendChild(b);
 });
 
-/* ===== USEFUL PHRASES: add new groups or words here ===== */
+/* ===== USEFUL WORDS: add new groups or words here ===== */
 const phraseGroups = [
   {
     "title": "Greetings for the time of day",
@@ -387,6 +393,24 @@ const phraseGroups = [
     ]
   },
   {
+    "title": "Seasons",
+    "words": [
+      [
+        "весна́",
+        "spring"
+      ],
+      [
+        "зима́",
+        "winter"
+      ]
+    ]
+  }
+];
+buildGroups('phraseGroups', phraseGroups);
+
+/* ===== PHRASES: add new groups here ===== */
+const sentenceGroups = [
+  {
     "title": "Что де́лаешь? – What are you doing?",
     "words": [
       [
@@ -440,22 +464,9 @@ const phraseGroups = [
       ]
     ],
     "note": "<b>Иду́ в теа́тр</b> – I’m going <b>to</b> the theatre (куда́?).<br><b>Я в теа́тре</b> – I’m <b>at</b> the theatre (где?): the word gets the ending <b>-е</b>.<br><b>Метро́</b> never changes: Иду́ в метро́. / Я в метро́."
-  },
-  {
-    "title": "Seasons",
-    "words": [
-      [
-        "весна́",
-        "spring"
-      ],
-      [
-        "зима́",
-        "winter"
-      ]
-    ]
   }
 ];
-buildGroups('phraseGroups', phraseGroups);
+buildGroups('sentenceGroups', sentenceGroups);
 
 /* ===== READING WORDS: add new groups or words here ===== */
 const readingGroups = [
