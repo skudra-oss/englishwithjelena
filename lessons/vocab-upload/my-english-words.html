@@ -187,7 +187,8 @@ const LESSONS = {
   l1: "Lesson 1 — 10.11.2026",
   l2: "Lesson 2 — 12.11.2026: Try These Sports!",
   l3: "Lesson 3 — 17.11.2026",
-  l4: "Lesson 4 — 19.11.2026"
+  l4: "Lesson 4 — 19.11.2026",
+  l5: "Lesson 5 — 24.11.2026"
 };
 const TOPICS = {
   sport: "Sport",
@@ -265,7 +266,18 @@ const WORDS = [
   {w:"twenty to", d:"20 minutes before the next hour.", ex:"3:40 — It's twenty to four.", ru:"Без 20 минут (3:40 — без двадцати четыре)", l:"l4", t:"clock"},
   {w:"quarter to", d:"15 minutes (a quarter of an hour) before the next hour.", ex:"3:45 — It's quarter to four.", ru:"Без четверти (3:45 — без четверти четыре)", l:"l4", t:"clock"},
   {w:"ten to", d:"10 minutes before the next hour.", ex:"3:50 — It's ten to four.", ru:"Без 10 минут (3:50 — без десяти четыре)", l:"l4", t:"clock"},
-  {w:"five to", d:"5 minutes before the next hour.", ex:"3:55 — It's five to four.", ru:"Без 5 минут (3:55 — без пяти четыре)", l:"l4", t:"clock"}
+  {w:"five to", d:"5 minutes before the next hour.", ex:"3:55 — It's five to four.", ru:"Без 5 минут (3:55 — без пяти четыре)", l:"l4", t:"clock"},
+  {w:"am", d:"The time from midnight to midday — the morning.", ex:"I get up at 8.00 am.", ru:"Утра, до полудня (8.00 am — восемь утра)", l:"l5", t:"clock"},
+  {w:"together", d:"With another person or with other people.", ex:"My friend and I go to school together.", ru:"Вместе", l:"l5", t:"useful"},
+  {w:"main course", d:"The biggest part of a meal.", ex:"Fish with vegetables is the main course.", ru:"Основное блюдо", l:"l5", t:"food"},
+  {w:"till", d:"Up to a time. It means the same as \"until\".", ex:"I do my homework till 6.00.", ru:"До (какого-то времени)", l:"l5", t:"time"},
+  {w:"middle", d:"The part that is in the centre of something.", ex:"There is a table in the middle of the room.", ru:"Середина (in the middle — посередине)", l:"l5", t:"place"},
+  {w:"drive", d:"To make a car go and control it.", ex:"My mum drives me to school.", ru:"Водить машину; везти на машине", l:"l5", t:"act"},
+  {w:"similar", d:"Almost the same, but not exactly the same.", ex:"My school day is similar to Onni's.", ru:"Похожий", l:"l5", t:"desc"},
+  {w:"close", d:"Near, not far.", ex:"My school is close to my house.", ru:"Близко", l:"l5", t:"place"},
+  {w:"last", d:"The one before this one.", ex:"Last week I had a test.", ru:"Прошлый (last week — на прошлой неделе)", l:"l5", t:"time"},
+  {w:"cabbage", d:"A big round vegetable with green or white leaves.", ex:"My grandma makes cabbage soup.", ru:"Капуста", l:"l5", t:"food"},
+  {w:"toast", d:"Bread that is made hot and brown.", ex:"I have toast with butter for breakfast.", ru:"Тост, поджаренный хлеб", l:"l5", t:"food"}
 ];
 WORDS.forEach(x=>x.id=x.l+":"+x.w);
 const TKEYS=Object.keys(TOPICS);const gcls=x=>"g"+(TKEYS.indexOf(x.t)%6);
