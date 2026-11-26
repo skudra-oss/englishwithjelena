@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Games · English with Jelena</title>
+<link rel="icon" href="/favicon-32.png">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#dcecf3;color:#2f3b40;font:17px/1.45 'Fredoka',system-ui,sans-serif;padding:24px 16px}
+form{background:#fff;border-radius:18px;padding:24px;max-width:380px;width:100%;display:flex;flex-direction:column;gap:12px;box-shadow:0 3px 0 rgba(0,0,0,.08)}
+h1{font-size:30px;font-weight:600;color:#2f8ea5;margin:0}
+p{margin:0;color:#5d6d73}
+label{font-weight:500}
+input[type=password],input[type=text]{width:100%;font:inherit;font-size:18px;padding:10px 12px;border:2px solid #cfe3ea;border-radius:10px}
+input:focus-visible,button:focus-visible{outline:3px solid #ffb300;outline-offset:2px}
+.row{display:flex;gap:8px;align-items:center;font-size:15px;color:#5d6d73;font-weight:400}
+button{font:inherit;font-weight:500;border:0;border-radius:10px;padding:12px;background:#2f8ea5;color:#fff;cursor:pointer;font-size:18px}
+button:disabled{opacity:.6}
+.err{color:#c2414f;min-height:1.4em}
+</style>
+</head>
+<body>
+<form id="f">
+  <h1>🎮 Games</h1>
+  <p>These games are for Jelena's students. Enter the password from your teacher.</p>
+  <label for="pw">Password</label>
+  <input type="password" id="pw" autocomplete="current-password" autofocus required>
+  <label class="row"><input type="checkbox" id="show"> Show password</label>
+  <label class="row"><input type="checkbox" id="remember"> Remember me on this device</label>
+  <button id="go">Open</button>
+  <p class="err" id="err" aria-live="polite"></p>
+</form>
+<script>
+const DATA={"s":"lf2a5Dpcxh0IWZ6ybEpTAA==","i":"e4ehAxQj2GtkiJcC","d":"lCMoxf3GYhNQkvi3lPYyH4uD2ldzgrlVO5H697ztS4g5g0BmBPMdxdl6oWE/geHZ0RQ7/MaZDEAvEjr00h6ws7/3bJy3AeiBzDiDEECMWvH/tH6abaQxwdVn3tOrS1U26iM0kj0Kmkty0WE6DbupyJE1yOnpQ7ktk/3kplWxNvYlEMm9+E7F442az/HBrTgxIOEHTLF09vqGrRR0TOTq72lOiS4GvhfJEzjPuPnqENI/Jwj+jn0J2+VCb753oRULH1auFVoxR+z+l/0x2wAB/KVoPnCGXk4rl5I2xsuDMWF9mHKJVlaQ7GHhOXa4l4T6ch4egApRKfuXbk8Smm82/s7qsOVfS6K0ZSFISHrkSgXabOK3P8Jg+o7f3kh9guHfrkIzLMjgtOy+41B2g8wx27BTVCZ4b/VYuRm9HflAoYES2iaRzPiwK3SHqF4Xikf3k5Cyqm2WSRrZnSdxiguXVD9HZ/fjr6hxqQEZDNjvcKh0ZWSed6uMmJ/lj2HK49yN/jxLVtVON1Aoix+Yeh+2ZqUfDt52oaHRg8/5IN3qCZDUPgV2SFIrvvWFSS7g2ULtTbBvhH5YDYbaTW/UhmdsfIs0kzasMWekbpyBRoUX6N6LESRunnmsWLIK9pggFCWu22zQcV0wCQBVcpg6qQme1+OETX7ieUw4lQFNYIzuR8mSE8zxxLkxgRRApGyt5eCpjvmpCm2TxXbSa/FJ/4T1GugpIR1MJDBjBC5lOKs4Jng2dAptRANqfmmRwQaJS+aZcUVoXx8nebD7zJnKx8Wvl+7F1tjG864wbVYVSA64JTrNcvQSfOnmpWCkeY6mKOxccu70J26krNBUWLJSGUzz9WFEMGG/K/HQnid5do3rFHwXs++KO5EiwX5T/6kN4YiB0HXfF+5SB6RBT5+qeXz7wKb69AmbIvExKNbwuj2nxiZ6exOYLtEAgjHcH5aGrrOTLidG8hAeoaY3cQpeZm596UYrtorq1ly40hqwdp5eIQYaQOnEsGN2UjxJm7YK7o8lEyq6Ta3XNymC9zvJ4qdVDg9psvfX/7rw9bsmduh+tt0UbvnzkPLFPdLV5oa5CenWo4rMIb5Q9HGGeHhEwgXBH7JY7rPhTXqXndDWQoKQzR5BqU3Sw+M5QUNTZciqA34Xe4Jqc9pavqj09muvDhppP8sfAKv7B1wcVli7LDGO3nGN92UHd0YLNlY282tNnlwcCj7wE+VC9V+Jb+uWcj6MS6iEGdKR5Aj3ZWASLDiOFEAUe+MMnh2mCja5Pax4IoJomEvUcLzwBt9O7LhC7jnBOK9aWg4SZ71ccjBaBFBi4nZXKxAm1Z/ZyFzEKLp8h2GwsXCPMHodd9cvjSaVf6zq6VSJAfSM4yCG9OCMNNdsO/1MzMty94XzbNWJgCLd4UEslQFKDafSzv7w0+QxOALWZJWc30nhzlqPMsDZkxY/J0XP1uUVtmGaOjARSY87CymxucMDs75/mJcjnCLgXWnPv7bPEjjx9bRG3auJtIkWkATA/pVmTQZ6KHT3A8b9EMRvW67l4X5D2W6OZU2BH5/obq0Y77BT1KxbFbDqn8mXMw/siJgxhOA2OeHPX+9XzNcw7nT9KTM1/434D3rTks5AoXsvN4AnxMlysW6q822iOmQOweEVQaQCCByoh0jnfx9Yx/i2UfSdRisOdGyA86xH417/G3bSvxn/DzpJowoxlzPxh/+2k6kLAUi+mAsN9urfu7f2HXFneZwckjWoQWXmpbZgwREIdruvuGPqT+XyKrbOfi0PSOmJf4D1cM0mLeHNlDqJevV9hykvQB8Fn9Cg/6EWfMm47Gl+hu2i8Nogf6E5Vrm0YdSle1H2tCIXNhOksW49xlG9C5zyETV33eURWPEdLfVC5G7feiPKppzqLFjSswUvZx79eGS7ETDWoWAM2PvPEmQi7KV1fIq4Q86ul+yCWJKzVCPYemtN5bTl/4XPgmbmSCYLlMYLOT3pwQEBrTWOr/eAGei4gE80onMQjKbyXZAxylVq6XWExvItXLtv8SrOL791z708rGCBZHHS1/kiYpRawh1Un7zKWTUDFZUIcjij3s9Y9BXqq6nb85YU+3/+jdf2MnJ6koJ1e+aLNhod6vg8yGV60IkAqEgu3lL5JpFBffpggMzgqSbZHL06utOany3+/fFzNcht9Tp97NFZrTud623xacaEPI862i3dV9tPbr8qHU36Xp1tYqkzS+m3/ICt4GtlVDiVbTyGmkTDjXhubxOv0+BGYJdfevc756qctBsY/OzQ41XVhG5o4BdXkTjDdraj+5jQ2DywuzXdBJyVJzb6xwkrEqIqNmr1oEcaYl1QQJuFN2apF7XsXLUY8kwHkA6Zpuzk039gKJs5c/haWlP+gLhq1uUnMWNMgr9+poFF2A4CM0Bb6gFZMP5Mf1c3GRkk6mC5UvyYgls0aaibxi21Pgb8Fgu8sJkR/N4lAp5v4oSjDj8T1xIrZf+x6sM9lKRSfJyLF7ox8xtT8Z1+1DQCbGDSFy77s9Au65WaO6vD7sYCL9KQztHkwIS+7cQ09vzaJx+qNbztHotMgD7aurDb2WHhAFobLaT6XLPLdYf29R9DPwvqm2s71ip/DebUO2q/bqqXsx5u3evChue21EcK7l4oad815Y50Euekp9m2pRjycSaQWyN7moS95gmog++0FNpS06nKJYly220Ht+aczXfGnplMCMlNe78WSgbRKFpsIWO9UTJz/0w9VR2DZn9y24YBQOkmAzsSn4eB31ntmsUeoVzPIJsvqGVfBMYSYiSMiRiqI1/unJzoNoA+AZebn8UwP15ELNVRUiUojWMfvVNpddf+eMIYQOnIHDoQiGyR7J92ZY7FIL1MKm46EYseuZ2VwpqOQldBfc6zHhZvMsSOtzFNWjIK+dj6qHuYzOWib49I53ls+8JVWiwX996J62XY7KiQWhK/78GKx0wdQJQ4Qv5LbxhAwg9e0mrViYzeaxhXFs7eCqsp/g4AyW+QaD424Ic3m+QnlEDC8nlfUuc+JGMrfBTIxRUBhA/wUYd9J4gsh1XXWsnFCQt73GBpsMLDqM+0WWcFxl5LDnfXGIZkQWgEauxAwotN/J7Q0EbOYqTOWcyGWOCP+Arc+LfJQgkrt1xOtmN3EjBXTravvTdR+Mm68mC3cYdeOnhYXzQS4ZW2/IAfvlKwRIr6Lzkw5wwsCvipJVbdeYVfAHNyz4vjXr6R1cBAmfcBXeSoRCJTcqiDea8lYawrEpB2fJcFSY99IfRBXKP+9EMc+tkcwgqAJUXzUdOLlkHnMU1yG4Ysn+rgG0fCc/krWxae8ArC6rftT+BFP6d+zUcCnRNyC8KAh2dzqP/L30euoGDsQFY+Hxw1OTPtCzIyBuuWNONOgitkE6gY1FTWCFQH1vT2e8DR58Nr97RG1NH/Zmc9j+IeFA05pzQMLE3R7sTdDjdxxbI3DQ=="};
+const K="ewj-games-pw";
+const b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function unlock(pw){
+  const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b(DATA.s),iterations:600000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:b(DATA.i)},key,b(DATA.d));
+  return new TextDecoder().decode(plain);
+}
+function open(html){document.open();document.write(html);document.close();}
+const f=document.getElementById("f"),pw=document.getElementById("pw"),err=document.getElementById("err"),go=document.getElementById("go");
+document.getElementById("show").addEventListener("change",e=>pw.type=e.target.checked?"text":"password");
+f.addEventListener("submit",async e=>{
+  e.preventDefault();err.textContent="";go.disabled=true;go.textContent="Opening…";
+  const v=pw.value.trim();
+  try{
+    const html=await unlock(v);
+    try{if(document.getElementById("remember").checked)localStorage.setItem(K,v);else sessionStorage.setItem(K,v);}catch(_){}
+    open(html);
+  }catch(_){
+    err.textContent="That password isn't right. Check capital letters and dashes, and try again.";
+    go.disabled=false;go.textContent="Open";
+  }
+});
+(async()=>{let s=null;try{s=localStorage.getItem(K)||sessionStorage.getItem(K);}catch(_){}
+  if(s){try{open(await unlock(s));}catch(_){try{localStorage.removeItem(K);sessionStorage.removeItem(K);}catch(__){}}}})();
+</script>
+</body>
+</html>

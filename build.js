@@ -148,6 +148,11 @@ if (fs.existsSync(path.join(ROOT, "lessons"))) {
   fs.cpSync(path.join(ROOT, "lessons"), path.join(OUT, "lessons"), { recursive: true });
 }
 
+// Games: the "games" folder goes on the site as it is (password-protected pages, e.g. englishwithjelena.com/games)
+if (fs.existsSync(path.join(ROOT, "games"))) {
+  fs.cpSync(path.join(ROOT, "games"), path.join(OUT, "games"), { recursive: true });
+}
+
 // Search engine verification files (Google, Yandex, Bing) uploaded to the repository
 for (const f of fs.readdirSync(ROOT)) {
   if (/^(google[0-9a-z]+\.html|yandex_[0-9a-z]+\.html|BingSiteAuth\.xml)$/i.test(f)) {
