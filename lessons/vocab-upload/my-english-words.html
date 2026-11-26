@@ -188,7 +188,8 @@ const LESSONS = {
   l2: "Lesson 2 — 12.11.2026: Try These Sports!",
   l3: "Lesson 3 — 17.11.2026",
   l4: "Lesson 4 — 19.11.2026",
-  l5: "Lesson 5 — 24.11.2026"
+  l5: "Lesson 5 — 24.11.2026",
+  l6: "Lesson 6 — 26.11.2026"
 };
 const TOPICS = {
   sport: "Sport",
@@ -277,7 +278,18 @@ const WORDS = [
   {w:"close", d:"Near, not far.", ex:"My school is close to my house.", ru:"Близко", l:"l5", t:"place"},
   {w:"last", d:"The one before this one.", ex:"Last week I had a test.", ru:"Прошлый (last week — на прошлой неделе)", l:"l5", t:"time"},
   {w:"cabbage", d:"A big round vegetable with green or white leaves.", ex:"My grandma makes cabbage soup.", ru:"Капуста", l:"l5", t:"food"},
-  {w:"toast", d:"Bread that is made hot and brown.", ex:"I have toast with butter for breakfast.", ru:"Тост, поджаренный хлеб", l:"l5", t:"food"}
+  {w:"toast", d:"Bread that is made hot and brown.", ex:"I have toast with butter for breakfast.", ru:"Тост, поджаренный хлеб", l:"l5", t:"food"},
+  {w:"feel unwell", d:"To feel a little ill, not well.", ex:"I feel unwell, so I stay at home today.", ru:"Плохо себя чувствовать", l:"l6", t:"desc"},
+  {w:"great", d:"Very good.", ex:"The film was great!", ru:"Отличный, замечательный", l:"l6", t:"desc"},
+  {w:"keep", d:"To have something and not give it away; to make something stay the same.", ex:"Keep your room warm in winter.", ru:"Держать, хранить; сохранять", l:"l6", t:"act"},
+  {w:"let in", d:"To allow someone or something to come inside.", ex:"Open the window and let in some fresh air.", ru:"Впускать", l:"l6", t:"act"},
+  {w:"useful", d:"Something that helps you or is good to use.", ex:"A dictionary is very useful.", ru:"Полезный", l:"l6", t:"desc"},
+  {w:"tips", d:"Small pieces of useful advice.", ex:"Here are some tips for good sleep.", ru:"Советы", l:"l6", t:"useful"},
+  {w:"other", d:"Different, not this one; more of the same kind.", ex:"Here are some other tips.", ru:"Другой, другие", l:"l6", t:"useful"},
+  {w:"fall asleep", d:"To start sleeping.", ex:"I fall asleep at ten o'clock.", ru:"Засыпать, заснуть", l:"l6", t:"time"},
+  {w:"straight away", d:"Now, at once, without waiting. It means the same as \"immediately\".", ex:"I do my homework straight away after school.", ru:"Сразу, немедленно", l:"l6", t:"time"},
+  {w:"immediately", d:"Now, at once, without waiting. It means the same as \"straight away\".", ex:"Come here immediately!", ru:"Немедленно, сразу", l:"l6", t:"time"},
+  {w:"but", d:"We use it to join two ideas that are different.", ex:"I like apples, but I don't like bananas.", ru:"Но", l:"l6", t:"useful"}
 ];
 WORDS.forEach(x=>x.id=x.l+":"+x.w);
 const TKEYS=Object.keys(TOPICS);const gcls=x=>"g"+(TKEYS.indexOf(x.t)%6);
